@@ -1,0 +1,214 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+@font-face {
+    font-family: 'UTM Avo';
+    src: url('./Font/UTM-Avo.ttf') format('truetype'); /* Thay đổi đường dẫn đến font chữ */
+    /* Nếu font chữ có các định dạng khác nhau như .woff hoặc .woff2, bạn có thể thêm các dòng dưới đây: 
+    src: url('./path/to/utm-avo.woff') format('woff'),
+    src: url('./path/to/utm-avo.woff2') format('woff2'), */
+    font-weight: normal;
+    font-style: normal;
+  }
+
+body{
+    font-family: "UTM Avo", "Arial",sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+img{
+    vertical-align: middle;
+}
+
+a{
+    text-decoration: none;
+    background-color: transparent;
+}
+
+ /* ----------------------------search---------------------------- */
+
+.search {
+  display: flex; /* Sử dụng flex layout */
+  align-items: center; /* Căn giữa theo chiều dọc */
+  background-color: #f1f1f1; /* Màu nền của thanh tìm kiếm */
+  padding: 5px; /* Đặt padding để tạo khoảng cách xung quanh */
+  border-radius: 5px; /* Đặt góc cong cho thanh tìm kiếm */
+}
+
+.search i {
+  color: #888; /* Màu biểu tượng tìm kiếm */
+}
+
+.search input {
+  border: none; /* Loại bỏ viền input */
+  background-color: transparent; /* Đặt màu nền của input là trong suốt */
+  outline: none; /* Loại bỏ viền khi focus vào input */
+  padding: 5px; /* Đặt padding cho input */
+  font-size: 16px; /* Đặt cỡ chữ cho input */
+  width: 100%; /* Đặt chiều rộng cho input */
+}
+
+.search input::placeholder {
+  color: #888; /* Màu chữ gợi ý trong input */
+}
+
+.search input:focus::placeholder {
+  color: transparent; /* Loại bỏ chữ gợi ý khi focus vào input */
+}
+
+  /* ----------------------------table---------------------------- */
+.db-product{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 6px 12px rgba(140, 152, 164, 0.75);
+    width: 100%;
+    max-width: 1200px;
+    background-clip: border-box;
+    border: solid rgba(172, 174, 180, 0.7);
+    border-radius: 10px;
+}
+
+#database{
+    text-indent: initial;
+    border-spacing: 2px;
+    border-collapse: collapse;
+}
+
+#database thead tr {
+    background-color: #f2f2f2; 
+    font-weight: bold; 
+  }
+  
+  /* Định dạng các cột trong bảng */
+  #database th {
+    padding: 10px;
+    text-align: center; 
+    border: 1px solid #ddd; 
+  }
+  
+
+  #database td {
+    padding: 10px;
+    text-align: center; 
+    border: 1px solid #ddd; 
+  }
+
+  .main-infor{
+    max-width: 200px;
+    text-align: left!important; 
+  }
+
+  
+
+  .product-img {
+    position: relative;
+    border-radius: 3px;
+    width: 40%;
+    height: auto; 
+  }
+  
+  .product-name {
+    display: inline-block;
+    padding-left: 2px;
+  }
+
+  .product-name h5 {
+    margin: 0; 
+    font-size: 18px; 
+    font-weight: bold; 
+    color: #000;
+  }
+
+  /* CSS cho phần tử <td> có class="action" */
+td.action {
+  text-align: center!important;
+  max-width: 50px;
+}
+
+/* Định dạng các biểu tượng (icon) */
+td.action a {
+  margin: 10px;
+  text-align: center;
+  cursor: pointer;
+  color: gray;
+}
+td.action a:hover {
+  color: #000;
+}
+
+/* Định dạng tooltip (thông báo chú thích) */
+[data-toogle="tooltip"] {
+  position: relative; 
+}
+
+/* Hiển thị tooltip khi rê chuột vào biểu tượng */
+[data-toogle="tooltip"]:hover::after {
+  content: attr(data-original-title); 
+  position: absolute; 
+  top: -30px; 
+  left: 50%; 
+  transform: translateX(-50%); 
+  background-color: #000; 
+  color: #fff; 
+  padding: 5px; 
+  border-radius: 5px; 
+  white-space: nowrap; 
+  font-size: 12px; 
+}
+
+
+  /* ----------------------------toogle---------------------------- */
+  /* toggle button container */
+.toggle-container {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 30px;
+}
+
+/* toggle button input */
+.toggle-checkbox {
+  display: none;
+}
+
+/* toggle button label */
+.toggle-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60px;
+  height: 30px;
+  background-color: #ccc;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+/* toggle button thumb (circle) */
+.toggle-label::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 26px;
+  height: 26px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+
+/* toggle button when it's checked (ON state) */
+.toggle-checkbox:checked + .toggle-label {
+  background-color: #4CAF50; /* Green */
+}
+
+/* toggle button thumb (circle) when it's checked (ON state) */
+.toggle-checkbox:checked + .toggle-label::before {
+  transform: translateX(30px);
+}
+
+

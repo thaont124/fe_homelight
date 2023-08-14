@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="editProduct.css" />
+</head>
+
+<body>
+  <div class="container">
+    <div class="container__product">
+      <div class="container__product__info">
+        <div>
+          <label for="productName">Tên sản phẩm:</label>
+          <input type="text" id="info__productName" name="productName" placeholder="Vd: Đèn ông sao" required />
+        </div>
+        <div>
+          <label for="productCode">Mã sản phẩm:</label>
+          <input type="text" id="info__productCode" name="productCode" placeholder="Vd: PR1234" required />
+        </div>
+        <div id="priceNoChoicePart">
+          <label for="priceNoChoice">Giá cả:</label>
+          <input type="text" id="priceNoChoice" name="priceNoChoice" placeholder="Vd: 15000" required />
+        </div>
+        <div>
+          <label for="description">Mô tả:</label>
+          <input type="text" id="description" name="description" placeholder="Đây là sản phẩm..." required />
+        </div>
+        <div class="categories">
+          <label for="category">Thể loại:</label>
+          <div class="category__tree" name="category__infor">
+            <div class="folder">
+              <label class="folder__label">
+                <input type="checkbox" class="folder__checkbox" />
+                Thư mục gốc
+              </label>
+              <ul class="folder__list">
+                <li class="folder__item">
+                  <label class="folder__label">
+                    <input type="checkbox" class="folder__checkbox" />
+                    Thư mục cấp 1
+                  </label>
+                  <ul class="folder__list">
+                    <li class="folder__item">
+                      <label class="folder__label">
+                        <input type="checkbox" class="folder__checkbox" />
+                        Thư mục cấp 2
+                      </label>
+                      <ul class="folder__list">
+                        <li class="folder__item">
+                          <label class="folder__label">
+                            <input type="checkbox" class="folder__checkbox" />
+                            Thư mục cấp 3
+                          </label>
+                          <ul class="folder__list">
+                            <li class="folder__item">
+                              <label class="folder__label">
+                                <input type="checkbox" class="folder__checkbox" />
+                                Thư mục cấp 4
+                              </label>
+                              <ul class="folder__list">
+                                <li class="folder__item">Tập tin 1</li>
+                                <li class="folder__item">Tập tin 2</li>
+                                <!-- Thêm tập tin khác nếu cần -->
+                              </ul>
+                            </li>
+                            <!-- Thêm thư mục cấp 4 khác nếu cần -->
+                          </ul>
+                        </li>
+                        <!-- Thêm thư mục cấp 3 khác nếu cần -->
+                      </ul>
+                    </li>
+                    <!-- Thêm thư mục cấp 2 khác nếu cần -->
+                  </ul>
+                </li>
+                <!-- Thêm thư mục cấp 1 khác nếu cần -->
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container__product__images">
+        <div id="selected-images" class="images__selected-images"></div>
+        <label for="image">Ảnh sản phẩm:</label>
+        <input type="file" class="images_input" id="image-input" name="image" multiple />
+      </div>
+    </div>
+    <button id="showChoice" onclick="showFormChoice()">Thêm phân loại</button>
+    <div id="choice" class="container__variant">
+      <div class="container__variant__choice">
+        <label for="choiceName">Phân loại theo:</label>
+        <input type="text" id="choiceName" name="choiceName" placeholder="Vd: Màu Sắc" required />
+      </div>
+      <div id="choiceValueForm" class="container__variant__choiceValue">
+        <div class="choiceValue__tabs">
+          <div class="tab-number-choiceValue">
+            <div id="choiceTabs">
+              <button onclick="goToChoiceValueTab(1)" class="active">Loại 1</button>
+            </div>
+            <button onclick="showFormChoiceValue()" class="active add-choice">
+              Thêm loại
+            </button>
+          </div>
+          <div id= "tabChoiceValueName" class="tab-name-choiceValue">
+            <label for="choiceValue">Loại:</label>
+            <input type="text" id="choiceValue" name="choiceValue" placeholder="Vd: Đỏ" required />
+            <label for="price">Giá cả:</label>
+            <input type="text" id="price" name="price" placeholder="Vd: 15000" required />
+          </div>
+        </div>
+        <div class="choiceValue__content">
+          <div id="sales" class="choiceValue__sale">
+            <div id="tabs" class="sale-tab">
+              <!-- <button onclick="goToPage(1)" class="activeSale" data-page="1">Mã giảm giá 0</button> -->
+            </div>
+            <div id="sale" class="sale-off">
+              <div class="sale-infor">
+                <label for="saleNumber">Phần trăm giảm giá:</label>
+                <input type="text" id="saleNumber" name="saleNumber" placeholder="Vd: 50" required />%
+              </div>
+              <div class="sale-date">
+                <label for="fromDate">Thời gian bắt đầu giảm giá:</label>
+                <input type="datetime-local" id="fromDate" name="fromDate" required />
+                <label for="toDate">Thời gian kết thúc giảm giá:</label>
+                <input type="datetime-local" id="toDate" name="toDate" required />
+              </div>
+            </div>
+          </div>
+          <div class="choiceValue__add">
+            <button onclick="showFormSale()">Thêm mã giảm giá</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container__submit">
+      <button onclick="submit()">Sửa</button>
+    </div>
+  </div>
+</body>
+<script src="addProduct.js"></script>
+<script src="choice.js"></script>
+
+</html>

@@ -1,0 +1,270 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@font-face {
+    font-family: 'UTM Avo';
+    src: url('./Font/UTM-Avo.ttf') format('truetype'); /* Thay đổi đường dẫn đến font chữ */
+    /* Nếu font chữ có các định dạng khác nhau như .woff hoặc .woff2, bạn có thể thêm các dòng dưới đây: 
+    src: url('./path/to/utm-avo.woff') format('woff'),
+    src: url('./path/to/utm-avo.woff2') format('woff2'), */
+    font-weight: normal;
+    font-style: normal;
+  }
+
+body {
+    font-family: "UTM Avo", "Arial",sans-serif;
+  background-color: #f4f4f4;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.container__product{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.container .container__product .container__product__info,
+.container .container__product .container__product__images{
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.container__product__info label,
+.container__product__images label,
+.choiceValue__tabs .tab-name label,
+.sale-infor label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.container__product__images {
+  position: relative;
+}
+
+.images__selected-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.selected-image-wrapper {
+  position: relative;
+}
+
+.container__product__images .selected-image {
+  max-width: 100px;
+  max-height: 100px;
+  border-radius: 8px;
+}
+
+.delete-button {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 4px 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.container .container__variant{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin: 20px;
+  border-radius: 5px;
+}
+
+.container .container__variant .container__variant__choiceValue {
+  display: flex;
+  justify-content: space-around;
+  align-items: center; 
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin: 20px;
+  border-radius: 5px;
+}
+
+.container__variant__choiceValue .choiceValue__tabs {
+  display: flex;
+  flex-direction: column;
+  margin-right: 20px;
+  justify-content: center;
+}
+
+
+.sale-infor label,
+.sale-date label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+#choiceTabs{
+  display: inline-block;
+}
+
+.sale-tab button,
+.tab-number-choiceValue #choiceTabs button,
+.tab-number-choiceValue button {
+  padding: 5px 10px;
+  background-color: #2665d8;
+  color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.sale-tab button.active,
+.tab-number-choiceValue button .active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.tab-name-choiceValue label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.tab-name-choiceValue input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.container__variant__choiceValue .choiceValue__content{
+  display: flex;
+  flex-direction: column;
+  column-gap: 20px;
+}
+
+.choiceValue__content .choiceValue__sale{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  row-gap: 10px;
+  max-width: 600px;
+}
+
+.choiceValue__sale .sale-off{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  row-gap: 10px;
+}
+
+.sale-date input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.container__variant__choiceValue .choiceValue__content .choiceValue__add button {
+  background-color: #28a745;
+  color: #fff;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.active .add-choice:hover,
+.container__variant__choiceValue .choiceValue__content .choiceValue__add button:hover {
+  background-color: #218838;
+}
+
+/*--------------------------Category Tree----------------------------*/
+/* Style for the folder container */
+.folder {
+  margin: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  max-width: 300px;
+}
+
+/* Style for folder name */
+.folder__name {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+/* Style for folder list and items */
+.folder__list {
+  list-style-type: none;
+  padding-left: 15px;
+}
+
+.folder__item {
+  margin-bottom: 5px;
+}
+
+/* Style for nested folders */
+.folder__list .folder__list {
+  margin-left: 10px;
+  border-left: 1px dashed #ccc;
+  padding-left: 10px;
+}
+
+/* Style for files */
+.folder__list .folder__item {
+  padding-left: 10px;
+  font-style: italic;
+}
+
+.container .container__submit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.container .container__submit button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px; 
+  cursor: pointer;
+}
+
+.container .container__submit button:hover {
+  background-color: #0056b3;
+}
+
+#showChoice {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #4caf50; 
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#showChoice:hover {
+  background-color: #45a049; 
+  box-shadow: #f4f4f4;
+}

@@ -7,19 +7,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/fe")
 public class HomeController {
+    @GetMapping("/login")
+    public String login(){
+        return "login";
+    }
+
 
     @GetMapping("/product/viewAll")
     public String viewProduct(){
-        return "viewProduct";
+        return "product/viewProduct";
     }
 
     @GetMapping("/product/edit/{idProduct}")
     public String editProduct(){
-        return "editProduct";
+        return "product/editProduct";
     }
 
     @GetMapping("/product/add")
     public String addProduct(){
-        return "addProduct";
+        return "product/addProduct";
     }
 }
