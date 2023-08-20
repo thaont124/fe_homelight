@@ -5,21 +5,69 @@
 }
 
 @font-face {
-    font-family: 'UTM Avo';
-    src: url('./Font/UTM-Avo.ttf') format('truetype'); /* Thay đổi đường dẫn đến font chữ */
-    /* Nếu font chữ có các định dạng khác nhau như .woff hoặc .woff2, bạn có thể thêm các dòng dưới đây: 
-    src: url('./path/to/utm-avo.woff') format('woff'),
-    src: url('./path/to/utm-avo.woff2') format('woff2'), */
-    font-weight: normal;
-    font-style: normal;
-  }
+  font-family: 'UTM Avo';
+  src: url('/Font/UTM-Avo.ttf') format('truetype'); /* Thay đổi đường dẫn đến font chữ */
+  /* Nếu font chữ có các định dạng khác nhau như .woff hoặc .woff2, bạn có thể thêm các dòng dưới đây: 
+  src: url('./path/to/utm-avo.woff') format('woff'),
+  src: url('./path/to/utm-avo.woff2') format('woff2'), */
+  font-weight: normal;
+  font-style: normal;
+}
 
 body {
-    font-family: "UTM Avo", "Arial",sans-serif;
+  position: relative;
+  font-family: "UTM Avo", "Arial",sans-serif;
   background-color: #f4f4f4;
 }
 
+input[type="text"], input[type="datetime-local"], select {
+  width: 10vw;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #333;
+  transition: border-color 0.3s ease-in-out;
+
+}
+
+select{
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+input:focus, select,
+#description:focus {
+  outline: none;
+  border-color: #2196F3; 
+  box-shadow: 0 0 5px rgba(33, 150, 243, 0.6); 
+}
+
+#description{
+  width: 200%;
+  height: 30vh;
+  resize: none;
+  padding: 5px;
+  word-wrap: break-word;
+  overflow: hidden;
+  overflow-y: scroll;
+  text-align: justify;
+  padding: 5% ;
+  color: #020407;
+  font-family: 'Times New Roman', Times, sans-serif;
+  font-size: 16px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 10px;
+  color: #0e4a8a;
+}
+
+
 .container {
+  position: relative;
   display: flex;
   flex-direction: column;
   max-width: 1200px;
@@ -29,11 +77,22 @@ body {
 
 .container__product{
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 3fr 2fr;
   gap: 20px;
 }
 
-.container .container__product .container__product__info,
+.container .container__product .container__product__info{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: inherit;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+.container__product__info div input[type="text"]{
+  width: 20vw;
+}
 .container .container__product .container__product__images{
   background-color: #fff;
   padding: 20px;
@@ -47,7 +106,7 @@ body {
 .sale-infor label {
   display: block;
   font-weight: bold;
-  margin-bottom: 8px;
+  margin-top: 8px;
 }
 
 .container__product__images {
@@ -84,7 +143,9 @@ body {
   font-size: 14px;
 }
 
-.container .container__variant{
+.container .container__variant,
+.container .container__exception,
+.container .container__sale{
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -94,23 +155,78 @@ body {
   border-radius: 5px;
 }
 
-.container .container__variant .container__variant__choiceValue {
+
+.container .container__variant .container__variant__choice, 
+.container .container__exception .container__exception__choice,
+.container .container__sale .container__sale__choice{
   display: flex;
-  justify-content: space-around;
-  align-items: center; 
-  border: 1px solid #ccc;
-  padding: 20px;
-  margin: 20px;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
   border-radius: 5px;
+  margin: 20px;
+
 }
 
-.container__variant__choiceValue .choiceValue__tabs {
+
+.choice__choiceInfo {
   display: flex;
-  flex-direction: column;
-  margin-right: 20px;
-  justify-content: center;
+  flex-direction: row;
+  align-items: center; 
+  border-radius: 5px;
+  justify-content: flex-start;
 }
 
+.chocie__saleChocie{
+  display: flex;
+  flex-direction: row;
+  align-items: center; 
+  border-radius: 5px;
+  justify-content: flex-start;
+  gap: 15px;
+}
+
+.choice__choiceInfo .choice__choiceInfo__choiceValue input{
+  margin-left: 10px;
+  width: 70px;
+}
+
+.choice__choiceInfo .choice__choiceInfo__choiceName{
+  margin-right: 20px;
+
+}
+
+.choice__choiceInfo .choice__choiceInfo__exception{
+  display: flex;
+  flex-direction: row;
+}
+
+.choice__choiceInfo select{
+  width: 10vw;
+}
+
+
+
+.plus-button {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border: 2px dashed #4CAF50;
+  border-radius: 5px;
+  background-color: transparent;
+  color: #4CAF50;
+  font-weight: bold;
+  text-align: center;
+  font-size: 20px;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: border-color 0.3s ease-in-out;
+}
+
+.plus-button:hover {
+  background-color: #45a049;
+  color: #fff;
+}
 
 .sale-infor label,
 .sale-date label {
@@ -194,66 +310,93 @@ body {
 }
 
 /*--------------------------Category Tree----------------------------*/
-/* Style for the folder container */
-.folder {
-  margin: 20px;
+
+.category__tree {
+  display: inline-block;
+  border: 1px solid #ccc;
   padding: 10px;
+  max-height: 30vh;
+  width: 20vw;
+  overflow: hidden;
+  overflow-y: scroll;
   border: 1px solid #ccc;
   border-radius: 5px;
-  max-width: 300px;
+  font-size: 16px;
+  color: #333;
+  transition: border-color 0.3s ease-in-out;
 }
 
-/* Style for folder name */
-.folder__name {
+.category-header {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.arrow {
+  margin-right: 10px;
+  display: inline;
+  transition: transform 0.2s;
+}
+
+.open .arrow {
+  transform: rotate(90deg);
+}
+
+
+.branch__name {
   font-weight: bold;
   margin-bottom: 10px;
 }
 
-/* Style for folder list and items */
-.folder__list {
+.branch__list {
   list-style-type: none;
   padding-left: 15px;
 }
 
-.folder__item {
+.branch__item {
   margin-bottom: 5px;
 }
 
-/* Style for nested folders */
-.folder__list .folder__list {
+.branch__list .branch__list {
   margin-left: 10px;
   border-left: 1px dashed #ccc;
   padding-left: 10px;
 }
 
-/* Style for files */
-.folder__list .folder__item {
+.branch__list .branch__item {
   padding-left: 10px;
   font-style: italic;
 }
 
-.container .container__submit {
+
+/*--------------------------Submit button----------------------------*/
+
+.submit {
   display: flex;
+  position: fixed;
+  bottom: 8px;
+  left: 16px;
   justify-content: center;
   align-items: center;
   margin-top: 20px;
 }
 
-.container .container__submit button {
+.submit button {
   padding: 10px 20px;
   font-size: 16px;
   background-color: #007bff;
+  box-shadow: 0px 0px 10px rgba(20, 80, 209, 0.2);
   color: white;
   border: none;
   border-radius: 5px; 
   cursor: pointer;
 }
 
-.container .container__submit button:hover {
+.submit button:hover {
   background-color: #0056b3;
 }
 
-#showChoice {
+.addElement {
   margin-top: 20px;
   padding: 10px 20px;
   font-size: 16px;
@@ -264,7 +407,7 @@ body {
   cursor: pointer;
 }
 
-#showChoice:hover {
+#addElement:hover {
   background-color: #45a049; 
   box-shadow: #f4f4f4;
 }

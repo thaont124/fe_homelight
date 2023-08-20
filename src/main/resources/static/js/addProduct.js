@@ -18,9 +18,9 @@ function init() {
 var rootFolders = document.querySelectorAll(".category__tree__branch");
 
 // Bắt sự kiện khi người dùng nhấp vào thư mục gốc
-rootFolders.forEach(function (rootFolder) {
+rootFolders.forEach(function(rootFolder) {
   var label = rootFolder.querySelector(".branch__label");
-  label.addEventListener("click", function () {
+  label.addEventListener("click", function() {
     var sublist = rootFolder.querySelector(".branch__list");
     sublist.classList.toggle("open"); // Thêm hoặc loại bỏ class "open" để hiển thị/ẩn thư mục cấp 1
   });
@@ -201,7 +201,7 @@ function createExceptionElement() {
   var addButton = document.createElement("button");
   addButton.textContent = "+";
   addButton.classList.add("plus-button");
-  addButton.onclick = function () {
+  addButton.onclick = function() {
     addExceptionValue(addButton);
   };
   addValueDiv.appendChild(addButton);
@@ -327,7 +327,7 @@ function createSaleElement() {
   addValueDiv.classList.add("choice__addValue");
   var addButton = document.createElement("button");
   addButton.textContent = "+";
-  addButton.onclick = function () {
+  addButton.onclick = function() {
     addSaleChoiceValue(addValueDiv);
   };
   addButton.classList.add("plus-button");
@@ -364,126 +364,4 @@ function addSaleChoiceValue(button) {
 
 
 
-/* ----------------------------------------------XỬ LÝ REQUEST HIỂN THỊ THÔNG TIN CŨ SẢN PHẨM---------------------------------------------- */
-
-viewProduct()
-function viewProduct() {
-  const xhttp = new XMLHttpRequest();
-  xhttp.onload = function () {
-    if (xhttp.status == 200) {
-      var ResponseJson = xhttp.responseText;
-      var Response = JSON.parse(ResponseJson);
-
-      var choiceList = []             //choiceName, choiceValues: [0: , 1: ]
-      var variantList = []     //100(Price) : [{choiceName, choiceValues: [0: , 1: ]} {choiceName, choiceValues: [0: , 1: ]}]
-      var saleList = []               //choices[0: {choiceName, choiceValue}, 1: ...] : sale{saleNumber, startDate, endDate}
-
-      for (var i = 0; i < Response.variantsDTO.length; i++) {
-        const variant = Response.variantsDTO[i];
-
-        //Add choiceList
-        for (var j = 0; j < variant.choices.length; j++) {
-          const choice = variant.choices[j];
-
-          const existingChoice = choiceList.find(item =>
-            item.choiceName === choice.choiceName && item.choiceValues.includes(choice.choiceValue)
-          );
-          if (!existingChoice) {
-            const choiceEntry = choiceList.find(item => item.choiceName === choice.choiceName);
-
-            if (choiceEntry) {
-              choiceEntry.choiceValues.push(choice.choiceValue);
-            } else {
-              choiceList.push({
-                choiceName: choice.choiceName,
-                choiceValues: [choice.choiceValue]
-              });
-            }
-          }
-        }
-
-        //Add variantList 
-        const variantPrice = variant.originPrice;
-        const variantChoices = variant.choices.map(choice => {
-          return {
-            id: choice.id,
-            choiceName: choice.choiceName,
-            choiceValue: choice.choiceValue
-          };
-        });
-
-        if (!variantList.some(item => item.price === variantPrice)) {
-          variantList.push({
-            price: variantPrice,
-            choices: [variantChoices]
-          });
-        } else {
-          const index = variantList.findIndex(item => item.price === variantPrice);
-          variantList[index].choices.push(variantChoices);
-        }
-
-        //Add saleList
-        const variantSales = variant.sale;
-        if (variantSales.length > 0) {
-          for (const sale of variantSales) {
-            const choices = variant.choices.map(choice => {
-              return {
-                choiceName: choice.choiceName,
-                choiceValue: choice.choiceValue
-              };
-            });
-
-            saleList.push({
-              choices: choices,
-              sale: {
-                saleNumber: sale.numberSale,
-                startDate: new Date(sale.startDate),
-                toDate: new Date(sale.endDate)
-              }
-            });
-          }
-        }
-      }
-      variantList.sort((a, b) => b.choices.length - a.choices.length);
-      saleList.sort((a, b) => a.sale.startDate - b.sale.startDate);
-
-      //result
-      console.log(choiceList)
-      console.log(variantList)
-      console.log(saleList)
-
-
-      //display
-      //product_infor
-      var productNameInput = document.getElementById('info__productName');
-      var productCodeInput = document.getElementById('info__productCode');
-      var priceNoChoiceInput = document.getElementById('priceNoChoice');
-      var description = document.getElementById('description');
-
-      productNameInput.value = Response.productName;
-      productCodeInput.value = Response.productCode;
-      priceNoChoiceInput.value = variantList[0].price;
-      description.value = Response.description;
-
-
-    } else if (xhttp.status == 204) {
-
-    } else if (xhttp.status == 401) {
-      localStorage.removeItem("Token");
-      window.location = "/Admin/Login";
-    } else if (xhttp.status == 403) {
-      localStorage.removeItem("Token");
-      window.location = "/Admin/Login";
-    }
-  }
-
-  xhttp.open("GET", "http://localhost:8080/api/v1.0/ProductDetail/" + window.location.pathname.substring(17), false);
-
-  xhttp.setRequestHeader("Content-type", "application/json");
-  token = localStorage.getItem("Token");
-  authorization = 'Bearer ' + token;
-  xhttp.setRequestHeader("Authorization", authorization);
-  xhttp.send();
-}
-
-/* ----------------------------------------------XỬ LÝ REQUEST SỬA SẢN PHẨM---------------------------------------------- */
+/* ----------------------------------------------XỬ LÝ REQUEST---------------------------------------------- */

@@ -1,5 +1,5 @@
 if (localStorage.getItem("Token")) {
-    window.location = "/Home";
+    window.location = "/fe/product/viewAll";
     // window.history.back();
 }
 else {
@@ -42,7 +42,7 @@ function login() {
             var tokenResponseJson = xhttp.responseText;
             var tokenResponse = JSON.parse(tokenResponseJson);
             localStorage.setItem("Token", tokenResponse['token']);
-            window.location.href = 'http://127.0.0.1:5500/fe/viewProduct.html';
+            window.location= '/fe/product/viewAll';
         }
         else {
             document.querySelector('#login_error').innerHTML = '<p>Không tìm thấy tài khoản nào có địa chỉ email này hoặc mật khẩu không đúng</p>';
