@@ -1,4 +1,10 @@
 /* ----------------------------------------------KHỞI TẠO---------------------------------------------- */
+var choiceList = []             //choiceName, choiceValues: [0: , 1: ]
+var variantList = []     //100(Price) : [{choiceName, choiceValues: [0: , 1: ]} {choiceName, choiceValues: [0: , 1: ]}]
+var saleList = []               //choices[0: {choiceName, choiceValue}, 1: ...] : sale{saleNumber, startDate, endDate}
+var selectedImages = []
+var categoryOfProduct = []
+
 init()
 function init() {
   var titles = document.getElementsByClassName("title");
@@ -13,80 +19,211 @@ function init() {
 }
 
 /* ----------------------------------------------XỬ LÝ CÂY---------------------------------------------- */
+var categoryData = [];
+const categoryTreeContainer = document.querySelector('.category__tree');
 
-// Lấy danh sách các thư mục gốc
-var rootFolders = document.querySelectorAll(".category__tree__branch");
+function categories() {
+  const xhttp = new XMLHttpRequest();
+  xhttp.onload = function () {
+    const ResponseJson = xhttp.responseText;
+    const Response = JSON.parse(ResponseJson);
+    if (xhttp.status === 200) {
+      categoryData = Response;
+      renderCategoryTree(categoryData, categoryTreeContainer);
+    } else {
+      // Handle error
+    }
+  };
+  xhttp.open("GET", "http://localhost:8080/api/v1.0/Categories", true);
+  xhttp.setRequestHeader("Content-type", "application/json");
+  xhttp.send();
+}
 
-// Bắt sự kiện khi người dùng nhấp vào thư mục gốc
-rootFolders.forEach(function (rootFolder) {
-  var label = rootFolder.querySelector(".branch__label");
-  label.addEventListener("click", function () {
-    var sublist = rootFolder.querySelector(".branch__list");
-    sublist.classList.toggle("open"); // Thêm hoặc loại bỏ class "open" để hiển thị/ẩn thư mục cấp 1
+function createCategoryNode(category) {
+  const node = document.createElement("div");
+  node.className = "category__tree__branch";
+
+  const label = document.createElement("label");
+  label.className = "branch__label";
+
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.className = "branch__checkbox";
+  checkbox.setAttribute("categoryId", category.id);
+
+  checkbox.addEventListener("change", function () {
+    if (checkbox.checked == true){
+      toggleParentCheckboxes(node, checkbox.checked); 
+      checkbox.checked = true; 
+    }
+    else{
+      toggleChildrenCheckboxes(node, false);
+      checkbox.checked = false; 
+    }
+    
+    
   });
-});
 
+  const text = document.createTextNode(category.categoryName);
+
+  label.appendChild(checkbox);
+  label.appendChild(text);
+
+  if (category.children.length > 0) {
+    const arrow = document.createElement("span");
+    arrow.className = "arrow";
+    arrow.innerText = "▶";
+    arrow.addEventListener("click", function (event) {
+      event.stopPropagation();
+      toggleChildrenVisibility(node);
+    });
+    label.appendChild(arrow);
+  }
+
+  node.appendChild(label);
+
+  if (category.children.length > 0) {
+    const childContainer = document.createElement("ul");
+    childContainer.className = "branch__list";
+    childContainer.style.display = "none";
+    category.children.forEach(child => {
+      const childNode = createCategoryNode(child);
+      childContainer.appendChild(childNode);
+    });
+    node.appendChild(childContainer);
+  }
+
+  return node;
+}
+
+function toggleParentCheckboxes(node, isChecked) {
+  const parentCheckbox = node.querySelector(".branch__checkbox");
+  if (parentCheckbox) {
+    parentCheckbox.checked = isChecked;
+    const parentNode = node.parentNode.closest(".category__tree__branch");
+    if (parentNode) {
+      toggleParentCheckboxes(parentNode, isChecked);
+    }
+  }
+}
+
+function toggleChildrenCheckboxes(node, isChecked) {
+  const checkboxes = node.querySelectorAll(".branch__checkbox");
+  checkboxes.forEach(checkbox => {
+    checkbox.checked = isChecked;
+  });
+}
+
+function toggleChildrenVisibility(node) {
+  const childContainer = node.querySelector(".branch__list");
+  if (childContainer) {
+    childContainer.style.display = childContainer.style.display === "none" ? "block" : "none";
+  }
+}
+
+function renderCategoryTree(data, container) {
+  container.innerHTML = "";
+  data.forEach(category => {
+    const categoryNode = createCategoryNode(category);
+    container.appendChild(categoryNode);
+  });
+}
+
+categories();
+
+//------------------ tick các category cũ
+function checkCategoryInTree(node, categoryId) {
+  const checkbox = node.querySelector(`input[categoryid="${categoryId}"]`);
+  if (checkbox) {
+    checkbox.checked = true;
+  }
+}
+
+function checkCategoriesInTree(data) {
+  data.forEach(category => {
+    checkCategoryInTree(categoryTreeContainer, category.id);
+    checkCategoriesInTree(category.children);
+  });
+}
+
+checkCategoriesInTree(categoryOfProduct);
 
 
 /* ----------------------------------------------XỬ LÝ ẢNH---------------------------------------------- */
 const selectedImagesContainer = document.getElementById('selected-images');
 const imageInput = document.getElementById('image-input');
+const overlay = document.getElementById('overlay');
+const overlayContent = document.getElementById('overlay-content');
 
-// Hàm để tạo một phần tử ảnh và nút xóa tương ứng
-function createImageElement(file) {
+function createImageElement(url, type) {
   const imageWrapper = document.createElement('div');
   imageWrapper.classList.add('selected-image-wrapper');
 
-  const img = document.createElement('img');
-  img.classList.add('selected-image');
-  img.src = URL.createObjectURL(file);
+  const mediaElement = type === 'image' ? document.createElement('img') : document.createElement('video');
+  mediaElement.classList.add('selected-media');
+  mediaElement.src = url;
+
+  mediaElement.addEventListener('click', () => displayMedia(mediaElement.src, type));
 
   const deleteButton = document.createElement('button');
   deleteButton.classList.add('delete-button');
   deleteButton.textContent = 'Xóa';
   deleteButton.addEventListener('click', () => {
+    removeMedia(url);
     imageWrapper.remove();
   });
 
-  imageWrapper.appendChild(img);
+  imageWrapper.appendChild(mediaElement);
   imageWrapper.appendChild(deleteButton);
 
   return imageWrapper;
 }
 
-// Lắng nghe sự kiện khi người dùng chọn tập tin ảnh mới
+function displayMedia(url, type) {
+  overlayContent.innerHTML = '';
+
+  if (type === 'image') {
+    const image = document.createElement('img');
+    image.src = url;
+    overlayContent.appendChild(image);
+  } else if (type === 'video') {
+    const video = document.createElement('video');
+    video.src = url;
+    video.controls = true;
+    overlayContent.appendChild(video);
+  }
+
+  overlay.style.display = 'block';
+}
+
+function removeMedia(url) {
+  const index = selectedImages.findIndex(image => image.url === url);
+  if (index !== -1) {
+    selectedImages.splice(index, 1);
+  }
+  console.log(selectedImages)
+}
+
+overlay.addEventListener('click', () => {
+  overlay.style.display = 'none';
+  overlayContent.innerHTML = '';
+});
+
 imageInput.addEventListener('change', (event) => {
   const files = event.target.files;
 
-  // Lặp qua danh sách các tập tin ảnh và thêm chúng vào selectedImagesContainer
   for (const file of files) {
-    if (file.type.startsWith('image/')) {
-      const imageElement = createImageElement(file);
+    if (file.type.startsWith('image/') || file.type.startsWith('video/')) {
+      const type = file.type.startsWith('image/') ? 'image' : 'video';
+      const imageElement = createImageElement(URL.createObjectURL(file), type);
+      selectedImages.push({ url: imageElement.querySelector('img, video').src, type: type });
       selectedImagesContainer.appendChild(imageElement);
     }
   }
+  console.log(selectedImages)
 
-  // Đặt giá trị của input về null để cho phép người dùng chọn cùng tập tin ảnh lần tiếp theo
   event.target.value = null;
 });
-
-
-function submit() {
-  // Lấy tất cả các phần tử con có lớp là 'selected-image'
-  const selectedImageElements = selectedImagesContainer.querySelectorAll('.selected-image');
-
-  // Mảng để lưu trữ các giá trị (ảnh)
-  const selectedImages = [];
-
-  // Lặp qua danh sách các phần tử và lấy giá trị (src của ảnh)
-  selectedImageElements.forEach((imageElement) => {
-    const imageUrl = imageElement.getAttribute('src');
-    selectedImages.push(imageUrl);
-  });
-
-  // selectedImages giờ chứa danh sách các ảnh đã chọn
-  console.log(selectedImages);
-}
 
 
 /* ----------------------------------------------XỬ LÝ PHÂN LOẠI---------------------------------------------- */
@@ -120,7 +257,7 @@ function addFormChoice() {
               <input type="text" name="choiceName" placeholder="Phân loại theo"
               choiceName-data="${choiceName_index}" required />
           </div>
-          <div class="choice__choiceInfo__choiceValue" id="choiceValueElement">
+          <div class="choice__choiceInfo__choiceValue">
               <input type="text" name="choiceValue" placeholder="Giá trị" choiceValue-data="1" required value="${previousInputValue}" />
           </div>
       </div>
@@ -147,6 +284,7 @@ function addChoiceValue(button) {
   choiceValueHTML.appendChild(newChoiceValueInput);
 }
 
+
 /* ----------------------------------------------XỬ LÝ NGOẠI LỆ---------------------------------------------- */
 function showExceptionForm() {
   document.getElementById("exceptionTitle").style.display = 'inline-block'
@@ -164,29 +302,24 @@ function createExceptionElement() {
   var choiceInfoDiv = document.createElement("div");
   choiceInfoDiv.classList.add("choice__choiceInfo");
 
-  var selectDiv1 = document.createElement("div");
-  selectDiv1.classList.add("select__exception");
-  var select1 = document.createElement("select");
-  select1.innerHTML = `
-        <option disabled selected>--- Chọn màu sắc ---</option>
-        <option value="red">Đỏ</option>
-        <option value="blue">Xanh</option>
-        <option value="green">Lục</option>
-    `;
-  selectDiv1.appendChild(select1);
+  for (var j = 0; j < choiceList.length; j++) {
+    var choice = choiceList[j];
+    var selectElement = document.createElement('select');
+    selectElement.classList.add('select__exception');
+    var optionAll = document.createElement('option');
+    optionAll.setAttribute('all', 'true');
+    optionAll.selected = true;
+    optionAll.textContent = `Mọi ${choice.choiceName}`;
+    selectElement.appendChild(optionAll);
 
-  var selectDiv2 = document.createElement("div");
-  selectDiv2.classList.add("select__exception");
-  var select2 = document.createElement("select");
-  select2.innerHTML = `
-        <option disabled selected>--- Chọn chất liệu ---</option>
-        <option value="red">Vàng</option>
-        <option value="blue">Kim cương</option>
-    `;
-  selectDiv2.appendChild(select2);
+    for (var k = 0; k < choice.choiceValues.length; k++) {
+      var option = document.createElement('option');
+      option.textContent = choice.choiceValues[k];
+      selectElement.appendChild(option);
+    }
 
-  choiceInfoDiv.appendChild(selectDiv1);
-  choiceInfoDiv.appendChild(selectDiv2);
+    choiceInfoDiv.appendChild(selectElement);
+  }
 
   var addValueDiv = document.createElement("div");
   addValueDiv.classList.add("choice__addValue");
@@ -198,13 +331,13 @@ function createExceptionElement() {
   priceInput.required = true;
   addValueDiv.appendChild(priceInput);
 
-  var addButton = document.createElement("button");
-  addButton.textContent = "+";
-  addButton.classList.add("plus-button");
-  addButton.onclick = function () {
-    addExceptionValue(addButton);
-  };
-  addValueDiv.appendChild(addButton);
+  // var addButton = document.createElement("button");
+  // addButton.textContent = "+";
+  // addButton.classList.add("plus-button");
+  // addButton.onclick = function () {
+  //   addExceptionValue(addButton);
+  // };
+  // addValueDiv.appendChild(addButton);
 
   exceptionDiv.appendChild(choiceInfoDiv);
   exceptionDiv.appendChild(addValueDiv);
@@ -221,16 +354,24 @@ function addExceptionForm() {
 function addExceptionValue(button) {
   var parentExceptionDiv = button.parentNode.previousElementSibling;
 
-  var selectElement = document.createElement("select");
-  selectElement.classList.add("select__exception");
-  selectElement.innerHTML = `
-      <option disabled selected>--- Chọn màu sắc ---</option>
-      <option value="red">Đỏ</option>
-      <option value="blue">Xanh</option>
-      <option value="green">Lục</option>
-  `;
+  for (var j = 0; j < choiceList.length; j++) {
+    var choice = choiceList[j];
+    var selectElement = document.createElement('select');
+    selectElement.classList.add('select__exception');
+    var optionAll = document.createElement('option');
+    optionAll.setAttribute('all', 'true');
+    optionAll.selected = true;
+    optionAll.textContent = `Mọi ${choice.choiceName}`;
+    selectElement.appendChild(optionAll);
 
-  parentExceptionDiv.appendChild(selectElement);
+    for (var k = 0; k < choice.choiceValues.length; k++) {
+      var option = document.createElement('option');
+      option.textContent = choice.choiceValues[k];
+      selectElement.appendChild(option);
+    }
+
+    parentExceptionDiv.appendChild(selectElement);
+  }
 }
 
 
@@ -274,7 +415,7 @@ function createSaleElement() {
   choiceInfoDiv.appendChild(selectDiv2);
 
   var saleChoiceDiv = document.createElement("div");
-  saleChoiceDiv.classList.add("chocie__saleChocie");
+  saleChoiceDiv.classList.add("choice__salechoice");
 
   var saleNumberDiv = document.createElement("div");
   saleNumberDiv.classList.add("sale-infor");
@@ -323,15 +464,15 @@ function createSaleElement() {
   saleChoiceDiv.appendChild(startDateDiv);
   saleChoiceDiv.appendChild(toDateDiv);
 
-  var addValueDiv = document.createElement("div");
-  addValueDiv.classList.add("choice__addValue");
-  var addButton = document.createElement("button");
-  addButton.textContent = "+";
-  addButton.onclick = function () {
-    addSaleChoiceValue(addValueDiv);
-  };
-  addButton.classList.add("plus-button");
-  addValueDiv.appendChild(addButton);
+  // var addValueDiv = document.createElement("div");
+  // addValueDiv.classList.add("choice__addValue");
+  // var addButton = document.createElement("button");
+  // addButton.textContent = "+";
+  // addButton.onclick = function () {
+  //   addSaleChoiceValue(addValueDiv);
+  // };
+  // addButton.classList.add("plus-button");
+  // addValueDiv.appendChild(addButton);
 
   saleDiv.appendChild(choiceInfoDiv);
   saleDiv.appendChild(saleChoiceDiv);
@@ -374,9 +515,6 @@ function viewProduct() {
       var ResponseJson = xhttp.responseText;
       var Response = JSON.parse(ResponseJson);
 
-      var choiceList = []             //choiceName, choiceValues: [0: , 1: ]
-      var variantList = []     //100(Price) : [{choiceName, choiceValues: [0: , 1: ]} {choiceName, choiceValues: [0: , 1: ]}]
-      var saleList = []               //choices[0: {choiceName, choiceValue}, 1: ...] : sale{saleNumber, startDate, endDate}
 
       for (var i = 0; i < Response.variantsDTO.length; i++) {
         const variant = Response.variantsDTO[i];
@@ -447,6 +585,7 @@ function viewProduct() {
       variantList.sort((a, b) => b.choices.length - a.choices.length);
       saleList.sort((a, b) => a.sale.startDate - b.sale.startDate);
 
+
       //result
       console.log(choiceList)
       console.log(variantList)
@@ -465,7 +604,225 @@ function viewProduct() {
       priceNoChoiceInput.value = variantList[0].price;
       description.value = Response.description;
 
+      //product_image
+      console.log(Response.image)
+      for (var i = 0; i < Response.image.length; i++) {
+        const mediaElement = createImageElement(Response.image[i].url, Response.image[i].type);
+        selectedImagesContainer.appendChild(mediaElement);
+      };
 
+
+      //choice
+      const choiceContainer = document.getElementById('choice');
+      if (choiceList.length > 0) {
+        showFormChoice()
+      }
+      for (var i = 0; i < choiceList.length; i++) {
+        const choice = choiceList[i];
+
+        const choiceWrapper = document.createElement('div');
+        choiceWrapper.classList.add('container__variant__choice');
+
+        const choiceDiv = document.createElement('div');
+        choiceDiv.classList.add('choice__choiceInfo');
+
+        const choiceNameDiv = document.createElement('div');
+        choiceNameDiv.classList.add('choice__choiceInfo__choiceName');
+        const choiceNameInput = document.createElement('input');
+        choiceNameInput.type = 'text';
+        choiceNameInput.name = 'choiceName';
+        choiceNameInput.placeholder = 'Phân loại theo';
+        choiceNameInput.value = choice.choiceName
+        choiceNameInput.setAttribute('choiceName-data', (i + 1));
+        choiceNameInput.required = true;
+        choiceNameDiv.appendChild(choiceNameInput);
+        choiceDiv.appendChild(choiceNameDiv);
+
+        const choiceValueDiv = document.createElement('div');
+        choiceValueDiv.classList.add('choice__choiceInfo__choiceValue');
+        for (var j = 0; j < choice.choiceValues.length; j++) {
+          const choiceValueInput = document.createElement('input');
+          choiceValueInput.type = 'text';
+          choiceValueInput.name = 'choiceValue';
+          choiceValueInput.id = "choiceValueElement";
+          choiceValueInput.placeholder = 'Giá trị phân loại';
+          choiceValueInput.value = choice.choiceValues[j]
+          choiceValueInput.setAttribute('choiceValue-data', (j + 1));
+          choiceValueInput.required = true;
+          choiceValueDiv.appendChild(choiceValueInput);
+        }
+        choiceDiv.appendChild(choiceValueDiv);
+
+        var addChoiceDiv = document.createElement('div');
+        addChoiceDiv.className = "choice__addValue"
+        addChoiceDiv.innerHTML = `
+            <button onclick="addChoiceValue(this)" class="plus-button">+</button>
+        `;
+
+        choiceWrapper.appendChild(choiceDiv);
+        choiceWrapper.appendChild(addChoiceDiv);
+
+        choiceContainer.insertBefore(choiceWrapper, choiceContainer.firstChild);
+      }
+
+      //exception 
+      var exceptionContainer = document.getElementById('exception');
+
+      if (variantList.length > 1) {
+        showExceptionForm()
+      }
+      for (var i = 1; i < variantList.length; i++) {
+        var variant = variantList[i];
+        var choiceExceptionContainer = document.createElement('div');
+        choiceExceptionContainer.classList.add('container__exception__choice');
+
+        var choiceInfoDiv = document.createElement('div');
+        choiceInfoDiv.classList.add('choice__choiceInfo');
+
+        for (var j = 0; j < choiceList.length; j++) {
+          var choice = choiceList[j];
+          var selectElement = document.createElement('select');
+          selectElement.classList.add('select__exception');
+          var optionAll = document.createElement('option');
+          optionAll.setAttribute('all', 'true');
+          optionAll.selected = true;
+          optionAll.textContent = `Mọi ${choice.choiceName}`;
+          selectElement.appendChild(optionAll);
+
+          for (var k = 0; k < choice.choiceValues.length; k++) {
+            var option = document.createElement('option');
+            option.textContent = choice.choiceValues[k];
+            if (variant.choices[0].find(c => c.choiceName === choice.choiceName && c.choiceValue === option.textContent)) {
+              option.selected = true;
+            }
+            selectElement.appendChild(option);
+          }
+
+          choiceInfoDiv.appendChild(selectElement);
+        }
+
+        choiceExceptionContainer.appendChild(choiceInfoDiv);
+
+        var priceInput = document.createElement('input');
+        priceInput.type = 'text';
+        priceInput.id = 'priceChoice';
+        priceInput.name = 'priceChoice';
+        priceInput.placeholder = 'Giá cả';
+        priceInput.value = variant.price;
+        priceInput.required = true;
+
+        var addValueDiv = document.createElement('div');
+        addValueDiv.classList.add('choice__addValue');
+        addValueDiv.appendChild(priceInput);
+
+        choiceExceptionContainer.appendChild(addValueDiv);
+
+        exceptionContainer.insertBefore(choiceExceptionContainer, exceptionContainer.firstChild);
+      }
+
+      //sale
+      var saleContainer = document.getElementById('sale');
+      if (saleList.length > 0) {
+        showSaleForm()
+      }
+      for (var i = 0; i < saleList.length; i++) {
+        var sale = saleList[i];
+        var choiceSaleContainer = document.createElement('div');
+        choiceSaleContainer.classList.add('container__sale__choice');
+
+        var choiceInfoDiv = document.createElement('div');
+        choiceInfoDiv.classList.add('choice__choiceInfo');
+
+        for (var j = 0; j < choiceList.length; j++) {
+          var choice = choiceList[j];
+          var selectElement = document.createElement('select');
+          selectElement.classList.add('select__exception');
+          var optionAll = document.createElement('option');
+          optionAll.setAttribute('all', 'true');
+          optionAll.selected = true;
+          optionAll.textContent = `Mọi ${choice.choiceName}`;
+          selectElement.appendChild(optionAll);
+
+          for (var k = 0; k < choice.choiceValues.length; k++) {
+            var option = document.createElement('option');
+            option.textContent = choice.choiceValues[k];
+            if (sale.choices.find(c => c.choiceName === choice.choiceName && c.choiceValue === option.textContent)) {
+              option.selected = true;
+            }
+            selectElement.appendChild(option);
+          }
+
+          choiceInfoDiv.appendChild(selectElement);
+        }
+
+        choiceSaleContainer.appendChild(choiceInfoDiv);
+
+        const saleChoiceDiv = document.createElement("div");
+        saleChoiceDiv.classList.add("choice__saleChoice");
+
+        const saleInfo__saleNumber = document.createElement("div");
+        saleInfo__saleNumber.classList.add("sale-infor");
+        const saleNumberInput = document.createElement("input");
+        saleNumberInput.type = "text";
+        saleNumberInput.id = "saleNumber";
+        saleNumberInput.name = "saleNumber";
+        saleNumberInput.placeholder = "Vd: 50";
+        saleNumberInput.required = true;
+        saleNumberInput.value = sale.sale.saleNumber;
+        const saleNumberLabel = document.createElement("label");
+        saleNumberLabel.for = "saleNumber";
+        saleNumberLabel.textContent = "Giảm giá:";
+        const saleNumberPercent = document.createElement("span");
+        saleNumberInput.value = sale.sale.saleNumber
+        saleNumberPercent.textContent = "%";
+        saleInfo__saleNumber.appendChild(saleNumberLabel);
+        saleInfo__saleNumber.appendChild(saleNumberInput);
+        saleInfo__saleNumber.appendChild(saleNumberPercent);
+
+
+        const saleInfo__startDate = document.createElement("div");
+        saleInfo__startDate.classList.add("sale-infor");
+        const startDateInput = document.createElement("input");
+        startDateInput.type = "datetime-local";
+        startDateInput.id = "startDate";
+        startDateInput.name = "startDate";
+        startDateInput.required = true;
+        startDateInput.value = new Date(sale.sale.startDate).toISOString().slice(0, 16)
+        const startDateLabel = document.createElement("label");
+        startDateLabel.for = "startDate";
+        startDateLabel.textContent = "Bắt đầu:";
+        saleInfo__startDate.appendChild(startDateLabel);
+        saleInfo__startDate.appendChild(startDateInput);
+
+        const saleInfo__endNumber = document.createElement("div");
+        saleInfo__endNumber.classList.add("sale-infor");
+        const toDateInput = document.createElement("input");
+        toDateInput.type = "datetime-local";
+        toDateInput.id = "toDate";
+        toDateInput.name = "toDate";
+        toDateInput.value = new Date(sale.sale.toDate).toISOString().slice(0, 16)
+        toDateInput.required = true;
+
+        const toDateLabel = document.createElement("label");
+        toDateLabel.for = "toDate";
+        toDateLabel.textContent = "Kết thúc:";
+        saleInfo__endNumber.appendChild(toDateLabel);
+        saleInfo__endNumber.appendChild(toDateInput);
+
+        saleChoiceDiv.appendChild(saleInfo__saleNumber);
+        saleChoiceDiv.appendChild(saleInfo__startDate);
+        saleChoiceDiv.appendChild(saleInfo__endNumber);
+
+
+        choiceSaleContainer.appendChild(saleChoiceDiv)
+        saleContainer.insertBefore(choiceSaleContainer, saleContainer.firstChild);
+
+        //image
+        selectedImages = Response.image;
+
+        //category
+        categoryOfProduct = Response.category
+      }
     } else if (xhttp.status == 204) {
 
     } else if (xhttp.status == 401) {

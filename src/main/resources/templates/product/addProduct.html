@@ -23,45 +23,44 @@
           <label for="priceNoChoice">Giá cả:</label>
           <input type="text" id="priceNoChoice" name="priceNoChoice" placeholder="Vd: 15000" required />
         </div>
-        <div>
-          <label for="description">Mô tả:</label>
-          <input type="text" id="description" name="description" placeholder="Đây là sản phẩm..." required />
-        </div>
-        <div class="categories">
-          <label for="category">Thể loại:</label>
+        <div class="category-dropdown">
+          <div class="category-header">
+            <span class="arrow">▼</span>
+            <label for="category">Thể loại:</label>
+          </div>
           <div class="category__tree" name="category__infor">
-            <div class="folder">
-              <label class="folder__label">
-                <input type="checkbox" class="folder__checkbox" />
+            <div class="category__tree__branch">
+              <label class="branch__label">
+                <input type="checkbox" class="branch__checkbox" />
                 Thư mục gốc
               </label>
-              <ul class="folder__list">
-                <li class="folder__item">
-                  <label class="folder__label">
-                    <input type="checkbox" class="folder__checkbox" />
+              <ul class="branch__list">
+                <li class="branch__item">
+                  <label class="branch__label">
+                    <input type="checkbox" class="branch__checkbox" />
                     Thư mục cấp 1
                   </label>
-                  <ul class="folder__list">
-                    <li class="folder__item">
-                      <label class="folder__label">
-                        <input type="checkbox" class="folder__checkbox" />
+                  <ul class="branch__list">
+                    <li class="branch__item">
+                      <label class="branch__label">
+                        <input type="checkbox" class="branch__checkbox" />
                         Thư mục cấp 2
                       </label>
-                      <ul class="folder__list">
-                        <li class="folder__item">
-                          <label class="folder__label">
-                            <input type="checkbox" class="folder__checkbox" />
+                      <ul class="branch__list">
+                        <li class="branch__item">
+                          <label class="branch__label">
+                            <input type="checkbox" class="branch__checkbox" />
                             Thư mục cấp 3
                           </label>
-                          <ul class="folder__list">
-                            <li class="folder__item">
-                              <label class="folder__label">
-                                <input type="checkbox" class="folder__checkbox" />
+                          <ul class="branch__list">
+                            <li class="branch__item">
+                              <label class="branch__label">
+                                <input type="checkbox" class="branch__checkbox" />
                                 Thư mục cấp 4
                               </label>
-                              <ul class="folder__list">
-                                <li class="folder__item">Tập tin 1</li>
-                                <li class="folder__item">Tập tin 2</li>
+                              <ul class="branch__list">
+                                <li class="branch__item">Tập tin 1</li>
+                                <li class="branch__item">Tập tin 2</li>
                                 <!-- Thêm tập tin khác nếu cần -->
                               </ul>
                             </li>
@@ -79,6 +78,11 @@
             </div>
           </div>
         </div>
+        
+        <div>
+          <label for="description">Mô tả:</label>
+          <textarea id="description" name="description" placeholder="Đây là sản phẩm..." required></textarea>
+        </div>
       </div>
 
       <div class="container__product__images">
@@ -87,59 +91,115 @@
         <input type="file" class="images_input" id="image-input" name="image" multiple />
       </div>
     </div>
-    <button id="showChoice" onclick="showFormChoice()">Thêm phân loại</button>
+    <div class="overlay" id="overlay">
+      <div class="overlay-content" id="overlay-content"></div>
+    </div>
+
+    <!-- Thêm phân loại -->
+    <button id="showChoice" onclick="showFormChoice()" class="addElement">Thêm phân loại</button>
+    <div id="choiceTitle" class="title">
+      <p>PHÂN LOẠI</p>
+    </div>
     <div id="choice" class="container__variant">
       <div class="container__variant__choice">
-        <label for="choiceName">Phân loại theo:</label>
-        <input type="text" id="choiceName" name="choiceName" placeholder="Vd: Màu Sắc" required />
+        <div class="choice__choiceInfo">
+          <div class="choice__choiceInfo__choiceName">
+            <input type="text" id="choiceName" name="choiceName" placeholder="Phân loại theo"
+              choiceName-data="1" required />
+          </div>
+          <div class="choice__choiceInfo__choiceValue">
+            <input type="text" name="choiceValue" placeholder="Giá trị phân loại" choiceValue-data="1"
+              required />
+          </div>
+        </div>
+        <div class="choice__addValue">
+          <button onclick="addChoiceValue(this)" class="plus-button">+</button>
+        </div>
       </div>
-      <div id="choiceValueForm" class="container__variant__choiceValue">
-        <div class="choiceValue__tabs">
-          <div class="tab-number-choiceValue">
-            <div id="choiceTabs">
-              <button onclick="goToChoiceValueTab(1)" class="active">Loại 1</button>
-            </div>
-            <button onclick="showFormChoiceValue()" class="active add-choice">
-              Thêm loại
-            </button>
-          </div>
-          <div id= "tabChoiceValueName" class="tab-name-choiceValue">
-            <label for="choiceValue">Loại:</label>
-            <input type="text" id="choiceValue" name="choiceValue" placeholder="Vd: Đỏ" required />
-            <label for="price">Giá cả:</label>
-            <input type="text" id="price" name="price" placeholder="Vd: 15000" required />
-          </div>
-        </div>
-        <div class="choiceValue__content">
-          <div id="sales" class="choiceValue__sale">
-            <div id="tabs" class="sale-tab">
-              <!-- <button onclick="goToPage(1)" class="activeSale" data-page="1">Mã giảm giá 0</button> -->
-            </div>
-            <div id="sale" class="sale-off">
-              <div class="sale-infor">
-                <label for="saleNumber">Phần trăm giảm giá:</label>
-                <input type="text" id="saleNumber" name="saleNumber" placeholder="Vd: 50" required />%
-              </div>
-              <div class="sale-date">
-                <label for="fromDate">Thời gian bắt đầu giảm giá:</label>
-                <input type="datetime-local" id="fromDate" name="fromDate" required />
-                <label for="toDate">Thời gian kết thúc giảm giá:</label>
-                <input type="datetime-local" id="toDate" name="toDate" required />
-              </div>
-            </div>
-          </div>
-          <div class="choiceValue__add">
-            <button onclick="showFormSale()">Thêm mã giảm giá</button>
-          </div>
-        </div>
+      
+      <div class="container__variant__addChoice">
+        <button id="addChoice" onclick="addFormChoice()" class="addElement">Thêm phân loại</button>
       </div>
     </div>
-    <div class="container__submit">
-      <button onclick="submit()">Sửa</button>
+
+    <!-- Thêm ngoại lệ -->
+    <button id="showExceptionForm" onclick="showExceptionForm()" class="addElement">Thêm ngoại lệ</button>
+    <div id="exceptionTitle" class="title">
+      <p>NGOẠI LỆ</p>
+    </div>
+    <div id="exception" class="container__exception">
+      <div class="container__exception__choice">
+        <div class="choice__choiceInfo">
+          <select class="select__exception">
+            <option disabled selected>--- Chọn màu sắc ---</option>
+            <option value="red">Đỏ</option>
+            <option value="blue">Xanh</option>
+            <option value="green">Lục</option>
+          </select>
+          <select class="select__exception">
+            <option disabled selected>--- Chọn chất liệu ---</option>
+            <option value="red">Vàng</option>
+            <option value="blue">Kim cương</option>
+          </select>
+        </div>
+        <div class="choice__addValue">
+          <input type="text" id="priceChoice" name="priceChoice" placeholder="Giá cả" required />
+          <button class="plus-button" onclick="addExceptionValue(this)">+</button>
+        </div>
+      </div>
+      <div class="container__variant__addChoice">
+        <button id="addExceptionForm" onclick="addExceptionForm()" class="addElement">Thêm ngoại lệ</button>
+      </div>
+    </div>
+
+    <!-- Thêm mã giảm giá -->
+    <button id="showSaleForm" onclick="showSaleForm()" class="addElement">Thêm mã giảm giá</button>
+    <div id="saleTitle" class="title">
+      <p>MÃ GIẢM GIÁ</p>
+    </div>
+    <div id="sale" class="container__sale">
+      <div class="container__sale__choice">
+        <div class="choice__choiceInfo">
+          <select class="selectedChoice">
+            <option disabled selected>--Màu sắc--</option>
+            <option value="red">Đỏ</option>
+            <option value="blue">Xanh</option>
+            <option value="green">Lục</option>
+          </select>
+          <select class="selectedChoice">
+            <option disabled selected>--Chất liệu--</option>
+            <option value="red">Vàng</option>
+            <option value="blue">Kim cương</option>
+          </select>
+        </div>
+        <div class="chocie__saleChocie">
+          <div class="sale-infor">
+            <label for="saleNumber">Giảm giá:</label>
+            <input type="text" id="saleNumber" name="saleNumber" placeholder="Vd: 50" required />%
+          </div>
+          <div class="sale-infor">
+            <label for="startDate">Bắt đầu:</label>
+            <input type="datetime-local" id="startDate" name="startDate" required />
+          </div>
+          <div class="sale-infor">
+            <label for="toDate">Kết thúc:</label>
+            <input type="datetime-local" id="toDate" name="toDate" required />
+          </div>
+        </div>
+        <div class="choice__addValue">
+          <button onclick="addSaleChoiceValue(this)" class="plus-button">+</button>
+        </div>
+      </div>
+      <div class="container__variant__addChoice">
+        <button id="showExceptionForm" onclick="addSaleForm()" class="addElement">Thêm mã giảm giá</button>
+      </div>
     </div>
   </div>
+  <div class="submit">
+    <button onclick="submit()">Sửa</button>
+  </div>
 </body>
-<script src="/js/addProduct.js"></script>
-<script src="/js/choice.js"></script>
+<script src="/js/editProduct.js"></script>
+<script src="/js/category_tree.js"></script>
 
 </html>
