@@ -614,8 +614,8 @@ function viewProduct() {
               choices: choices,
               sale: {
                 saleNumber: sale.numberSale,
-                startDate: new Date(sale.startDate[0], sale.startDate[1] - 1, sale.startDate[2], sale.startDate[3], sale.startDate[4], sale.startDate[5] ? sale.startDate[5] : 0),
-                toDate: new Date(sale.endDate[0], sale.endDate[1] - 1, sale.endDate[2], sale.endDate[3], sale.endDate[4], sale.endDate[5] ? sale.endDate[5] : 0)
+                startDate: new Date(sale.startDate),
+                toDate: new Date(sale.endDate)
               }
             });
           }
