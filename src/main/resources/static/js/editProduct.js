@@ -18,6 +18,39 @@ function init() {
   document.getElementById("sale").style.display = 'none'
 }
 
+function checkAndToggleChoiceVisibility() {
+  const containerChoice = document.querySelector('#choice .container__variant__choice');
+  const choiceContainer = document.querySelector('#choice');
+  if (containerChoice) {
+  } else {
+    choiceContainer.style.display = 'none';
+    document.getElementById("choiceTitle").style.display = 'none'
+    document.getElementById("showChoice").style.display = 'block'
+  }
+
+  const containerException = document.querySelector('#exception .container__exception__choice');
+  const exceptionContainer = document.querySelector('#exception');
+  if (containerException) {
+  } else {
+    exceptionContainer.style.display = 'none';
+    document.getElementById("exceptionTitle").style.display = 'none'
+    document.getElementById("showExceptionForm").style.display = 'block'
+  }
+
+  const containerSale = document.querySelector('#sale .container__sale__choice');
+  const saleContainer = document.querySelector('#sale');
+  if (containerSale) {
+  } else {
+    saleContainer.style.display = 'none';
+    document.getElementById("saleTitle").style.display = 'none'
+    document.getElementById("showSaleForm").style.display = 'block'
+  }
+
+}
+
+checkAndToggleChoiceVisibility();
+
+
 /* ----------------------------------------------XỬ LÝ CÂY---------------------------------------------- */
 var categoryData = [];
 const categoryTreeContainer = document.querySelector('.category__tree');
@@ -30,6 +63,7 @@ function categories() {
     if (xhttp.status === 200) {
       categoryData = Response;
       renderCategoryTree(categoryData, categoryTreeContainer);
+      tickCategoryInTree(categoryOfProduct)
     } else {
       // Handle error
     }
@@ -39,34 +73,31 @@ function categories() {
   xhttp.send();
 }
 
+
 function createCategoryNode(category) {
   const node = document.createElement("div");
   node.className = "category__tree__branch";
 
-  const label = document.createElement("label");
-  label.className = "branch__label";
-
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
   checkbox.className = "branch__checkbox";
-  checkbox.setAttribute("categoryId", category.id);
+  checkbox.setAttribute("categoryid", category.id);
 
   checkbox.addEventListener("change", function () {
-    if (checkbox.checked == true){
-      toggleParentCheckboxes(node, checkbox.checked); 
-      checkbox.checked = true; 
-    }
-    else{
+    if (checkbox.checked) {
+      toggleParentCheckboxes(node, true);
+    } else {
       toggleChildrenCheckboxes(node, false);
-      checkbox.checked = false; 
+      toggleParentCheckboxes(node, true);
+      checkbox.checked = false
     }
-    
-    
   });
+
+  const label = document.createElement("label");
+  label.className = "branch__label";
 
   const text = document.createTextNode(category.categoryName);
 
-  label.appendChild(checkbox);
   label.appendChild(text);
 
   if (category.children.length > 0) {
@@ -80,6 +111,7 @@ function createCategoryNode(category) {
     label.appendChild(arrow);
   }
 
+  node.appendChild(checkbox);
   node.appendChild(label);
 
   if (category.children.length > 0) {
@@ -131,22 +163,19 @@ function renderCategoryTree(data, container) {
 
 categories();
 
-//------------------ tick các category cũ
-function checkCategoryInTree(node, categoryId) {
-  const checkbox = node.querySelector(`input[categoryid="${categoryId}"]`);
-  if (checkbox) {
-    checkbox.checked = true;
-  }
-}
 
-function checkCategoriesInTree(data) {
-  data.forEach(category => {
-    checkCategoryInTree(categoryTreeContainer, category.id);
-    checkCategoriesInTree(category.children);
+
+//------------------ tick các category cũ
+
+function tickCategoryInTree(categories) {
+
+  categories.forEach(category => {
+    document.querySelector(`.branch__checkbox[categoryid="${category.id}"]`).checked = true
+    if (category.children.length > 0) {
+      tickCategoryInTree(category.children);
+    }
   });
 }
-
-checkCategoriesInTree(categoryOfProduct);
 
 
 /* ----------------------------------------------XỬ LÝ ẢNH---------------------------------------------- */
@@ -201,7 +230,6 @@ function removeMedia(url) {
   if (index !== -1) {
     selectedImages.splice(index, 1);
   }
-  console.log(selectedImages)
 }
 
 overlay.addEventListener('click', () => {
@@ -220,7 +248,6 @@ imageInput.addEventListener('change', (event) => {
       selectedImagesContainer.appendChild(imageElement);
     }
   }
-  console.log(selectedImages)
 
   event.target.value = null;
 });
@@ -258,11 +285,15 @@ function addFormChoice() {
               choiceName-data="${choiceName_index}" required />
           </div>
           <div class="choice__choiceInfo__choiceValue">
-              <input type="text" name="choiceValue" placeholder="Giá trị" choiceValue-data="1" required value="${previousInputValue}" />
+            <div class="input-container">
+              <input type="text" name="choiceValue" class="choice-value-input" placeholder="Giá trị" required="">
+              <button onclick="removeValue(this)">x</button>
+            </div>
           </div>
       </div>
       <div class="choice__addValue">
           <button onclick="addChoiceValue(this)" class="plus-button">+</button>
+          <button onclick="removeChoiceContainer(this)" class="remove-button">x</button>
       </div>
   `;
 
@@ -271,19 +302,52 @@ function addFormChoice() {
 
 function addChoiceValue(button) {
   var choiceValueHTML = button.parentNode.previousElementSibling.querySelector(".choice__choiceInfo__choiceValue");
-  var inputElements = choiceValueHTML.getElementsByTagName("input");
-  var choiceValue_index = inputElements.length + 1;
+  const newInputContainer = document.createElement('div');
+  newInputContainer.classList.add('input-container');
 
-  var newChoiceValueInput = document.createElement("input");
-  newChoiceValueInput.type = "text";
-  newChoiceValueInput.name = "choiceValue";
-  newChoiceValueInput.placeholder = "Giá trị";
-  newChoiceValueInput.setAttribute("choiceValue-data", choiceValue_index);
+  const newChoiceValueInput = document.createElement('input');
+  newChoiceValueInput.type = 'text';
+  newChoiceValueInput.name = 'choiceValue';
+  newChoiceValueInput.classList.add('choice-value-input');
+  newChoiceValueInput.placeholder = 'Giá trị';
   newChoiceValueInput.required = true;
 
-  choiceValueHTML.appendChild(newChoiceValueInput);
+  const removeButton = document.createElement('button');
+  removeButton.textContent = 'x';
+  removeButton.addEventListener('click', function () {
+    newInputContainer.remove();
+  });
+
+  newInputContainer.appendChild(newChoiceValueInput);
+  newInputContainer.appendChild(removeButton);
+
+
+  choiceValueHTML.appendChild(newInputContainer);
 }
 
+function removeChoiceContainer(button) {
+  const container = button.closest('.container__variant__choice');
+  if (container) {
+    container.remove();
+    checkAndToggleChoiceVisibility();
+  }
+}
+
+function removeValue(button) {
+  const container = button.closest('.input-container');
+  if (container) {
+    container.remove();
+    checkAndToggleChoiceVisibility();
+  }
+  const choiceValueContainer = document.querySelector('.choice__choiceInfo__choiceValue');
+  if (choiceValueContainer && choiceValueContainer.innerHTML.trim() === '') {
+    const choiceInfoContainer = choiceValueContainer.closest('.choice__choiceInfo');
+    if (choiceInfoContainer) {
+      choiceInfoContainer.remove();
+    }
+  }
+
+};
 
 /* ----------------------------------------------XỬ LÝ NGOẠI LỆ---------------------------------------------- */
 function showExceptionForm() {
@@ -323,21 +387,11 @@ function createExceptionElement() {
 
   var addValueDiv = document.createElement("div");
   addValueDiv.classList.add("choice__addValue");
-  var priceInput = document.createElement("input");
-  priceInput.type = "text";
-  priceInput.id = "priceChoice";
-  priceInput.name = "priceChoice";
-  priceInput.placeholder = "Giá cả";
-  priceInput.required = true;
-  addValueDiv.appendChild(priceInput);
 
-  // var addButton = document.createElement("button");
-  // addButton.textContent = "+";
-  // addButton.classList.add("plus-button");
-  // addButton.onclick = function () {
-  //   addExceptionValue(addButton);
-  // };
-  // addValueDiv.appendChild(addButton);
+  var removeButtonHTML = `
+  <input type="text" name="priceChoice" placeholder="Giá cả" required="">
+  <button class="remove-button" onclick="removeExceptionContainer(this)">x</button>`;
+  addValueDiv.innerHTML = removeButtonHTML;
 
   exceptionDiv.appendChild(choiceInfoDiv);
   exceptionDiv.appendChild(addValueDiv);
@@ -374,7 +428,13 @@ function addExceptionValue(button) {
   }
 }
 
-
+function removeExceptionContainer(button) {
+  const container = button.closest('.container__exception__choice');
+  if (container) {
+    container.remove();
+    checkAndToggleChoiceVisibility();
+  }
+}
 /* ----------------------------------------------XỬ LÝ MÃ GIẢM GIÁ---------------------------------------------- */
 
 function showSaleForm() {
@@ -390,32 +450,28 @@ function createSaleElement() {
   var choiceInfoDiv = document.createElement("div");
   choiceInfoDiv.classList.add("choice__choiceInfo");
 
-  var selectDiv1 = document.createElement("div");
-  selectDiv1.classList.add("select__exception");
-  var select1 = document.createElement("select");
-  select1.innerHTML = `
-      <option disabled selected>--Màu sắc--</option>
-      <option value="red">Đỏ</option>
-      <option value="blue">Xanh</option>
-      <option value="green">Lục</option>
-  `;
-  selectDiv1.appendChild(select1);
+  for (var j = 0; j < choiceList.length; j++) {
+    var choice = choiceList[j];
+    var selectElement = document.createElement('select');
+    selectElement.classList.add('select__exception');
+    var optionAll = document.createElement('option');
+    optionAll.setAttribute('all', 'true');
+    optionAll.selected = true;
+    optionAll.textContent = `Mọi ${choice.choiceName}`;
+    selectElement.appendChild(optionAll);
 
-  var selectDiv2 = document.createElement("div");
-  selectDiv2.classList.add("select__exception");
-  var select2 = document.createElement("select");
-  select2.innerHTML = `
-      <option disabled selected>--Chất liệu--</option>
-      <option value="red">Vàng</option>
-      <option value="blue">Kim cương</option>
-  `;
-  selectDiv2.appendChild(select2);
+    for (var k = 0; k < choice.choiceValues.length; k++) {
+      var option = document.createElement('option');
+      option.textContent = choice.choiceValues[k];
+      selectElement.appendChild(option);
+    }
 
-  choiceInfoDiv.appendChild(selectDiv1);
-  choiceInfoDiv.appendChild(selectDiv2);
+    choiceInfoDiv.appendChild(selectElement);
+  }
+
 
   var saleChoiceDiv = document.createElement("div");
-  saleChoiceDiv.classList.add("choice__salechoice");
+  saleChoiceDiv.classList.add("choice__saleChoice");
 
   var saleNumberDiv = document.createElement("div");
   saleNumberDiv.classList.add("sale-infor");
@@ -424,7 +480,6 @@ function createSaleElement() {
   saleNumberLabel.textContent = "Giảm giá:";
   var saleNumberInput = document.createElement("input");
   saleNumberInput.type = "text";
-  saleNumberInput.id = "saleNumber";
   saleNumberInput.name = "saleNumber";
   saleNumberInput.placeholder = "Vd: 50";
   saleNumberInput.required = true;
@@ -441,7 +496,6 @@ function createSaleElement() {
   startDateLabel.textContent = "Bắt đầu:";
   var startDateInput = document.createElement("input");
   startDateInput.type = "datetime-local";
-  startDateInput.id = "startDate";
   startDateInput.name = "startDate";
   startDateInput.required = true;
   startDateDiv.appendChild(startDateLabel);
@@ -454,7 +508,6 @@ function createSaleElement() {
   toDateLabel.textContent = "Kết thúc:";
   var toDateInput = document.createElement("input");
   toDateInput.type = "datetime-local";
-  toDateInput.id = "toDate";
   toDateInput.name = "toDate";
   toDateInput.required = true;
   toDateDiv.appendChild(toDateLabel);
@@ -464,46 +517,32 @@ function createSaleElement() {
   saleChoiceDiv.appendChild(startDateDiv);
   saleChoiceDiv.appendChild(toDateDiv);
 
-  // var addValueDiv = document.createElement("div");
-  // addValueDiv.classList.add("choice__addValue");
-  // var addButton = document.createElement("button");
-  // addButton.textContent = "+";
-  // addButton.onclick = function () {
-  //   addSaleChoiceValue(addValueDiv);
-  // };
-  // addButton.classList.add("plus-button");
-  // addValueDiv.appendChild(addButton);
+  var removeValueDiv = document.createElement("div");
+  removeValueDiv.classList.add("choice__addValue");
+  var removeButtonHTML = '<button class="remove-button" onclick="removeSaleContainer(this)">x</button>';
+  removeValueDiv.innerHTML = removeButtonHTML;
+
 
   saleDiv.appendChild(choiceInfoDiv);
   saleDiv.appendChild(saleChoiceDiv);
-  saleDiv.appendChild(addValueDiv);
+  saleDiv.appendChild(removeValueDiv);
 
   return saleDiv;
 }
+
 
 function addSaleForm() {
   var saleHTML = document.getElementById("sale");
   var newSaleElement = createSaleElement();
   saleHTML.insertBefore(newSaleElement, saleHTML.lastElementChild);
 }
-
-function addSaleChoiceValue(button) {
-  var parentSaleDiv = button.closest(".container__sale__choice");
-
-  var selectElement = document.createElement("select");
-  selectElement.classList.add("select__exception");
-  selectElement.innerHTML = `
-      <option disabled selected>--- Chọn màu sắc ---</option>
-      <option value="red">Đỏ</option>
-      <option value="blue">Xanh</option>
-      <option value="green">Lục</option>
-  `;
-
-  var choiceInfoDiv = parentSaleDiv.querySelector(".choice__choiceInfo");
-  choiceInfoDiv.appendChild(selectElement);
+function removeSaleContainer(button) {
+  const container = button.closest('.container__sale__choice');
+  if (container) {
+    container.remove();
+    checkAndToggleChoiceVisibility();
+  }
 }
-
-
 
 /* ----------------------------------------------XỬ LÝ REQUEST HIỂN THỊ THÔNG TIN CŨ SẢN PHẨM---------------------------------------------- */
 
@@ -575,8 +614,8 @@ function viewProduct() {
               choices: choices,
               sale: {
                 saleNumber: sale.numberSale,
-                startDate: new Date(sale.startDate),
-                toDate: new Date(sale.endDate)
+                startDate: new Date(sale.startDate[0], sale.startDate[1] - 1, sale.startDate[2], sale.startDate[3], sale.startDate[4], sale.startDate[5] ? sale.startDate[5] : 0),
+                toDate: new Date(sale.endDate[0], sale.endDate[1] - 1, sale.endDate[2], sale.endDate[3], sale.endDate[4], sale.endDate[5] ? sale.endDate[5] : 0)
               }
             });
           }
@@ -586,10 +625,7 @@ function viewProduct() {
       saleList.sort((a, b) => a.sale.startDate - b.sale.startDate);
 
 
-      //result
-      console.log(choiceList)
-      console.log(variantList)
-      console.log(saleList)
+
 
 
       //display
@@ -605,7 +641,6 @@ function viewProduct() {
       description.value = Response.description;
 
       //product_image
-      console.log(Response.image)
       for (var i = 0; i < Response.image.length; i++) {
         const mediaElement = createImageElement(Response.image[i].url, Response.image[i].type);
         selectedImagesContainer.appendChild(mediaElement);
@@ -641,15 +676,39 @@ function viewProduct() {
         const choiceValueDiv = document.createElement('div');
         choiceValueDiv.classList.add('choice__choiceInfo__choiceValue');
         for (var j = 0; j < choice.choiceValues.length; j++) {
-          const choiceValueInput = document.createElement('input');
-          choiceValueInput.type = 'text';
-          choiceValueInput.name = 'choiceValue';
-          choiceValueInput.id = "choiceValueElement";
-          choiceValueInput.placeholder = 'Giá trị phân loại';
-          choiceValueInput.value = choice.choiceValues[j]
-          choiceValueInput.setAttribute('choiceValue-data', (j + 1));
-          choiceValueInput.required = true;
-          choiceValueDiv.appendChild(choiceValueInput);
+          const newInputContainer = document.createElement('div');
+          newInputContainer.classList.add('input-container');
+
+          const newChoiceValueInput = document.createElement('input');
+          newChoiceValueInput.type = 'text';
+          newChoiceValueInput.name = 'choiceValue';
+          newChoiceValueInput.classList.add('choice-value-input');
+          newChoiceValueInput.placeholder = 'Giá trị';
+          newChoiceValueInput.value = choice.choiceValues[j];
+          newChoiceValueInput.required = true;
+
+          const removeButton = document.createElement('button');
+          removeButton.textContent = 'x';
+          removeButton.addEventListener('click', function () {
+            const choiceInfo = removeButton.closest('.choice__choiceInfo');
+            newInputContainer.remove();
+            if (choiceInfo) {
+              const choiceValue = choiceInfo.querySelector('.choice__choiceInfo__choiceValue');
+
+              if (choiceValue.textContent.trim() === "") {
+                const container = choiceInfo.closest('.container__variant__choice');
+                if (container) {
+                  container.remove();
+                  checkAndToggleChoiceVisibility();
+                }
+              }
+            }
+
+          });
+
+          newInputContainer.appendChild(newChoiceValueInput);
+          newInputContainer.appendChild(removeButton);
+          choiceValueDiv.appendChild(newInputContainer);
         }
         choiceDiv.appendChild(choiceValueDiv);
 
@@ -657,7 +716,8 @@ function viewProduct() {
         addChoiceDiv.className = "choice__addValue"
         addChoiceDiv.innerHTML = `
             <button onclick="addChoiceValue(this)" class="plus-button">+</button>
-        `;
+            <button onclick="removeChoiceContainer(this)" class="remove-button">x</button>
+            `;
 
         choiceWrapper.appendChild(choiceDiv);
         choiceWrapper.appendChild(addChoiceDiv);
@@ -703,20 +763,15 @@ function viewProduct() {
 
         choiceExceptionContainer.appendChild(choiceInfoDiv);
 
-        var priceInput = document.createElement('input');
-        priceInput.type = 'text';
-        priceInput.id = 'priceChoice';
-        priceInput.name = 'priceChoice';
-        priceInput.placeholder = 'Giá cả';
-        priceInput.value = variant.price;
-        priceInput.required = true;
+        var addValueDiv = document.createElement("div");
+        addValueDiv.classList.add("choice__addValue");
 
-        var addValueDiv = document.createElement('div');
-        addValueDiv.classList.add('choice__addValue');
-        addValueDiv.appendChild(priceInput);
+        var removeButtonHTML = `
+          <input type="text" name="priceChoice" placeholder="Giá cả" value="${variant.price}" required="">
+          <button class="remove-button" onclick="removeExceptionContainer(this)">x</button>`;
+        addValueDiv.innerHTML = removeButtonHTML;
 
         choiceExceptionContainer.appendChild(addValueDiv);
-
         exceptionContainer.insertBefore(choiceExceptionContainer, exceptionContainer.firstChild);
       }
 
@@ -764,7 +819,6 @@ function viewProduct() {
         saleInfo__saleNumber.classList.add("sale-infor");
         const saleNumberInput = document.createElement("input");
         saleNumberInput.type = "text";
-        saleNumberInput.id = "saleNumber";
         saleNumberInput.name = "saleNumber";
         saleNumberInput.placeholder = "Vd: 50";
         saleNumberInput.required = true;
@@ -784,7 +838,6 @@ function viewProduct() {
         saleInfo__startDate.classList.add("sale-infor");
         const startDateInput = document.createElement("input");
         startDateInput.type = "datetime-local";
-        startDateInput.id = "startDate";
         startDateInput.name = "startDate";
         startDateInput.required = true;
         startDateInput.value = new Date(sale.sale.startDate).toISOString().slice(0, 16)
@@ -798,7 +851,6 @@ function viewProduct() {
         saleInfo__endNumber.classList.add("sale-infor");
         const toDateInput = document.createElement("input");
         toDateInput.type = "datetime-local";
-        toDateInput.id = "toDate";
         toDateInput.name = "toDate";
         toDateInput.value = new Date(sale.sale.toDate).toISOString().slice(0, 16)
         toDateInput.required = true;
@@ -814,7 +866,14 @@ function viewProduct() {
         saleChoiceDiv.appendChild(saleInfo__endNumber);
 
 
-        choiceSaleContainer.appendChild(saleChoiceDiv)
+        var removeValueDiv = document.createElement("div");
+        removeValueDiv.classList.add("choice__addValue");
+        var removeButtonHTML = '<button class="remove-button" onclick="removeSaleContainer(this)">x</button>';
+        removeValueDiv.innerHTML = removeButtonHTML;
+
+        choiceSaleContainer.appendChild(saleChoiceDiv);
+        choiceSaleContainer.appendChild(removeValueDiv);
+
         saleContainer.insertBefore(choiceSaleContainer, saleContainer.firstChild);
 
         //image
@@ -822,6 +881,7 @@ function viewProduct() {
 
         //category
         categoryOfProduct = Response.category
+
       }
     } else if (xhttp.status == 204) {
 
@@ -842,5 +902,15 @@ function viewProduct() {
   xhttp.setRequestHeader("Authorization", authorization);
   xhttp.send();
 }
+
+
+
+
+//result of old product
+console.log(choiceList)
+console.log(variantList)
+console.log(saleList)
+console.log(selectedImages)
+console.log(categoryOfProduct)
 
 /* ----------------------------------------------XỬ LÝ REQUEST SỬA SẢN PHẨM---------------------------------------------- */

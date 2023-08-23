@@ -217,8 +217,8 @@ input:focus, select,
 
 
 .choice__choiceInfo {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   align-items: center; 
   border-radius: 5px;
   justify-content: flex-start;
@@ -233,10 +233,44 @@ input:focus, select,
   gap: 15px;
 }
 
+.choice__choiceInfo .choice__choiceInfo__choiceValue{
+  display: flex;
+  flex-direction: row;
+}
+
 .choice__choiceInfo .choice__choiceInfo__choiceValue input{
   margin-left: 10px;
-  width: 70px;
+  width: 90px;
 }
+
+.input-container {
+  position: relative;
+}
+
+.input-container input {
+  padding-right: 30px; /* Để nhường chỗ cho nút x */
+}
+
+.input-container button {
+  position: absolute;
+  top: -5px;
+  right: 0;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: none;
+  border-radius: 50%;
+  background-color: #f02a10;
+  color: #fcf7f6;
+  font-weight: bold;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: border-color 0.3s ease-in-out;
+}
+
+
 
 .choice__choiceInfo .choice__choiceInfo__choiceName{
   margin-right: 20px;
@@ -253,6 +287,14 @@ input:focus, select,
 }
 
 
+
+.choice-value-input {
+  flex: 1;
+  padding: 5px;
+  margin-right: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
 
 .plus-button {
   display: inline-block;
@@ -276,7 +318,7 @@ input:focus, select,
   color: #fff;
 }
 
-/* .delete-button {
+.remove-button {
   display: inline-block;
   width: 40px;
   height: 40px;
@@ -293,10 +335,10 @@ input:focus, select,
 }
 
 
-.delete-button:hover {
+.remove-button:hover {
   background-color: #e01313;
   color: #fff;
-} */
+}
 
 .sale-infor label,
 .sale-date label {
@@ -325,6 +367,8 @@ input:focus, select,
   background-color: #007bff;
   color: #fff;
 }
+
+
 
 .tab-name-choiceValue label {
   display: block;
@@ -359,11 +403,12 @@ input:focus, select,
   row-gap: 10px;
 }
 
-.sale-date input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+.sale-date, input[name="startDate"], input[name="toDate"]{
+  width: fit-content;
+}
+
+input[name="saleNumber"]{
+  width: 100px;
 }
 
 .container__variant__choiceValue .choiceValue__content .choiceValue__add button {
@@ -397,16 +442,22 @@ input:focus, select,
   transition: border-color 0.3s ease-in-out;
 }
 
+.category__tree__branch input{
+  display: inline-block;
+}
+
 .category-header {
   display: flex;
   align-items: center;
   cursor: pointer;
 }
 
+
 .arrow {
-  margin-right: 10px;
   display: inline;
   transition: transform 0.2s;
+  margin-left: 15px;
+  cursor: pointer;
 }
 
 .open .arrow {
@@ -424,6 +475,15 @@ input:focus, select,
   padding-left: 15px;
 }
 
+.branch__label {
+  display: inline-block!important;
+}
+.branch__checkbox {
+  vertical-align: initial;
+    margin-right: 10px;
+}
+
+
 .branch__item {
   margin-bottom: 5px;
 }
@@ -439,6 +499,15 @@ input:focus, select,
   font-style: italic;
 }
 
+.branch__label:hover span{
+  box-shadow: 0 0 5px rgba(18, 235, 144, 0.3);
+  transition: box-shadow 0.3s ease-in-out;
+}
+
+.branch__label:hover input {
+  box-shadow: 0 0 5px rgba(81, 103, 230, 0.3);
+  transition: box-shadow 0.3s ease-in-out;
+}
 
 /*--------------------------Submit button----------------------------*/
 
