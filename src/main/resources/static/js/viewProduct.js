@@ -61,7 +61,7 @@ function viewProduct(){
             }
         }
         
-        xhttp.open("GET", "http://localhost:8080/api/v1.0/Products", false);
+        xhttp.open("GET", "http://26.127.173.194:8080/api/v1.0/Products", false);
         
         xhttp.setRequestHeader("Content-type", "application/json");
         token = localStorage.getItem("Token");

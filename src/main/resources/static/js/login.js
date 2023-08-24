@@ -54,7 +54,7 @@ function login() {
         password: passwordInput.value
     };
     postData = JSON.stringify(userInfo);
-    xhttp.open("POST", "http://localhost:8080/Api/v1.0/Login", false);
+    xhttp.open("POST", "http://26.127.173.194:8080/Api/v1.0/Login", false);
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send(postData);
 }

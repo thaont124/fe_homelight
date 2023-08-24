@@ -521,7 +521,8 @@ input[name="saleNumber"]{
   margin-top: 20px;
 }
 
-.submit button {
+
+.submit button, button[type="submit"] {
   padding: 10px 20px;
   font-size: 16px;
   background-color: #007bff;
@@ -532,7 +533,7 @@ input[name="saleNumber"]{
   cursor: pointer;
 }
 
-.submit button:hover {
+.submit button, button[type="submit"] :hover {
   background-color: #0056b3;
 }
 

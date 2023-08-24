@@ -69,7 +69,7 @@ function categories() {
       // Handle error
     }
   };
-  xhttp.open("GET", "http://localhost:8080/api/v1.0/Categories", true);
+  xhttp.open("GET", "http://26.127.173.194:8080/api/v1.0/Categories", true);
   xhttp.setRequestHeader("Content-type", "application/json");
   xhttp.send();
 }
@@ -320,8 +320,34 @@ function displayChoice() {
             }
           }
         }
-        choiceList = extractChoiceList();
+        choiceList = extractChoiceList()
+        variantList = extractExceptions()
+        saleList = extractSaleList()
+        console.log("lấy từ html")
         console.log(choiceList);
+        console.log(variantList);
+        console.log(saleList);
+
+        variantList = filterVariantsByChoiceList(variantList, choiceList)
+        saleList = filterSalesByChoiceList(saleList, choiceList)
+
+        console.log("sau khi filter")
+        console.log(choiceList);
+        console.log(variantList);
+        console.log(saleList);
+
+        document.getElementById('sale').innerHTML = `<div class="container__variant__addChoice">
+          <button id="showExceptionForm" onclick="addSaleForm()" class="addElement">Thêm mã giảm giá</button>
+        </div>`
+        document.getElementById('exception').innerHTML = `<div class="container__variant__addChoice">
+          <button id="addExceptionForm" onclick="addExceptionForm()" class="addElement">Thêm ngoại lệ</button>
+        </div>`
+
+        displayException()
+        displaySale()
+        
+
+
       });
 
       newInputContainer.appendChild(newChoiceValueInput);
@@ -399,6 +425,27 @@ function addChoiceValue(button) {
   removeButton.textContent = 'x';
   removeButton.addEventListener('click', function () {
     newInputContainer.remove();
+    choiceList = extractChoiceList()
+    variantList = extractExceptions()
+    saleList = extractSaleList()
+
+    variantList = filterVariantsByChoiceList(variantList, choiceList)
+    saleList = filterSalesByChoiceList(saleList, choiceList)
+
+    document.getElementById('sale').innerHTML = `<div class="container__variant__addChoice">
+      <button id="showExceptionForm" onclick="addSaleForm()" class="addElement">Thêm mã giảm giá</button>
+    </div>`
+    document.getElementById('exception').innerHTML = `<div class="container__variant__addChoice">
+      <button id="addExceptionForm" onclick="addExceptionForm()" class="addElement">Thêm ngoại lệ</button>
+    </div>`
+
+    displayException()
+    displaySale()
+
+    console.log(choiceList);
+    console.log(variantList);
+    console.log(saleList);
+    console.log(choiceList);
   });
 
   newInputContainer.appendChild(newChoiceValueInput);
@@ -413,6 +460,19 @@ function removeChoiceContainer(button) {
   if (container) {
     container.remove();
     checkAndToggleChoiceVisibility();
+    choiceList = extractChoiceList()
+    variantList = extractExceptions()
+    saleList = extractSaleList()
+
+    variantList = filterVariantsByChoiceList(variantList, choiceList)
+    displayException()
+
+    saleList = filterSalesByChoiceList(saleList, choiceList)
+    displaySale()
+
+    console.log(choiceList);
+    console.log(variantList);
+    console.log(saleList);
   }
 }
 
@@ -429,6 +489,22 @@ function removeValue(button) {
       choiceInfoContainer.remove();
     }
   }
+  choiceList = extractChoiceList()
+  variantList = extractExceptions()
+  saleList = extractSaleList()
+
+  variantList = filterVariantsByChoiceList(variantList, choiceList)
+  saleList = filterSalesByChoiceList(saleList, choiceList)
+
+  document.getElementById('sale').innerHTML = `<div class="container__variant__addChoice">
+      <button id="showExceptionForm" onclick="addSaleForm()" class="addElement">Thêm mã giảm giá</button>
+    </div>`
+  document.getElementById('exception').innerHTML = `<div class="container__variant__addChoice">
+      <button id="addExceptionForm" onclick="addExceptionForm()" class="addElement">Thêm ngoại lệ</button>
+    </div>`
+
+  displayException()
+  displaySale()
 
 };
 
@@ -465,52 +541,61 @@ function showExceptionForm() {
 
 function displayException() {
   var exceptionContainer = document.getElementById('exception');
-
-  if (variantList.length > 1) {
+  var commonPrice = document.getElementById('priceNoChoice').value;
+  if (variantList.length > 0) {
     showExceptionForm()
+  } else {
+    exceptionContainer.innerHTML = `
+        <div class="container__variant__addChoice">
+          <button id="addExceptionForm" onclick="addExceptionForm()" class="addElement">Thêm ngoại lệ</button>
+        </div>`
+    checkAndToggleChoiceVisibility()
   }
-  for (var i = 1; i < variantList.length; i++) {
+  for (var i = 0; i < variantList.length; i++) {
     var variant = variantList[i];
-    var choiceExceptionContainer = document.createElement('div');
-    choiceExceptionContainer.classList.add('container__exception__choice');
+    if (variant.price != commonPrice) {
+      var choiceExceptionContainer = document.createElement('div');
+      choiceExceptionContainer.classList.add('container__exception__choice');
 
-    var choiceInfoDiv = document.createElement('div');
-    choiceInfoDiv.classList.add('choice__choiceInfo');
+      var choiceInfoDiv = document.createElement('div');
+      choiceInfoDiv.classList.add('choice__choiceInfo');
 
-    for (var j = 0; j < choiceList.length; j++) {
-      var choice = choiceList[j];
-      var selectElement = document.createElement('select');
-      selectElement.classList.add('select__exception');
-      var optionAll = document.createElement('option');
-      optionAll.setAttribute('all', 'true');
-      optionAll.selected = true;
-      optionAll.textContent = `Mọi ${choice.choiceName}`;
-      selectElement.appendChild(optionAll);
+      for (var j = 0; j < choiceList.length; j++) {
+        var choice = choiceList[j];
+        var selectElement = document.createElement('select');
+        selectElement.classList.add('select__exception');
+        selectElement.setAttribute('choiceName', choice.choiceName);
+        var optionAll = document.createElement('option');
+        optionAll.setAttribute('all', 'true');
+        optionAll.selected = true;
+        optionAll.textContent = `Mọi ${choice.choiceName}`;
+        selectElement.appendChild(optionAll);
 
-      for (var k = 0; k < choice.choiceValues.length; k++) {
-        var option = document.createElement('option');
-        option.textContent = choice.choiceValues[k];
-        if (variant.choices[0].find(c => c.choiceName === choice.choiceName && c.choiceValue === option.textContent)) {
-          option.selected = true;
+        for (var k = 0; k < choice.choiceValues.length; k++) {
+          var option = document.createElement('option');
+          option.textContent = choice.choiceValues[k];
+          if (variant.choices[0].find(c => c.choiceName === choice.choiceName && c.choiceValue === option.textContent)) {
+            option.selected = true;
+          }
+          selectElement.appendChild(option);
         }
-        selectElement.appendChild(option);
+
+        choiceInfoDiv.appendChild(selectElement);
       }
 
-      choiceInfoDiv.appendChild(selectElement);
-    }
+      choiceExceptionContainer.appendChild(choiceInfoDiv);
 
-    choiceExceptionContainer.appendChild(choiceInfoDiv);
+      var addValueDiv = document.createElement("div");
+      addValueDiv.classList.add("choice__addValue");
 
-    var addValueDiv = document.createElement("div");
-    addValueDiv.classList.add("choice__addValue");
-
-    var removeButtonHTML = `
+      var removeButtonHTML = `
           <input type="text" name="priceChoice" placeholder="Giá cả" value="${variant.price}" required="">
           <button class="remove-button" onclick="removeExceptionContainer(this)">x</button>`;
-    addValueDiv.innerHTML = removeButtonHTML;
+      addValueDiv.innerHTML = removeButtonHTML;
 
-    choiceExceptionContainer.appendChild(addValueDiv);
-    exceptionContainer.insertBefore(choiceExceptionContainer, exceptionContainer.firstChild);
+      choiceExceptionContainer.appendChild(addValueDiv);
+      exceptionContainer.insertBefore(choiceExceptionContainer, exceptionContainer.firstChild);
+    }
   }
 }
 
@@ -528,6 +613,7 @@ function createExceptionElement() {
     var choice = choiceList[j];
     var selectElement = document.createElement('select');
     selectElement.classList.add('select__exception');
+    selectElement.setAttribute('choiceName', choice.choiceName);
     var optionAll = document.createElement('option');
     optionAll.setAttribute('all', 'true');
     optionAll.selected = true;
@@ -571,6 +657,7 @@ function addExceptionValue(button) {
     var selectElement = document.createElement('select');
     selectElement.classList.add('select__exception');
     var optionAll = document.createElement('option');
+    selectElement.setAttribute('choiceName', choice.choiceName);
     optionAll.setAttribute('all', 'true');
     optionAll.selected = true;
     optionAll.textContent = `Mọi ${choice.choiceName}`;
@@ -591,9 +678,52 @@ function removeExceptionContainer(button) {
   if (container) {
     container.remove();
     checkAndToggleChoiceVisibility();
-    extractChoiceList();
   }
 }
+
+function filterVariantsByChoiceList(variants, choices) {
+  if (variants.length == 0) {
+    return [];
+  }
+  const newVariantList = variants.filter(variant => {
+    return variant.choices.every(choice => {
+      return choices.some(c =>
+        c.choiceName === choice.choiceName && c.choiceValues.includes(choice.choiceValue)
+      );
+    });
+  });
+
+  return newVariantList;
+}
+
+function extractExceptions() {
+  const saleList = [];
+
+  const exceptionContainers = document.querySelectorAll('.container__exception__choice');
+
+  exceptionContainers.forEach(exceptionContainer => {
+    const choiceInfo = exceptionContainer.querySelector('.choice__choiceInfo');
+    const selectElements = choiceInfo.querySelectorAll('select.select__exception');
+    const choices = Array.from(selectElements).map(select => ({
+      choiceName: select.getAttribute('choicename'),
+      choiceValue: select.value
+    }));
+
+    const addValueDiv = exceptionContainer.querySelector('.choice__addValue');
+    const price = addValueDiv.querySelector('input[name="priceChoice"]')
+
+    const sale = {
+      choices: choices,
+      price: price.value
+    };
+
+    saleList.push(sale);
+  });
+
+  return saleList;
+}
+
+
 /* ----------------------------------------------XỬ LÝ MÃ GIẢM GIÁ---------------------------------------------- */
 
 function showSaleForm() {
@@ -606,6 +736,11 @@ function displaySale() {
   var saleContainer = document.getElementById('sale');
   if (saleList.length > 0) {
     showSaleForm()
+  } else {
+    saleContainer.innerHTML = `<div class="container__variant__addChoice">
+      <button id="showExceptionForm" onclick="addSaleForm()" class="addElement">Thêm mã giảm giá</button>
+    </div>`
+    checkAndToggleChoiceVisibility()
   }
   for (var i = 0; i < saleList.length; i++) {
     var sale = saleList[i];
@@ -620,6 +755,7 @@ function displaySale() {
       var selectElement = document.createElement('select');
       selectElement.classList.add('select__exception');
       var optionAll = document.createElement('option');
+      selectElement.setAttribute('choiceName', choice.choiceName);
       optionAll.setAttribute('all', 'true');
       optionAll.selected = true;
       optionAll.textContent = `Mọi ${choice.choiceName}`;
@@ -655,7 +791,6 @@ function displaySale() {
     saleNumberLabel.textContent = "Giảm giá:";
     const saleNumberPercent = document.createElement("span");
     saleNumberInput.value = sale.sale.saleNumber
-    saleNumberPercent.textContent = "%";
     saleInfo__saleNumber.appendChild(saleNumberLabel);
     saleInfo__saleNumber.appendChild(saleNumberInput);
     saleInfo__saleNumber.appendChild(saleNumberPercent);
@@ -720,6 +855,7 @@ function createSaleElement() {
     selectElement.classList.add('select__exception');
     var optionAll = document.createElement('option');
     optionAll.setAttribute('all', 'true');
+    selectElement.setAttribute('choiceName', choice.choiceName);
     optionAll.selected = true;
     optionAll.textContent = `Mọi ${choice.choiceName}`;
     selectElement.appendChild(optionAll);
@@ -748,7 +884,6 @@ function createSaleElement() {
   saleNumberInput.placeholder = "Vd: 50";
   saleNumberInput.required = true;
   var percentSpan = document.createElement("span");
-  percentSpan.textContent = "%";
   saleNumberDiv.appendChild(saleNumberLabel);
   saleNumberDiv.appendChild(saleNumberInput);
   saleNumberDiv.appendChild(percentSpan);
@@ -806,6 +941,54 @@ function removeSaleContainer(button) {
     container.remove();
     checkAndToggleChoiceVisibility();
   }
+}
+
+function filterSalesByChoiceList(sales, choices) {
+  if (sales.length == 0) {
+    return [];
+  }
+  const newSaleList = sales.filter(sale => {
+    return sale.choices.every(choice => {
+      return choices.some(c =>
+        c.choiceName === choice.choiceName && c.choiceValues.includes(choice.choiceValue)
+      );
+    });
+  });
+
+  return newSaleList;
+}
+
+function extractSaleList() {
+  const saleList = [];
+
+  const saleContainers = document.querySelectorAll('.container__sale__choice');
+
+  saleContainers.forEach(saleContainer => {
+    const choiceInfo = saleContainer.querySelector('.choice__choiceInfo');
+    const selectElements = choiceInfo.querySelectorAll('select.select__exception');
+    const choices = Array.from(selectElements).map(select => ({
+      choiceName: select.getAttribute('choicename'),
+      choiceValue: select.value
+    }));
+
+    const saleChoice = saleContainer.querySelector('.choice__saleChoice');
+    const saleNumberInput = saleChoice.querySelector('input[name="saleNumber"]');
+    const startDateInput = saleChoice.querySelector('input[name="startDate"]');
+    const toDateInput = saleChoice.querySelector('input[name="toDate"]');
+
+    const sale = {
+      choices: choices,
+      sale: {
+        saleNumber: parseFloat(saleNumberInput.value),
+        startDate: new Date(startDateInput.value),
+        toDate: new Date(toDateInput.value)
+      }
+    };
+
+    saleList.push(sale);
+  });
+
+  return saleList;
 }
 
 /* ----------------------------------------------XỬ LÝ REQUEST HIỂN THỊ THÔNG TIN CŨ SẢN PHẨM---------------------------------------------- */
@@ -935,7 +1118,7 @@ function viewProduct() {
     }
   }
 
-  xhttp.open("GET", "http://localhost:8080/api/v1.0/ProductDetail/" + window.location.pathname.substring(17), false);
+  xhttp.open("GET", "http://26.127.173.194:8080/api/v1.0/ProductDetail/" + window.location.pathname.substring(17), false);
 
   xhttp.setRequestHeader("Content-type", "application/json");
   token = localStorage.getItem("Token");
@@ -955,3 +1138,14 @@ console.log(selectedImages)
 console.log(categoryOfProduct)
 
 /* ----------------------------------------------XỬ LÝ REQUEST SỬA SẢN PHẨM---------------------------------------------- */
+function submit(event) {
+  // Ngăn chặn hành vi gửi form theo cách thông thường
+  event.preventDefault();
+
+  // Logic xử lý form của bạn ở đây
+  // ...
+}
+
+// Thêm lắng nghe sự kiện submit cho form
+const form = document.querySelector('form');
+form.addEventListener('submit', submit);

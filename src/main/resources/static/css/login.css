@@ -24,8 +24,8 @@ h1{
 
 
 .form-data{
-    max-width: 350px;
-    height: 400px;
+    max-width: 20vw;
+    height: 80vh;
     background: #f4f3ef;
     margin: 30px auto;
     display: flex;
