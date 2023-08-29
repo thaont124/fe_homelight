@@ -1,10 +1,18 @@
+if (localStorage.getItem("Token")) {
+}
+else {
+  window.location = "/fe/login";
+}
+
+
 /* ----------------------------------------------KHỞI TẠO---------------------------------------------- */
 var choiceList = []             //choiceName, choiceValues: [0: , 1: ]
 var variantList = []     //100(Price) : [{choiceName, choiceValues: [0: , 1: ]} {choiceName, choiceValues: [0: , 1: ]}]
 var saleList = []               //choices[0: {choiceName, choiceValue}, 1: ...] : sale{saleNumber, startDate, endDate}
 var selectedImages = []
 var categoryOfProduct = []
-
+var imageFormData = new FormData();
+var categoryData = [];
 init()
 function init() {
   var titles = document.getElementsByClassName("title");
@@ -35,7 +43,7 @@ function checkAndToggleChoiceVisibility() {
   } else {
     exceptionContainer.style.display = 'none';
     document.getElementById("exceptionTitle").style.display = 'none'
-    document.getElementById("showExceptionForm").style.display = 'block'
+    document.getElementById("showExceptionForm").style.display = (choiceList.length > 0 && variantList.length == 0) ? 'block' : 'none'
   }
 
   const containerSale = document.querySelector('#sale .container__sale__choice');
@@ -52,8 +60,9 @@ function checkAndToggleChoiceVisibility() {
 checkAndToggleChoiceVisibility();
 
 
+
 /* ----------------------------------------------XỬ LÝ CÂY---------------------------------------------- */
-var categoryData = [];
+
 const categoryTreeContainer = document.querySelector('.category__tree');
 
 function categories() {
@@ -162,9 +171,28 @@ function renderCategoryTree(data, container) {
   });
 }
 
+
 categories();
 
+function findAncestors(categoryId, categories) {
+  const ancestors = [];
 
+  function findInCategoryTree(categoryId, categoryList) {
+    for (const category of categoryList) {
+      if (category.id == categoryId) {
+        return true;
+      }
+      if (category.children.length > 0 && findInCategoryTree(categoryId, category.children)) {
+        ancestors.push(category.id);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  findInCategoryTree(categoryId, categories);
+  return ancestors;
+}
 
 //------------------ tick các category cũ
 
@@ -178,12 +206,148 @@ function tickCategoryInTree(categories) {
   });
 }
 
+function updateAndDisplay() {
+  clearFieldErrors();
+  const requiredFields = document.querySelectorAll('[required]');
+  const requiredFieldsArray = Array.from(requiredFields);
+  if (getAllCategory().length == 0) {
+    requiredFieldsArray.push(document.getElementById("categoryTree"))
+  }
+  if (selectedImages.length == 0) {
+    requiredFieldsArray.push(document.getElementById("image-input"))
+  }
+  let allFieldsFilled = true;
+  requiredFieldsArray.forEach(field => {
+    if (!checkRequiredField(field)) {
+      allFieldsFilled = false;
+    }
+  });
+
+  if (!allFieldsFilled) {
+    const overlay = document.createElement('div');
+    overlay.classList.add('overlay');
+    document.body.appendChild(overlay);
+
+    const notification = document.createElement('div');
+    notification.classList.add('notification');
+    notification.innerHTML = `
+      <div class="notification-content">
+          <p>Hãy điền đầy đủ thông tin</p>
+          <button id="okButton">OK</button>
+      </div>
+    `;
+    document.body.appendChild(notification);
+
+    const okButton = document.getElementById('okButton');
+    okButton.addEventListener('click', () => {
+      document.body.removeChild(notification);
+      overlay.style.display = 'none';
+    });
+    return;
+  }
+  if (checkDuplicateChoicesWithDifferentPrices(variantList)) {
+    const overlay = document.createElement('div');
+    overlay.classList.add('overlay');
+    document.body.appendChild(overlay);
+
+    const notification = document.createElement('div');
+    notification.classList.add('notification');
+    notification.innerHTML = `
+      <div class="notification-content">
+          <p>Có nhiều hơn 1 nhóm lựa chọn có nhiều giá. Vui lòng sửa</p>
+          <button id="okButton">OK</button>
+      </div>
+    `;
+    document.body.appendChild(notification);
+
+    const okButton = document.getElementById('okButton');
+    okButton.addEventListener('click', () => {
+      document.body.removeChild(notification);
+      overlay.style.display = 'none';
+    });
+  }
+  if (checkDuplicateChoicesWithDuplicateSale(saleList)) {
+    const overlay = document.createElement('div');
+    overlay.classList.add('overlay');
+    document.body.appendChild(overlay);
+
+    const notification = document.createElement('div');
+    notification.classList.add('notification');
+    notification.innerHTML = `
+      <div class="notification-content">
+          <p>Nhóm lựa chọn có nhiều hơn 1 mã giám trong cùng thời điểm. Vui lòng sửa</p>
+          <button id="okButton">OK</button>
+      </div>
+    `;
+    document.body.appendChild(notification);
+
+    const okButton = document.getElementById('okButton');
+    okButton.addEventListener('click', () => {
+      document.body.removeChild(notification);
+      overlay.style.display = 'none';
+    });
+  }
+  choiceList = extractChoiceList()
+  variantList = extractExceptions()
+  saleList = extractSaleList()
+  console.log("lấy từ html")
+  console.log(choiceList);
+  console.log(variantList);
+  console.log(saleList);
+
+  variantList = filterVariantsByChoiceList(variantList, choiceList)
+  saleList = filterSalesByChoiceList(saleList, choiceList)
+
+  console.log("sau khi filter")
+  console.log(choiceList);
+  console.log(variantList);
+  console.log(saleList);
+
+  document.getElementById('sale').innerHTML = `<div class="container__variant__addChoice">
+          <button id="showExceptionForm" onclick="addSaleForm()" class="addElement">Thêm mã giảm giá</button>
+        </div>`
+  document.getElementById('exception').innerHTML = `<div class="container__variant__addChoice">
+          <button id="addExceptionForm" onclick="addExceptionForm()" class="addElement">Thêm ngoại lệ</button>
+        </div>`
+
+  displayException()
+  displaySale()
+  if (variantsByChoiceList.length <= 1) {
+    document.getElementById("showExceptionForm").style.display = 'none'
+    document.getElementById("exceptionTitle").style.display = 'none'
+    document.getElementById("exception").style.display = 'none'
+
+  } else if (variantList.length < 1 && variantsByChoiceList.length > 1) {
+    document.getElementById("showExceptionForm").style.display = 'block'
+    document.getElementById("exceptionTitle").style.display = 'none'
+    document.getElementById("exception").style.display = 'none'
+  } else {
+    document.getElementById("showExceptionForm").style.display = 'none'
+    document.getElementById("exceptionTitle").style.display = 'block'
+    document.getElementById("exception").style.display = 'flex'
+  }
+
+
+}
 
 /* ----------------------------------------------XỬ LÝ ẢNH---------------------------------------------- */
 const selectedImagesContainer = document.getElementById('selected-images');
 const imageInput = document.getElementById('image-input');
 const overlay = document.getElementById('overlay');
 const overlayContent = document.getElementById('overlay-content');
+
+async function fetchImageAsFile(imageUrl, fileType) {
+  try {
+    const response = await fetch(imageUrl);
+    const blob = await response.blob();
+    const file = new File([blob], `filename.${fileType}`);
+    return file;
+  } catch (error) {
+    console.error('Error fetching image:', error);
+    return null;
+  }
+}
+
 
 function createImageElement(url, type) {
   const imageWrapper = document.createElement('div');
@@ -231,6 +395,7 @@ function removeMedia(url) {
   if (index !== -1) {
     selectedImages.splice(index, 1);
   }
+  console.log(selectedImages)
 }
 
 overlay.addEventListener('click', () => {
@@ -249,7 +414,7 @@ imageInput.addEventListener('change', (event) => {
       selectedImagesContainer.appendChild(imageElement);
     }
   }
-
+  console.log(selectedImages)
   event.target.value = null;
 });
 
@@ -261,13 +426,26 @@ function showFormChoice() {
   document.getElementById("choiceTitle").style.display = 'inline-block'
   document.getElementById("choice").style.display = 'flex'
   document.getElementById("showChoice").style.display = 'none'
-  document.getElementById("showExceptionForm").style.display = 'inline-block'
+  var choiceContainers = document.getElementById("choice").querySelectorAll(".container__variant__choice")
+  if (choiceContainers.length == 0) {
+    addFormChoice()
+  }
+  var variantsByChoiceList = generateCombinations(choiceList);
+    if(variantsByChoiceList.length > 1){
+      document.getElementById("showExceptionForm").style.display = 'inline-block'
+    }
 }
 
 function displayChoice() {
   const choiceContainer = document.getElementById('choice');
   if (choiceList.length > 0) {
-    showFormChoice()
+    document.getElementById("choiceTitle").style.display = 'inline-block'
+    document.getElementById("choice").style.display = 'flex'
+    document.getElementById("showChoice").style.display = 'none'
+    var variantsByChoiceList = generateCombinations(choiceList);
+    if(variantsByChoiceList.length > 1){
+      document.getElementById("showExceptionForm").style.display = 'inline-block'
+    }
   }
   for (var i = 0; i < choiceList.length; i++) {
     const choice = choiceList[i];
@@ -320,34 +498,6 @@ function displayChoice() {
             }
           }
         }
-        choiceList = extractChoiceList()
-        variantList = extractExceptions()
-        saleList = extractSaleList()
-        console.log("lấy từ html")
-        console.log(choiceList);
-        console.log(variantList);
-        console.log(saleList);
-
-        variantList = filterVariantsByChoiceList(variantList, choiceList)
-        saleList = filterSalesByChoiceList(saleList, choiceList)
-
-        console.log("sau khi filter")
-        console.log(choiceList);
-        console.log(variantList);
-        console.log(saleList);
-
-        document.getElementById('sale').innerHTML = `<div class="container__variant__addChoice">
-          <button id="showExceptionForm" onclick="addSaleForm()" class="addElement">Thêm mã giảm giá</button>
-        </div>`
-        document.getElementById('exception').innerHTML = `<div class="container__variant__addChoice">
-          <button id="addExceptionForm" onclick="addExceptionForm()" class="addElement">Thêm ngoại lệ</button>
-        </div>`
-
-        displayException()
-        displaySale()
-        
-
-
       });
 
       newInputContainer.appendChild(newChoiceValueInput);
@@ -373,6 +523,12 @@ function displayChoice() {
 var choiceName_index = 0;
 
 function addFormChoice() {
+  choiceList = extractChoiceList()
+  var variantsByChoiceList = generateCombinations(choiceList);
+  console.log("variantsByChoiceList", variantsByChoiceList)
+  if(variantsByChoiceList.length > 1){
+    document.getElementById("showExceptionForm").style.display = 'inline-block'
+  }
   choiceName_index += 1;
   var choiceHTML = document.getElementById("choice");
 
@@ -410,6 +566,13 @@ function addFormChoice() {
 
 
 function addChoiceValue(button) {
+  choiceList = extractChoiceList()
+  console.log("choiceList", choiceList)
+  var variantsByChoiceList = generateCombinations(choiceList);
+  console.log("variantsByChoiceList", variantsByChoiceList)
+  if(variantsByChoiceList.length > 1){
+    document.getElementById("showExceptionForm").style.display = 'inline-block'
+  }
   var choiceValueHTML = button.parentNode.previousElementSibling.querySelector(".choice__choiceInfo__choiceValue");
   const newInputContainer = document.createElement('div');
   newInputContainer.classList.add('input-container');
@@ -425,27 +588,6 @@ function addChoiceValue(button) {
   removeButton.textContent = 'x';
   removeButton.addEventListener('click', function () {
     newInputContainer.remove();
-    choiceList = extractChoiceList()
-    variantList = extractExceptions()
-    saleList = extractSaleList()
-
-    variantList = filterVariantsByChoiceList(variantList, choiceList)
-    saleList = filterSalesByChoiceList(saleList, choiceList)
-
-    document.getElementById('sale').innerHTML = `<div class="container__variant__addChoice">
-      <button id="showExceptionForm" onclick="addSaleForm()" class="addElement">Thêm mã giảm giá</button>
-    </div>`
-    document.getElementById('exception').innerHTML = `<div class="container__variant__addChoice">
-      <button id="addExceptionForm" onclick="addExceptionForm()" class="addElement">Thêm ngoại lệ</button>
-    </div>`
-
-    displayException()
-    displaySale()
-
-    console.log(choiceList);
-    console.log(variantList);
-    console.log(saleList);
-    console.log(choiceList);
   });
 
   newInputContainer.appendChild(newChoiceValueInput);
@@ -460,19 +602,6 @@ function removeChoiceContainer(button) {
   if (container) {
     container.remove();
     checkAndToggleChoiceVisibility();
-    choiceList = extractChoiceList()
-    variantList = extractExceptions()
-    saleList = extractSaleList()
-
-    variantList = filterVariantsByChoiceList(variantList, choiceList)
-    displayException()
-
-    saleList = filterSalesByChoiceList(saleList, choiceList)
-    displaySale()
-
-    console.log(choiceList);
-    console.log(variantList);
-    console.log(saleList);
   }
 }
 
@@ -489,28 +618,13 @@ function removeValue(button) {
       choiceInfoContainer.remove();
     }
   }
-  choiceList = extractChoiceList()
-  variantList = extractExceptions()
-  saleList = extractSaleList()
-
-  variantList = filterVariantsByChoiceList(variantList, choiceList)
-  saleList = filterSalesByChoiceList(saleList, choiceList)
-
-  document.getElementById('sale').innerHTML = `<div class="container__variant__addChoice">
-      <button id="showExceptionForm" onclick="addSaleForm()" class="addElement">Thêm mã giảm giá</button>
-    </div>`
-  document.getElementById('exception').innerHTML = `<div class="container__variant__addChoice">
-      <button id="addExceptionForm" onclick="addExceptionForm()" class="addElement">Thêm ngoại lệ</button>
-    </div>`
-
-  displayException()
-  displaySale()
 
 };
 
 //--------------------------cập nhật choiceList
 function extractChoiceList() {
-  const choiceContainers = document.querySelectorAll('.container__variant__choice');
+  const container = document.getElementById("choice")
+  const choiceContainers = container.querySelectorAll('.container__variant__choice');
 
   const choiceList = [];
 
@@ -529,7 +643,7 @@ function extractChoiceList() {
     }
   });
 
-  return choiceList;
+  return choiceList.sort((a, b) => a.choiceName.localeCompare(b.choiceName));
 }
 
 /* ----------------------------------------------XỬ LÝ NGOẠI LỆ---------------------------------------------- */
@@ -537,23 +651,30 @@ function showExceptionForm() {
   document.getElementById("exceptionTitle").style.display = 'inline-block'
   document.getElementById("exception").style.display = 'flex'
   document.getElementById("showExceptionForm").style.display = 'none'
+
+  var exceptionContainers = document.getElementById("exception").querySelectorAll(".container__exception__choice")
+  if (exceptionContainers.length == 0) {
+    addExceptionForm()
+  }
 }
 
 function displayException() {
   var exceptionContainer = document.getElementById('exception');
-  var commonPrice = document.getElementById('priceNoChoice').value;
+
   if (variantList.length > 0) {
     showExceptionForm()
-  } else {
-    exceptionContainer.innerHTML = `
-        <div class="container__variant__addChoice">
-          <button id="addExceptionForm" onclick="addExceptionForm()" class="addElement">Thêm ngoại lệ</button>
-        </div>`
+  }else{
+    exceptionContainer.innerHTML = `<div class="container__variant__addChoice">
+        <button id="addSaleForm" onclick="addExceptionForm()" class="addElement">Thêm ngoại lệ</button>
+      </div>`
     checkAndToggleChoiceVisibility()
+    document.getElementById("exceptionTitle").style.display = 'none'
+    document.getElementById("exception").style.display = 'none'
+    document.getElementById("showExceptionForm").style.display = 'block'
   }
   for (var i = 0; i < variantList.length; i++) {
     var variant = variantList[i];
-    if (variant.price != commonPrice) {
+    if (variant.price != document.getElementById('priceNoChoice').value) {
       var choiceExceptionContainer = document.createElement('div');
       choiceExceptionContainer.classList.add('container__exception__choice');
 
@@ -564,11 +685,13 @@ function displayException() {
         var choice = choiceList[j];
         var selectElement = document.createElement('select');
         selectElement.classList.add('select__exception');
-        selectElement.setAttribute('choiceName', choice.choiceName);
+        selectElement.required = true;
         var optionAll = document.createElement('option');
         optionAll.setAttribute('all', 'true');
+        selectElement.setAttribute('choicename', choice.choiceName);
         optionAll.selected = true;
-        optionAll.textContent = `Mọi ${choice.choiceName}`;
+        optionAll.disabled = true;
+        optionAll.textContent = `-- ${choice.choiceName} --`;
         selectElement.appendChild(optionAll);
 
         for (var k = 0; k < choice.choiceValues.length; k++) {
@@ -598,7 +721,6 @@ function displayException() {
     }
   }
 }
-
 var exceptionTitleIndex = 0;
 
 function createExceptionElement() {
@@ -613,11 +735,13 @@ function createExceptionElement() {
     var choice = choiceList[j];
     var selectElement = document.createElement('select');
     selectElement.classList.add('select__exception');
-    selectElement.setAttribute('choiceName', choice.choiceName);
+    selectElement.required = true;
+    selectElement.setAttribute('choicename', choice.choiceName);
     var optionAll = document.createElement('option');
     optionAll.setAttribute('all', 'true');
     optionAll.selected = true;
-    optionAll.textContent = `Mọi ${choice.choiceName}`;
+    optionAll.disabled = true;
+    optionAll.textContent = `-- ${choice.choiceName} --`;
     selectElement.appendChild(optionAll);
 
     for (var k = 0; k < choice.choiceValues.length; k++) {
@@ -656,11 +780,13 @@ function addExceptionValue(button) {
     var choice = choiceList[j];
     var selectElement = document.createElement('select');
     selectElement.classList.add('select__exception');
+    selectElement.required = true;
     var optionAll = document.createElement('option');
-    selectElement.setAttribute('choiceName', choice.choiceName);
+    selectElement.setAttribute('choicename', choice.choiceName);
     optionAll.setAttribute('all', 'true');
     optionAll.selected = true;
-    optionAll.textContent = `Mọi ${choice.choiceName}`;
+    optionAll.disabled = true;
+    optionAll.textContent = `-- ${choice.choiceName} --`;
     selectElement.appendChild(optionAll);
 
     for (var k = 0; k < choice.choiceValues.length; k++) {
@@ -682,45 +808,54 @@ function removeExceptionContainer(button) {
 }
 
 function filterVariantsByChoiceList(variants, choices) {
-  if (variants.length == 0) {
-    return [];
-  }
-  const newVariantList = variants.filter(variant => {
-    return variant.choices.every(choice => {
-      return choices.some(c =>
-        c.choiceName === choice.choiceName && c.choiceValues.includes(choice.choiceValue)
-      );
+  return variants.map(variant => {
+    const filteredChoices = variant.choices.filter(choicesSet => {
+      return choicesSet.every(choice => {
+        const matchingChoice = choices.find(c => c.choiceName === choice.choiceName);
+        return matchingChoice && matchingChoice.choiceValues.includes(choice.choiceValue);
+      });
     });
-  });
 
-  return newVariantList;
+    return {
+      price: variant.price,
+      choices: filteredChoices
+    };
+  }).filter(variant => variant.choices.length > 0);
 }
 
 function extractExceptions() {
-  const saleList = [];
+  const variants = [];
 
   const exceptionContainers = document.querySelectorAll('.container__exception__choice');
 
   exceptionContainers.forEach(exceptionContainer => {
     const choiceInfo = exceptionContainer.querySelector('.choice__choiceInfo');
     const selectElements = choiceInfo.querySelectorAll('select.select__exception');
-    const choices = Array.from(selectElements).map(select => ({
+
+    var choices = []
+    const choice = Array.from(selectElements).map(select => ({
       choiceName: select.getAttribute('choicename'),
       choiceValue: select.value
     }));
+    choices.push(choice)
 
     const addValueDiv = exceptionContainer.querySelector('.choice__addValue');
     const price = addValueDiv.querySelector('input[name="priceChoice"]')
 
-    const sale = {
+    const variant = {
       choices: choices,
       price: price.value
     };
 
-    saleList.push(sale);
+    variants.push(variant);
   });
+  for (const variant of variants) {
+    variant.choices.forEach(choiceGroup => {
+      choiceGroup.sort((a, b) => a.choiceName.localeCompare(b.choiceName));
+    });
+  }
 
-  return saleList;
+  return variants;
 }
 
 
@@ -730,19 +865,30 @@ function showSaleForm() {
   document.getElementById("saleTitle").style.display = 'inline-block'
   document.getElementById("sale").style.display = 'flex'
   document.getElementById("showSaleForm").style.display = 'none'
+
+  var saleContainers = document.getElementById("exception").querySelectorAll(".container__sale__choice")
+  if (saleContainers.length == 0) {
+    addSaleForm()
+  }
 }
 
 function displaySale() {
   var saleContainer = document.getElementById('sale');
   if (saleList.length > 0) {
+    document.getElementById("saleTitle").style.display = 'inline-block'
+    document.getElementById("sale").style.display = 'flex'
+    document.getElementById("showSaleForm").style.display = 'none'
     showSaleForm()
   } else {
     saleContainer.innerHTML = `<div class="container__variant__addChoice">
-      <button id="showExceptionForm" onclick="addSaleForm()" class="addElement">Thêm mã giảm giá</button>
+      <button id="showSaleForm" onclick="addSaleForm()" class="addElement">Thêm mã giảm giá</button>
     </div>`
     checkAndToggleChoiceVisibility()
+    document.getElementById("saleTitle").style.display = 'none'
+    document.getElementById("sale").style.display = 'none'
+    document.getElementById("showSaleForm").style.display = 'block'
   }
-  for (var i = 0; i < saleList.length; i++) {
+  for (var i = saleList.length - 1; i >= 0; i--) {
     var sale = saleList[i];
     var choiceSaleContainer = document.createElement('div');
     choiceSaleContainer.classList.add('container__sale__choice');
@@ -754,11 +900,13 @@ function displaySale() {
       var choice = choiceList[j];
       var selectElement = document.createElement('select');
       selectElement.classList.add('select__exception');
+      selectElement.required = true;
       var optionAll = document.createElement('option');
-      selectElement.setAttribute('choiceName', choice.choiceName);
+      selectElement.setAttribute('choicename', choice.choiceName);
       optionAll.setAttribute('all', 'true');
       optionAll.selected = true;
-      optionAll.textContent = `Mọi ${choice.choiceName}`;
+      optionAll.disabled = true;
+      optionAll.textContent = `-- ${choice.choiceName} --`;
       selectElement.appendChild(optionAll);
 
       for (var k = 0; k < choice.choiceValues.length; k++) {
@@ -811,17 +959,17 @@ function displaySale() {
 
     const saleInfo__endNumber = document.createElement("div");
     saleInfo__endNumber.classList.add("sale-infor");
-    const toDateInput = document.createElement("input");
-    toDateInput.type = "datetime-local";
-    toDateInput.name = "toDate";
-    toDateInput.value = new Date(sale.sale.toDate).toISOString().slice(0, 16)
-    toDateInput.required = true;
+    const endDateInput = document.createElement("input");
+    endDateInput.type = "datetime-local";
+    endDateInput.name = "endDate";
+    endDateInput.value = new Date(sale.sale.endDate).toISOString().slice(0, 16)
+    endDateInput.required = true;
 
-    const toDateLabel = document.createElement("label");
-    toDateLabel.for = "toDate";
-    toDateLabel.textContent = "Kết thúc:";
-    saleInfo__endNumber.appendChild(toDateLabel);
-    saleInfo__endNumber.appendChild(toDateInput);
+    const endDateLabel = document.createElement("label");
+    endDateLabel.for = "endDate";
+    endDateLabel.textContent = "Kết thúc:";
+    saleInfo__endNumber.appendChild(endDateLabel);
+    saleInfo__endNumber.appendChild(endDateInput);
 
     saleChoiceDiv.appendChild(saleInfo__saleNumber);
     saleChoiceDiv.appendChild(saleInfo__startDate);
@@ -853,11 +1001,13 @@ function createSaleElement() {
     var choice = choiceList[j];
     var selectElement = document.createElement('select');
     selectElement.classList.add('select__exception');
+    selectElement.required = true;
     var optionAll = document.createElement('option');
     optionAll.setAttribute('all', 'true');
     selectElement.setAttribute('choiceName', choice.choiceName);
     optionAll.selected = true;
-    optionAll.textContent = `Mọi ${choice.choiceName}`;
+    optionAll.disabled = true;
+    optionAll.textContent = `-- ${choice.choiceName} --`;
     selectElement.appendChild(optionAll);
 
     for (var k = 0; k < choice.choiceValues.length; k++) {
@@ -900,21 +1050,21 @@ function createSaleElement() {
   startDateDiv.appendChild(startDateLabel);
   startDateDiv.appendChild(startDateInput);
 
-  var toDateDiv = document.createElement("div");
-  toDateDiv.classList.add("sale-infor");
-  var toDateLabel = document.createElement("label");
-  toDateLabel.setAttribute("for", "toDate");
-  toDateLabel.textContent = "Kết thúc:";
-  var toDateInput = document.createElement("input");
-  toDateInput.type = "datetime-local";
-  toDateInput.name = "toDate";
-  toDateInput.required = true;
-  toDateDiv.appendChild(toDateLabel);
-  toDateDiv.appendChild(toDateInput);
+  var endDateDiv = document.createElement("div");
+  endDateDiv.classList.add("sale-infor");
+  var endDateLabel = document.createElement("label");
+  endDateLabel.setAttribute("for", "endDate");
+  endDateLabel.textContent = "Kết thúc:";
+  var endDateInput = document.createElement("input");
+  endDateInput.type = "datetime-local";
+  endDateInput.name = "endDate";
+  endDateInput.required = true;
+  endDateDiv.appendChild(endDateLabel);
+  endDateDiv.appendChild(endDateInput);
 
   saleChoiceDiv.appendChild(saleNumberDiv);
   saleChoiceDiv.appendChild(startDateDiv);
-  saleChoiceDiv.appendChild(toDateDiv);
+  saleChoiceDiv.appendChild(endDateDiv);
 
   var removeValueDiv = document.createElement("div");
   removeValueDiv.classList.add("choice__addValue");
@@ -959,7 +1109,7 @@ function filterSalesByChoiceList(sales, choices) {
 }
 
 function extractSaleList() {
-  const saleList = [];
+  const sales = [];
 
   const saleContainers = document.querySelectorAll('.container__sale__choice');
 
@@ -974,21 +1124,21 @@ function extractSaleList() {
     const saleChoice = saleContainer.querySelector('.choice__saleChoice');
     const saleNumberInput = saleChoice.querySelector('input[name="saleNumber"]');
     const startDateInput = saleChoice.querySelector('input[name="startDate"]');
-    const toDateInput = saleChoice.querySelector('input[name="toDate"]');
+    const endDateInput = saleChoice.querySelector('input[name="endDate"]');
 
     const sale = {
-      choices: choices,
+      choices: choices.sort((a, b) => a.choiceName.localeCompare(b.choiceName)),
       sale: {
         saleNumber: parseFloat(saleNumberInput.value),
         startDate: new Date(startDateInput.value),
-        toDate: new Date(toDateInput.value)
+        endDate: new Date(endDateInput.value)
       }
     };
 
-    saleList.push(sale);
+    sales.push(sale);
   });
 
-  return saleList;
+  return sales;
 }
 
 /* ----------------------------------------------XỬ LÝ REQUEST HIỂN THỊ THÔNG TIN CŨ SẢN PHẨM---------------------------------------------- */
@@ -1001,40 +1151,43 @@ function viewProduct() {
       var ResponseJson = xhttp.responseText;
       var Response = JSON.parse(ResponseJson);
 
-
       for (var i = 0; i < Response.variantsDTO.length; i++) {
         const variant = Response.variantsDTO[i];
 
         //Add choiceList
-        for (var j = 0; j < variant.choices.length; j++) {
-          const choice = variant.choices[j];
+        if (variant.choices) {
+          for (var j = 0; j < variant.choices.length; j++) {
+            const choice = variant.choices[j];
 
-          const existingChoice = choiceList.find(item =>
-            item.choiceName === choice.choiceName && item.choiceValues.includes(choice.choiceValue)
-          );
-          if (!existingChoice) {
-            const choiceEntry = choiceList.find(item => item.choiceName === choice.choiceName);
+            const existingChoice = choiceList.find(item =>
+              item.choiceName === choice.choiceName && item.choiceValues.includes(choice.choiceValue)
+            );
+            if (!existingChoice) {
+              const choiceEntry = choiceList.find(item => item.choiceName === choice.choiceName);
 
-            if (choiceEntry) {
-              choiceEntry.choiceValues.push(choice.choiceValue);
-            } else {
-              choiceList.push({
-                choiceName: choice.choiceName,
-                choiceValues: [choice.choiceValue]
-              });
+              if (choiceEntry) {
+                choiceEntry.choiceValues.push(choice.choiceValue);
+              } else {
+                choiceList.push({
+                  choiceName: choice.choiceName,
+                  choiceValues: [choice.choiceValue]
+                });
+                choiceList.sort((a, b) => a.choiceName.localeCompare(b.choiceName))
+              }
             }
           }
         }
 
+
         //Add variantList 
         const variantPrice = variant.originPrice;
-        const variantChoices = variant.choices.map(choice => {
+        const variantChoices = variant.choices ? variant.choices.map(choice => {
           return {
             id: choice.id,
             choiceName: choice.choiceName,
             choiceValue: choice.choiceValue
           };
-        });
+        }).sort((a, b) => a.choiceName.localeCompare(b.choiceName)) : [];
 
         if (!variantList.some(item => item.price === variantPrice)) {
           variantList.push({
@@ -1050,19 +1203,19 @@ function viewProduct() {
         const variantSales = variant.sale;
         if (variantSales.length > 0) {
           for (const sale of variantSales) {
-            const choices = variant.choices.map(choice => {
+            const choices = variant.choices ? variant.choices.map(choice => {
               return {
                 choiceName: choice.choiceName,
                 choiceValue: choice.choiceValue
               };
-            });
+            }) : [];
 
             saleList.push({
-              choices: choices,
+              choices: choices.sort((a, b) => a.choiceName.localeCompare(b.choiceName)),
               sale: {
                 saleNumber: sale.numberSale,
                 startDate: new Date(sale.startDate),
-                toDate: new Date(sale.endDate)
+                endDate: new Date(sale.endDate)
               }
             });
           }
@@ -1070,9 +1223,6 @@ function viewProduct() {
       }
       variantList.sort((a, b) => b.choices.length - a.choices.length);
       saleList.sort((a, b) => a.sale.startDate - b.sale.startDate);
-
-
-
 
 
       //display
@@ -1098,6 +1248,9 @@ function viewProduct() {
       displayChoice()
 
       //exception 
+      if (variantList.length == 1) {
+        variantList = []
+      }
       displayException()
 
       //sale
@@ -1137,15 +1290,388 @@ console.log(saleList)
 console.log(selectedImages)
 console.log(categoryOfProduct)
 
-/* ----------------------------------------------XỬ LÝ REQUEST SỬA SẢN PHẨM---------------------------------------------- */
-function submit(event) {
-  // Ngăn chặn hành vi gửi form theo cách thông thường
-  event.preventDefault();
+/* ----------------------------------------------VALIDATION---------------------------------------------- */
+function checkRequiredField(field) {
+  if (!field.value) {
+    field.classList.add('error');
+    const errorElement = document.createElement('div');
+    errorElement.classList.add('error-message');
+    errorElement.textContent = 'Không để trống ô này.';
+    field.insertAdjacentElement('afterend', errorElement);
+    return false;
+  }
 
-  // Logic xử lý form của bạn ở đây
-  // ...
+  return true;
 }
 
-// Thêm lắng nghe sự kiện submit cho form
-const form = document.querySelector('form');
-form.addEventListener('submit', submit);
+
+function clearFieldErrors() {
+  const errorMessages = document.querySelectorAll('.error-message');
+  errorMessages.forEach(error => error.remove());
+
+  const errorFields = document.querySelectorAll('.error');
+  errorFields.forEach(field => field.classList.remove('error'));
+}
+
+function checkDuplicateChoicesWithDifferentPrices(variants) {
+  const seenChoices = new Map();
+  const duplicateChoices = new Set();
+  for (const variant of variants) {
+    const choicesCopy = [...variant.choices];
+    choicesCopy.forEach(choiceGroup => {
+      choiceGroup.sort((a, b) => a.choiceName.localeCompare(b.choiceName));
+    });
+
+    const choicesStr = JSON.stringify(choicesCopy);
+
+    if (seenChoices.has(choicesStr)) {
+      if (seenChoices.get(choicesStr) !== variant.price) {
+        duplicateChoices.add(choicesStr);
+      }
+    } else {
+      seenChoices.set(choicesStr, variant.price);
+    }
+  }
+
+  if (duplicateChoices.size > 0) {
+    const duplicateChoicesList = document.getElementById('duplicateChoicesList');
+    duplicateChoices.forEach(choicesStr => {
+      const choices = JSON.parse(choicesStr);
+      const listItem = document.createElement('li');
+      listItem.textContent = choices.map(choice => `${choice.choiceName}: ${choice.choiceValue}`).join(', ');
+      duplicateChoicesList.appendChild(listItem);
+    });
+
+    const duplicateChoicesAlert = document.getElementById('duplicateChoicesAlert');
+    duplicateChoicesAlert.style.display = 'block';
+  }
+  return duplicateChoices.length > 0;
+}
+
+
+function checkDuplicateChoicesWithDuplicateSale(sales) {
+  const seenChoices = new Map();
+  const duplicateSales = new Map();
+  const duplicateSalesList = [];
+
+  for (const saleItem of sales) {
+    const choicesKey = JSON.stringify(saleItem.choices);
+
+    if (seenChoices.has(choicesKey)) {
+      const existingSale = seenChoices.get(choicesKey);
+
+      const newSaleStart = new Date(saleItem.sale.startDate).getTime();
+      const newSaleEnd = new Date(saleItem.sale.endDate).getTime();
+
+      const existingSaleStart = new Date(existingSale.sale.startDate).getTime();
+      const existingSaleEnd = new Date(existingSale.sale.endDate).getTime();
+
+      if (
+        (newSaleStart >= existingSaleStart && newSaleStart <= existingSaleEnd) ||
+        (newSaleEnd >= existingSaleStart && newSaleEnd <= existingSaleEnd)
+      ) {
+        if (!duplicateSales.has(choicesKey)) {
+          duplicateSales.set(choicesKey, [existingSale.sale, saleItem.sale]);
+        } else {
+          duplicateSales.get(choicesKey).push(saleItem.sale);
+        }
+      }
+    } else {
+      seenChoices.set(choicesKey, saleItem);
+    }
+  }
+
+  if (duplicateSales.size > 0) {
+    const duplicateSalesListElement = document.getElementById('duplicateSalesList');
+    duplicateSales.forEach((sales, choicesKey) => {
+      const choices = JSON.parse(choicesKey);
+      const listItem = document.createElement('li');
+      listItem.textContent = choices.map(choice => `${choice.choiceName}: ${choice.choiceValue}`).join(', ');
+      duplicateSalesListElement.appendChild(listItem);
+    });
+
+    const duplicateSalesAlert = document.getElementById('duplicateSalesAlert');
+    duplicateSalesAlert.style.display = 'block';
+  }
+  return duplicateSales.size > 0;
+}
+
+
+/* ----------------------------------------------XỬ LÝ REQUEST SỬA SẢN PHẨM---------------------------------------------- */
+//lấy toàn bộ category được selected
+function getAllCategory() {
+  const checkboxes = document.querySelectorAll('input.branch__checkbox:checked');
+  const selectedCategories = [];
+
+  checkboxes.forEach(checkbox => {
+    const categoryId = checkbox.getAttribute('categoryid');
+    selectedCategories.push(parseInt(categoryId));
+  });
+
+  return selectedCategories;
+}
+
+//tổng hợp variant
+function generateCombinations(choiceList) {
+  const result = [];
+
+  function generate(index, currentCombination) {
+    if (index === choiceList.length) {
+      result.push([...currentCombination]);
+      return;
+    }
+
+    for (const value of choiceList[index].choiceValues) {
+      currentCombination.push({
+        choiceName: choiceList[index].choiceName,
+        choiceValue: value
+      });
+      generate(index + 1, currentCombination);
+      currentCombination.pop();
+    }
+  }
+
+  generate(0, []);
+
+  return result;
+}
+
+async function editProduct() {
+  //check validate
+  clearFieldErrors();
+  const requiredFields = document.querySelectorAll('[required]');
+  const requiredFieldsArray = Array.from(requiredFields);
+  if (getAllCategory().length == 0) {
+    requiredFieldsArray.push(document.getElementById("categoryTree"))
+  }
+  if (selectedImages.length == 0) {
+    requiredFieldsArray.push(document.getElementById("image-input"))
+  }
+  let allFieldsFilled = true;
+  requiredFieldsArray.forEach(field => {
+    if (!checkRequiredField(field)) {
+      allFieldsFilled = false;
+    }
+  });
+
+  if (!allFieldsFilled) {
+    overlay.style.display = 'block';
+
+    const notification = document.createElement('div');
+    notification.classList.add('notification');
+    notification.innerHTML = `
+      <div class="notification-content">
+          <p>Hãy điền đầy đủ thông tin</p>
+          <button id="okButton">OK</button>
+      </div>
+    `;
+    document.body.appendChild(notification);
+
+    const okButton = document.getElementById('okButton');
+    okButton.addEventListener('click', () => {
+      document.body.removeChild(notification);
+      overlay.style.display = 'none';
+    });
+
+    return;
+  }
+  if (checkDuplicateChoicesWithDifferentPrices(variantList)) {
+    overlay.style.display = 'block';
+
+    const notification = document.createElement('div');
+    notification.classList.add('notification');
+    notification.innerHTML = `
+      <div class="notification-content">
+          <p>Có nhiều hơn 1 nhóm lựa chọn có nhiều giá. Vui lòng sửa</p>
+          <button id="okButton">OK</button>
+      </div>
+    `;
+    document.body.appendChild(notification);
+
+    const okButton = document.getElementById('okButton');
+    okButton.addEventListener('click', () => {
+      document.body.removeChild(notification);
+      overlay.style.display = 'none';
+    });
+    return;
+  }
+  if (checkDuplicateChoicesWithDuplicateSale(saleList)) {
+    overlay.style.display = 'block';
+
+    const notification = document.createElement('div');
+    notification.classList.add('notification');
+    notification.innerHTML = `
+      <div class="notification-content">
+          <p>Nhóm lựa chọn có nhiều hơn 1 mã giám trong cùng thời điểm. Vui lòng sửa</p>
+          <button id="okButton">OK</button>
+      </div>
+    `;
+    document.body.appendChild(notification);
+
+    const okButton = document.getElementById('okButton');
+    okButton.addEventListener('click', () => {
+      document.body.removeChild(notification);
+      overlay.style.display = 'none';
+    });
+    return;
+  }
+
+  updateAndDisplay()
+
+  //----------------------------Lấy category----------------------------------//
+  var categoryRequestHTML = getAllCategory();
+  var categoryRequest = categoryRequestHTML.slice();
+  for (var i = 0; i < categoryRequestHTML.length; i++) {
+    var ancestors = findAncestors(categoryRequestHTML[i], categoryData);
+    for (var j = 0; j < ancestors.length; j++) {
+      const index = categoryRequest.indexOf(ancestors[j]);
+      if (index !== -1) {
+        categoryRequest.splice(index, 1);
+      }
+    }
+  }
+  console.log(categoryRequest)
+
+
+  //----------------------------Lấy variant----------------------------------//
+  var variantsByChoiceList = generateCombinations(choiceList)
+  console.log(variantsByChoiceList)
+  var variantsRequest = []
+  for (var i = 0; i < variantsByChoiceList.length; i++) {
+    var choicesRequest = variantsByChoiceList[i]; //lấy choice của variantsByChoiceList thứ i
+    var hasVariant = false
+
+    var priceOfVariant = document.getElementById("priceNoChoice").value;
+    for (const entry of variantList) {
+      const choices = entry.choices.flat();
+      const matchingChoicesException = choicesRequest.every(choice => {
+        return choices.some(c => c.choiceName === choice.choiceName && c.choiceValue === choice.choiceValue);
+      });
+      priceOfVariant = matchingChoicesException ? entry.price : document.getElementById("priceNoChoice").value;
+    }
+
+    const matchingSales = [];
+    for (const saleItem of saleList) {
+      const matchingChoices = saleItem.choices.every(saleChoice => {
+        return choicesRequest.some(variantChoice =>
+          variantChoice.choiceName === saleChoice.choiceName &&
+          variantChoice.choiceValue === saleChoice.choiceValue
+        );
+      });
+
+      if (matchingChoices) {
+        matchingSales.push({
+          numberSale: saleItem.sale.saleNumber,
+          startDate: saleItem.sale.startDate.toISOString().replace('.000Z', ''),
+          endDate: saleItem.sale.endDate.toISOString().replace('.000Z', '')
+        });
+      }
+    }
+
+    variantsRequest.push({
+      originPrice: priceOfVariant,
+      choices: choicesRequest,
+      sale: matchingSales.length > 0 ? matchingSales : null
+    })
+    console.log("variantsDTO", variantsRequest)
+  }
+
+  //thực hiện gửi request
+
+  console.log("gửi")
+
+  //gửi request
+  const xhttp = new XMLHttpRequest();
+  var formData = new FormData();
+  formData.append('productName', document.getElementById('info__productName').value)
+  formData.append('productCode', document.getElementById('info__productCode').value)
+  formData.append('description', document.getElementById('description').value)
+
+  const imageFile = []
+  const imageFormData = new FormData();
+
+  for (const imageInfo of selectedImages) {
+    const imageUrl = imageInfo.url;
+    const fileType = imageInfo.type;
+
+    const file = await fetchImageAsFile(imageUrl, fileType);
+
+    if (file) {
+      imageFile.push(file);
+    }
+  }
+  console.log("imageFile", imageFile);
+  imageFile.forEach(file => {
+    formData.append('image', file); // Thêm đối tượng File vào FormData
+  });
+  const imageValues = formData.getAll('image');
+  console.log("imageValues", imageValues);
+
+  formData.append('categoryId', categoryRequest)
+
+  variantsRequest.forEach((item, index) => {
+    formData.append(`variantsDTO[${index}].originPrice`, item.originPrice);
+
+    item.choices.forEach((choice, choiceIndex) => {
+      formData.append(`variantsDTO[${index}].choices[${choiceIndex}].choiceName`, choice.choiceName);
+      formData.append(`variantsDTO[${index}].choices[${choiceIndex}].choiceValue`, choice.choiceValue);
+    });
+
+    if (item.sale) {
+      item.sale.forEach((sale, saleIndex) => {
+        formData.append(`variantsDTO[${index}].sale[${saleIndex}].numberSale`, sale.numberSale);
+        formData.append(`variantsDTO[${index}].sale[${saleIndex}].startDate`, sale.startDate);
+        formData.append(`variantsDTO[${index}].sale[${saleIndex}].endDate`, sale.endDate);
+      });
+    }
+  });
+
+  console.log(formData.getAll('variantsDTO[0].originPrice'));
+  console.log(formData.getAll('variantsDTO[0].sale[0].numberSale'));
+
+  xhttp.onload = function () {
+    if (xhttp.status === 200) {
+      var ResponseJson = xhttp.responseText;
+      var Response = JSON.parse(ResponseJson)
+
+      function showSuccessNotification(message) {
+        overlay.style.display = 'block';
+
+        const notification = document.createElement('div');
+        notification.classList.add('notification');
+        notification.innerHTML = `
+                <div class="notification-content">
+                    <p>Bạn đã sửa sản phẩm ${message} thành công</p>
+                    <button id="okButton">OK</button>
+                </div>
+            `;
+        document.body.appendChild(notification);
+
+        const okButton = document.getElementById('okButton');
+        okButton.addEventListener('click', () => {
+          document.body.removeChild(notification);
+          overlay.style.display = 'none';
+          window.location = '/fe/product/viewAll';
+        });
+      }
+      showSuccessNotification(document.getElementById('info__productName').value)
+    } else if (xhttp.status === 403) {
+      //window.location = '/fe/login';
+    } else if (xhttp.status === 400) {
+      var ResponseJson = xhttp.responseText
+      var Response = JSON.parse(ResponseJson)
+
+    } else {
+      var ResponseJson = xhttp.responseText
+      var Response = JSON.parse(ResponseJson)
+      alert(Response.messages);
+      alert(Response.messages);
+    }
+  }
+  xhttp.open('PUT', "http://26.127.173.194:8080/api/v1.0/ProductDetail/" + window.location.pathname.substring(17), true);
+  var jwtToken = localStorage.getItem("Token");
+  xhttp.setRequestHeader('Authorization', 'Bearer ' + jwtToken);
+
+  xhttp.send(formData);
+
+}

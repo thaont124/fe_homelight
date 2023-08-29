@@ -105,6 +105,7 @@ input:focus, select,
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
+
 .overlay {
   display: none;
   position: fixed;
@@ -203,11 +204,9 @@ input:focus, select,
 }
 
 
-.container .container__variant .container__variant__choice, 
-.container .container__exception .container__exception__choice,
-.container .container__sale .container__sale__choice{
-  display: flex;
-  flex-direction: row;
+.container .container__variant .container__variant__choice{
+  display: grid;
+  grid-template-columns: 10fr 1fr;
   justify-content: space-between;
   align-items: flex-end;
   border-radius: 5px;
@@ -215,10 +214,30 @@ input:focus, select,
 
 }
 
-
-.choice__choiceInfo {
+.container .container__exception .container__exception__choice{
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 10fr 3fr;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-radius: 5px;
+  margin: 20px;
+
+}
+
+.container .container__sale .container__sale__choice{
+  display: grid;
+  grid-template-columns: 2fr 20fr 2fr;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-radius: 5px;
+  margin: 20px;
+
+}
+
+.container__variant__choice .choice__choiceInfo,
+.container__sale__choice .choice__choiceInfo {
+  display: grid;
+  grid-template-columns: 1fr 10fr;
   align-items: center; 
   border-radius: 5px;
   justify-content: flex-start;
@@ -229,10 +248,12 @@ input:focus, select,
   flex-direction: row;
   align-items: center; 
   border-radius: 5px;
-  justify-content: flex-start;
+  justify-content: flex-end;
   gap: 15px;
 }
-
+.choice__addValue{
+  position: relative;
+}
 .choice__choiceInfo .choice__choiceInfo__choiceValue{
   display: flex;
   flex-direction: row;
@@ -240,7 +261,7 @@ input:focus, select,
 
 .choice__choiceInfo .choice__choiceInfo__choiceValue input{
   margin-left: 10px;
-  width: 90px;
+  width: 9vw;
 }
 
 .input-container {
@@ -403,12 +424,12 @@ input:focus, select,
   row-gap: 10px;
 }
 
-.sale-date, input[name="startDate"], input[name="toDate"]{
+.sale-date, input[name="startDate"], input[name="endDate"]{
   width: fit-content;
 }
 
 input[name="saleNumber"]{
-  width: 100px;
+  width: 7vw;
 }
 
 .container__variant__choiceValue .choiceValue__content .choiceValue__add button {
@@ -542,13 +563,90 @@ input[name="saleNumber"]{
   padding: 10px 20px;
   font-size: 16px;
   background-color: #4caf50; 
+  border-color: #4caf50;
   color: white;
-  border: none;
   border-radius: 5px;
   cursor: pointer;
 }
 
-#addElement:hover {
-  background-color: #45a049; 
-  box-shadow: #f4f4f4;
+.addElement:hover, .saveElement:hover {
+  background-color: #1846dd; 
+  border: none;
+  color: white;
+  box-shadow: 0px 0px 10px rgba(20, 80, 209, 0.2);;
 }
+
+.saveElement {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: white; 
+  color: #4caf50;
+  border-color: #4caf50;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+/*--------------------------Success notification----------------------------*/
+.notification {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+}
+
+.notification-content {
+  text-align: center;
+}
+
+#okButton {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.error-message {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+  position: absolute;
+}
+
+.sale-infor:first-child .error-message {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+  position: absolute;
+  width: 7vw;
+}
+
+/*--------------------------Variant error----------------------------*/
+
+.alert {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border: 1px solid #f5c6cb;
+  margin-bottom: 10px;
+}
+
+.alert p {
+  margin: 0;
+  font-weight: bold;
+}
+
+.alert ul {
+  margin-top: 5px;
+  padding-left: 20px;
+}
+

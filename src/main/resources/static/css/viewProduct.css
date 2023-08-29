@@ -29,6 +29,13 @@ a{
     background-color: transparent;
 }
 
+span{
+  cursor: pointer;
+}
+span {
+  transition: transform 0.3s;
+}
+
  /* ----------------------------search---------------------------- */
 
 .search {
@@ -109,7 +116,7 @@ a{
     position: relative;
     border-radius: 3px;
     width: auto;
-    height: 40vh; 
+    height: 20vh; 
   }
   
   .product-name {
@@ -163,52 +170,170 @@ td.action a:hover {
 
 
   /* ----------------------------toogle---------------------------- */
-  /* toggle button container */
-.toggle-container {
+  .toggle {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  
+  .toggle input {
+    display: none;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+  }
+  
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(26px);
+  }
+.toggle {
   position: relative;
   display: inline-block;
   width: 60px;
-  height: 30px;
+  height: 34px;
 }
 
-/* toggle button input */
-.toggle-checkbox {
+.toggle input {
   display: none;
 }
 
-/* toggle button label */
-.toggle-label {
+.slider {
   position: absolute;
+  cursor: pointer;
   top: 0;
   left: 0;
-  width: 60px;
-  height: 30px;
+  right: 0;
+  bottom: 0;
   background-color: #ccc;
-  border-radius: 15px;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+  
+
+  /* ----------------------------notification---------------------------- */
+
+/* CSS cho overlay mờ */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
+}
+
+/* CSS cho khung thông báo */
+.notification {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  padding: 20px;
+  z-index: 9999;
+}
+
+.notification-content {
+  text-align: center;
+}
+
+.notification button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 3px;
   cursor: pointer;
 }
 
-/* toggle button thumb (circle) */
-.toggle-label::before {
-  content: "";
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 26px;
-  height: 26px;
-  background-color: white;
-  border-radius: 50%;
-  transition: transform 0.2s ease;
+.notification #deleteButton, #okButton {
+  background-color: #dc3545;
+  color: white;
 }
 
-/* toggle button when it's checked (ON state) */
-.toggle-checkbox:checked + .toggle-label {
-  background-color: #4CAF50; /* Green */
+.notification #deleteButton:hover, #okButton:hover {
+  background-color: #c82333;
 }
 
-/* toggle button thumb (circle) when it's checked (ON state) */
-.toggle-checkbox:checked + .toggle-label::before {
-  transform: translateX(30px);
+.notification #cancelButton {
+  background-color: #6c757d;
+  color: white;
+  margin-left: 10px;
 }
 
+.notification #cancelButton:hover {
+  background-color: #5a6268;
+}
 
+  /* ----------------------------pagination---------------------------- */
+
+/* CSS cho số trang */
+.pagination {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.page-button {
+  border: none;
+  background-color: transparent;
+  color: #007bff;
+  cursor: pointer;
+  margin: 0 5px;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 14px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.page-button.active, .page-button:hover {
+  background-color: #007bff;
+  color: white;
+}

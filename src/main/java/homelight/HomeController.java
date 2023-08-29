@@ -27,4 +27,8 @@ public class HomeController {
     public String addProduct(){
         return "product/addProduct";
     }
+    @GetMapping("/product/search/{key}")
+    public String searchProductByName(){
+        return "product/searchProductByName";
+    }
 }

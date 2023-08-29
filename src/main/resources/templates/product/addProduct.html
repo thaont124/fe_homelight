@@ -12,73 +12,32 @@
     <div class="container__product">
       <div class="container__product__info">
         <div>
-          <label for="productName">Tên sản phẩm:</label>
+          <label for="info__productName">Tên sản phẩm:</label>
           <input type="text" id="info__productName" name="productName" placeholder="Vd: Đèn ông sao" required />
         </div>
         <div>
-          <label for="productCode">Mã sản phẩm:</label>
+          <label for="info__productCode">Mã sản phẩm:</label>
           <input type="text" id="info__productCode" name="productCode" placeholder="Vd: PR1234" required />
         </div>
         <div id="priceNoChoicePart">
           <label for="priceNoChoice">Giá cả:</label>
           <input type="text" id="priceNoChoice" name="priceNoChoice" placeholder="Vd: 15000" required />
         </div>
-        <div class="category-dropdown">
-          <div class="category-header">
+        <div id="category-dropdown" class="category-dropdown">
+          <div class="category-header" id="category_header">
             <span class="arrow">▼</span>
             <label for="category">Thể loại:</label>
           </div>
-          <div class="category__tree" name="category__infor">
+          <div id="categoryTree" class="category__tree" name="category__infor">
             <div class="category__tree__branch">
-              <label class="branch__label">
-                <input type="checkbox" class="branch__checkbox" />
-                Thư mục gốc
-              </label>
-              <ul class="branch__list">
-                <li class="branch__item">
-                  <label class="branch__label">
-                    <input type="checkbox" class="branch__checkbox" />
-                    Thư mục cấp 1
-                  </label>
-                  <ul class="branch__list">
-                    <li class="branch__item">
-                      <label class="branch__label">
-                        <input type="checkbox" class="branch__checkbox" />
-                        Thư mục cấp 2
-                      </label>
-                      <ul class="branch__list">
-                        <li class="branch__item">
-                          <label class="branch__label">
-                            <input type="checkbox" class="branch__checkbox" />
-                            Thư mục cấp 3
-                          </label>
-                          <ul class="branch__list">
-                            <li class="branch__item">
-                              <label class="branch__label">
-                                <input type="checkbox" class="branch__checkbox" />
-                                Thư mục cấp 4
-                              </label>
-                              <ul class="branch__list">
-                                <li class="branch__item">Tập tin 1</li>
-                                <li class="branch__item">Tập tin 2</li>
-                                <!-- Thêm tập tin khác nếu cần -->
-                              </ul>
-                            </li>
-                            <!-- Thêm thư mục cấp 4 khác nếu cần -->
-                          </ul>
-                        </li>
-                        <!-- Thêm thư mục cấp 3 khác nếu cần -->
-                      </ul>
-                    </li>
-                    <!-- Thêm thư mục cấp 2 khác nếu cần -->
-                  </ul>
-                </li>
-                <!-- Thêm thư mục cấp 1 khác nếu cần -->
-              </ul>
+
+            </div>
+            <div class="category__tree__branch">
+
             </div>
           </div>
         </div>
-        
+
         <div>
           <label for="description">Mô tả:</label>
           <textarea id="description" name="description" placeholder="Đây là sản phẩm..." required></textarea>
@@ -101,24 +60,10 @@
       <p>PHÂN LOẠI</p>
     </div>
     <div id="choice" class="container__variant">
-      <div class="container__variant__choice">
-        <div class="choice__choiceInfo">
-          <div class="choice__choiceInfo__choiceName">
-            <input type="text" id="choiceName" name="choiceName" placeholder="Phân loại theo"
-              choiceName-data="1" required />
-          </div>
-          <div class="choice__choiceInfo__choiceValue">
-            <input type="text" name="choiceValue" placeholder="Giá trị phân loại" choiceValue-data="1"
-              required />
-          </div>
-        </div>
-        <div class="choice__addValue">
-          <button onclick="addChoiceValue(this)" class="plus-button">+</button>
-        </div>
-      </div>
-      
+
       <div class="container__variant__addChoice">
         <button id="addChoice" onclick="addFormChoice()" class="addElement">Thêm phân loại</button>
+        <button id="saveChoice" onclick="updateAndDisplay()" class="saveElement">Lưu phân loại</button>
       </div>
     </div>
 
@@ -128,25 +73,26 @@
       <p>NGOẠI LỆ</p>
     </div>
     <div id="exception" class="container__exception">
-      <div class="container__exception__choice">
-        <div class="choice__choiceInfo">
-          <select class="select__exception">
-            <option disabled selected>--- Chọn màu sắc ---</option>
-            <option value="red">Đỏ</option>
-            <option value="blue">Xanh</option>
-            <option value="green">Lục</option>
-          </select>
-          <select class="select__exception">
-            <option disabled selected>--- Chọn chất liệu ---</option>
-            <option value="red">Vàng</option>
-            <option value="blue">Kim cương</option>
-          </select>
-        </div>
-        <div class="choice__addValue">
-          <input type="text" id="priceChoice" name="priceChoice" placeholder="Giá cả" required />
-          <button class="plus-button" onclick="addExceptionValue(this)">+</button>
-        </div>
+      <!-- <div class="container__exception__choice">
+      <div class="choice__choiceInfo">
+        <select class="select__exception">
+          <option all="true" disabled selected>--- Chọn màu sắc ---</option>
+          <option value="red">Đỏ</option>
+          <option value="blue">Xanh</option>
+          <option value="green">Lục</option>
+        </select>
+        <select class="select__exception">
+          <option all="true" disabled selected>--- Chọn chất liệu ---</option>
+          <option value="red">Vàng</option>
+          <option value="blue">Kim cương</option>
+        </select>
       </div>
+      
+      <div class="choice__addValue">
+        <input type="text" id="priceChoice" name="priceChoice" placeholder="Giá cả" required />
+        <button class="plus-button" onclick="addExceptionValue(this)">+</button>
+      </div>
+    </div>-->
       <div class="container__variant__addChoice">
         <button id="addExceptionForm" onclick="addExceptionForm()" class="addElement">Thêm ngoại lệ</button>
       </div>
@@ -158,48 +104,50 @@
       <p>MÃ GIẢM GIÁ</p>
     </div>
     <div id="sale" class="container__sale">
-      <div class="container__sale__choice">
-        <div class="choice__choiceInfo">
-          <select class="selectedChoice">
-            <option disabled selected>--Màu sắc--</option>
-            <option value="red">Đỏ</option>
-            <option value="blue">Xanh</option>
-            <option value="green">Lục</option>
-          </select>
-          <select class="selectedChoice">
-            <option disabled selected>--Chất liệu--</option>
-            <option value="red">Vàng</option>
-            <option value="blue">Kim cương</option>
-          </select>
+      <!--<div class="container__sale__choice">
+      <div class="choice__choiceInfo">
+        <select class="selectedChoice">
+          <option disabled selected>Màu sắc</option>
+          <option value="red">Đỏ</option>
+          <option value="blue">Xanh</option>
+          <option value="green">Lục</option>
+        </select>
+        <select class="selectedChoice">
+          <option disabled selected>Chất liệu</option>
+          <option value="red">Vàng</option>
+          <option value="blue">Kim cương</option>
+        </select>
+      </div>
+      <div class="choice__saleChoice">
+        <div class="sale-infor">
+          <label for="saleNumber">Giảm giá:</label>
+          <input type="text" id="saleNumber" name="saleNumber" placeholder="Vd: 50" required />%
         </div>
-        <div class="chocie__saleChocie">
-          <div class="sale-infor">
-            <label for="saleNumber">Giảm giá:</label>
-            <input type="text" id="saleNumber" name="saleNumber" placeholder="Vd: 50" required />%
-          </div>
-          <div class="sale-infor">
-            <label for="startDate">Bắt đầu:</label>
-            <input type="datetime-local" id="startDate" name="startDate" required />
-          </div>
-          <div class="sale-infor">
-            <label for="toDate">Kết thúc:</label>
-            <input type="datetime-local" id="toDate" name="toDate" required />
-          </div>
+        <div class="sale-infor">
+          <label for="startDate">Bắt đầu:</label>
+          <input type="datetime-local" id="startDate" name="startDate" required />
         </div>
-        <div class="choice__addValue">
-          <button onclick="addSaleChoiceValue(this)" class="plus-button">+</button>
+        <div class="sale-infor">
+          <label for="toDate">Kết thúc:</label>
+          <input type="datetime-local" id="toDate" name="toDate" required />
         </div>
       </div>
+      
+      <div class="choice__addValue">
+        <button onclick="addSaleChoiceValue(this)" class="delete-button">x</button>
+      </div>
+    </div>-->
       <div class="container__variant__addChoice">
-        <button id="showExceptionForm" onclick="addSaleForm()" class="addElement">Thêm mã giảm giá</button>
+        <button id="showSaleForm" onclick="addSaleForm()" class="addElement">Thêm mã giảm giá</button>
       </div>
     </div>
   </div>
   <div class="submit">
-    <button onclick="submit()">Sửa</button>
+    <button type="submit" onclick="editProduct()">Thêm</button>
   </div>
+
 </body>
-<script src="/js/editProduct.js"></script>
+<script src="/js/addProduct.js"></script>
 <script src="/js/category_tree.js"></script>
 
 </html>

@@ -25,14 +25,16 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     const inputElement = document.getElementById("productSearch");
+    inputElement.value = `${window.location.pathname.substring(19)}`
     inputElement.addEventListener("change", function(event) {
         const inputValue = event.target.value;
         if(inputValue.trim() != ''){
             window.location = "/fe/product/search/" + inputValue
+        } else{
+            window.location = "/fe/product/viewAll"
         }
     });
 });
-
 
 var rotationName = 0;
 function sortByName(){
@@ -95,7 +97,8 @@ function fetchlistProduct(index) {
         }
     };
 
-    xhttp.open("GET", `http://26.127.173.194:8080/api/v1.0/Products?pageNo=${index}&pageSize=8`, false);
+    xhttp.open("GET", `http://26.127.173.194:8080/api/v1.0/ProductByName/${window.location.pathname.substring(19)}?pageNo=${index}&pageSize=8`, false);
+
     xhttp.setRequestHeader("Content-type", "application/json");
     token = localStorage.getItem("Token");
     authorization = 'Bearer ' + token;
@@ -115,8 +118,12 @@ function updatePaginationButtons() {
 function showProductsByIndex(index) {
     var tableProductElement = document.getElementById('productInformation');
     console.log(listProduct)
+    console.log(index)
     var start = (index - 1) * pageSize;
     var end = Math.min(index * pageSize, listProduct.length - 1)
+    if(end == start){
+        end++;
+    }
     var tableProductHtml = '';
     for (var i = start; i < end; i++) {
         console.log(listProduct[i])
