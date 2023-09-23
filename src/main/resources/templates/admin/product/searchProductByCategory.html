@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/css/admin/viewProduct.css" />
+    <link rel="stylesheet" href="/css/admin/ViewCategory.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="header">
+        <div class="navbar__logo">
+            <a href="#">
+              <img src="/img/60.png" alt="" />
+            </a>
+        </div>
+        <div class="header__navbar">
+            <div class="search">
+                <input id="productSearch" type="search" placeholder="Tìm kiếm...">
+            </div>
+            <div class="header__menu">
+                <ul>
+                    <li><a href="/fe/product/viewAll">Quản lí sản phẩm</a></li>
+                    <li><a href="/fe/category/viewAll">Quản lí thể loại</a></li>
+                    <li><a href="/fe/order/viewAll">Quản lí đơn hàng</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="db-product">
+        <div class="head-table">
+            <!--<div class="search">
+                <i class="fa fa-search"></i>
+                <input id="productSearch" type="search" placeholder="Nhập tên sản phẩm" />
+            </div>-->
+            <div class="spacer"></div>
+
+            <li id="navbar">
+                <a> Thể loại </a>
+                <ul>
+                    <li>
+                        <a href=""> Bàn </a>
+                        <ul>
+                            <li> <a href="">Bàn tròn</a>
+                              <ul>
+                                    <li> <a href="">Bàn tròn trơn</a></li>
+                                    <li> <a href="">Bàn tròn hoa</a></li>
+                              </ul>
+                            </li>
+                            <li> <a href="">Bàn gập</a></li>
+                            <li> <a href="">Bàn vuông</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href=""> Ghế </a>
+                        <ul>
+                            <li> <a href="">Ghế xoay</a></li>
+                            <li> 
+                              <a href="">Ghế đẩu</a>
+                              <ul>
+                                  <li>
+                                      <a href="">Ghế đẩu nhựa</a>
+                                      <ul>
+                                          <li> <a href="">Ghế đẩu nhựa trẻ em</a></li>
+                                          <li> <a href="">Ghế đẩu nhựa không đặc sắc</a></li>
+                                      </ul>
+                                  </li>
+                                  <li> <a href="">Ghế đẩu gỗ</a></li>
+                              </ul>
+                            </li>
+                            
+                        </ul>
+                    </li>
+
+                </ul>
+            </li>
+
+
+            <div class="add">
+                <a href="/fe/product/add" class="btn-add"> Thêm sản phẩm </a>
+            </div>
+        </div>
+        <table id="database">
+            <thead>
+                <tr>
+
+                    <th class="main-infor">
+                        SẢN PHẨM
+                        <span class="arrow" idProduct="${listProduct[i].id}" id="sortByName">▼</span>
+                    </th>
+                    <th>
+                        MÃ SẢN PHẨM
+                        <span class="arrow" idProduct="${listProduct[i].id}" id="sortByCode">▼</span>
+                    </th>
+                    <th>TRẠNG THÁI</th>
+                    <th>HÀNH ĐỘNG</th>
+                </tr>
+            </thead>
+            <tbody id="productInformation">
+                <tr>
+                    <td class="main-infor ">
+                        <a href="https://www.facebook.com/">
+                            <img class="product-img"
+                                src="https://thuonghieuvaphapluat.vn/Images/hanhnm/2020/11/18/image001.jpg" />
+                            <div class="product-name">
+                                <h5>Vòng cổ</h5>
+                            </div>
+                        </a>
+                    </td>
+                    <td>Violet2015</td>
+                    <td>
+                        <label class="toggle">
+                            <input type="checkbox" id="toggleSwitch">
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+                    <td class="action">
+                        <a href="/fe/product/edit/1" class="edit" data-toogle="tooltip" data-original-title="Sửa">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                        <a class="delete" data-toogle="tooltip" data-original-title="Xoá">
+                            <i class="fa fa-trash-o"></i>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+        <div class="pagination" id="pagination">
+            <button class="page-button.open">1</button>
+            <button class="page-button">2</button>
+            <button class="page-button">3</button>
+            <!-- ... Thêm các nút số trang khác ở đây ... -->
+        </div>
+    </div>
+</body>
+<script src="/js/config.js"></script>
+<script src="/js/admin/searchProductByCategory.js"></script>
+
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0-beta3/css/all.min.css">
+    <title>View</title>
+    <link rel="stylesheet" href="/css/admin/ViewCategory.css">
+</head>
+<script>
+    function confirmDeleteCategory(categoryName) {
+      const isConfirmed = confirm(`Bạn có chắc chắn muốn xóa category "${categoryName}" không?`);
+      if (isConfirmed) {
+        // Thực hiện xóa category tại đây (có thể thêm logic xóa category theo yêu cầu)
+        alert(`Đã xóa category "${categoryName}"`);
+      }
+    }
+</script>
+<body>
+    <div id="header">
+        <div class="navbar__logo">
+            <a href="#">
+              <img src="/img/60.png" alt="" />
+            </a>
+        </div>
+        <div class="header__navbar">
+            <div class="search">
+                <input type="search" placeholder="Tìm kiếm...">
+            </div>
+            <div class="header__menu">
+                <ul>
+                    <li><a href="/fe/product/viewAll">Quản lí sản phẩm</a></li>
+                    <li><a href="/fe/category/viewAll">Quản lí thể loại</a></li>
+                    <li><a href="/fe/order/viewAll">Quản lí đơn hàng</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="container">
+        <div class="add"><a href="/fe/category/add"><button>Thêm mới</button></a></div>
+        <div class="folder-tree">
+            
+            <ul id="addtree">
+                
+            </ul>
+        </div>
+        
+    </div>
+    <div class="overlay" id="overlay"></div>
+    <div class="modal" id="modal">
+      <h2>Thông báo</h2>
+      <p>Bạn chắc chắn muốn xóa thể loại này ?</p>
+      <button id="closeModal">No</button>
+      <button id="confirm">Yes</button>
+    </div>
+</body>
+<script src="/js/config.js"></script>
+<script src="/js/admin/listCategory.js"></script>
+<!-- <script src="script.js"></script> -->
+</html>

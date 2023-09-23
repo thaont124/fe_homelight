@@ -1,0 +1,485 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+@font-face {
+  font-family: 'UTM Avo';
+  src: url('/Font/UTM-Avo.ttf') format('truetype');
+  /* Thay đổi đường dẫn đến font chữ */
+  /* Nếu font chữ có các định dạng khác nhau như .woff hoặc .woff2, bạn có thể thêm các dòng dưới đây: 
+  src: url('./path/to/utm-avo.woff') format('woff'),
+  src: url('./path/to/utm-avo.woff2') format('woff2'), */
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: "UTM Avo", "Arial", sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+img {
+  vertical-align: middle;
+}
+
+a {
+  text-decoration: none;
+  background-color: transparent;
+}
+
+span {
+  cursor: pointer;
+}
+
+span {
+  transition: transform 0.3s;
+}
+
+/* ----------------------------search---------------------------- */
+.head-table{
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: space-between
+}
+
+.spacer {
+  flex-grow: 1; /* Kéo dãn phần khoảng trống để lấp đầy không gian trống còn lại */
+}
+
+.search {
+  display: flex;
+  /* Sử dụng flex layout */
+  align-items: center;
+  /* Căn giữa theo chiều dọc */
+  background-color: #f1f1f1;
+  /* Màu nền của thanh tìm kiếm */
+  padding: 5px;
+  /* Đặt padding để tạo khoảng cách xung quanh */
+  border-radius: 5px;
+  /* Đặt góc cong cho thanh tìm kiếm */
+  margin: 5px 4px;
+}
+
+.search i {
+  color: #888;
+  
+}
+
+.search input {
+  border: none;
+  /* Loại bỏ viền input */
+  background-color: transparent;
+  /* Đặt màu nền của input là trong suốt */
+  outline: none;
+  /* Loại bỏ viền khi focus vào input */
+  padding: 5px;
+  /* Đặt padding cho input */
+  font-size: 16px;
+  /* Đặt cỡ chữ cho input */
+  min-width: 30vw
+  /* Đặt chiều rộng cho input */
+  
+}
+
+.search input::placeholder {
+  color: #888;
+  /* Màu chữ gợi ý trong input */
+}
+
+.search input:focus::placeholder {
+  color: transparent;
+  /* Loại bỏ chữ gợi ý khi focus vào input */
+}
+
+.btn-add {
+  display: inline-block;
+  padding: 0.8em 1.5em 0.6em 1.5em;
+  margin: 2px 4px;
+  border: 2px solid #5f70bd;
+  background: #5f70bd;
+  color: #fff;
+  font-size: 1em;
+  margin-left: 0;
+  border-radius: 5px;
+  cursor: pointer;
+  
+}
+
+
+/* ----------------------------category---------------------------- */
+li#navbar {
+  position: relative;
+  padding: 0.8em 1.5em 0.6em 1.5em;
+  margin: 2px 4px;
+  border: 2px solid #5f70bd;
+  background: #fff;
+  color: #5f70bd;
+  font-size: 1em;
+  margin-left: 0;
+  border-radius: 5px;
+  cursor: pointer;
+  
+}
+
+li#navbar:hover > ul{
+  display: inline-block;
+}
+
+li#navbar li{
+  position: relative;
+  padding: 0.8em 1.5em 0.6em 1.5em;
+  border: 2px solid #5f70bd;
+  background-color: #fff;
+  color: #5f70bd;
+  margin-left: 0;
+  border-radius: 5px;
+  cursor: pointer;
+  left: 0;
+  top: 100%;
+  width: 100%;
+  height: fit-content;
+}
+
+
+
+li#navbar ul {
+  position: absolute;
+  display: none;
+  left: 0;
+  top: 100%;
+  width: 100%
+}
+
+li#navbar:hover > ul {
+  display: block;
+}
+
+
+li#navbar  li > ul {
+  display: none;
+}
+li {
+  list-style: none;
+  background-color: white;
+}
+li#navbar li > a {
+  text-decoration: none;
+  color: #5f70bd;
+  background-color: white;
+  display: inline-block;
+  padding: 0px, 5vh
+}
+
+li#navbar li:hover > ul {
+  display: block;
+}
+
+
+
+li#navbar li:hover{
+  background-color: #a4c6eb;
+}
+
+
+li#navbar li:hover > a{
+  font-style: solid;
+  background-color: #a4c6eb;
+  color: #f1f1f1;
+}
+
+
+li#navbar li > ul {
+  position: absolute;
+}
+
+li#navbar  ul > li > ul {
+  left: 100%;
+  top: 0;
+  width: 100%
+}
+/* ----------------------------table---------------------------- */
+.db-product {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 6px 12px rgba(140, 152, 164, 0.75);
+  width: 100%;
+  /* max-width: 1200px; */
+  background-clip: border-box;
+  border: solid rgba(172, 174, 180, 0.7);
+  border-radius: 10px;
+  margin-top: 40px;
+}
+
+#database {
+  text-indent: initial;
+  border-spacing: 2px;
+  border-collapse: collapse;
+}
+
+#database thead tr {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+/* Định dạng khi kéo thả */
+tr.dragover {
+  background-color: #f5f5f5;
+}
+
+/* Định dạng các cột trong bảng */
+#database th {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+
+#database td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+.main-infor {
+  max-width: 200px;
+  text-align: left !important;
+}
+
+
+
+.product-img {
+  position: relative;
+  border-radius: 3px;
+  width: 22.5%;
+  height: 20vh;
+}
+
+.product-name {
+  display: inline-block;
+  padding-left: 2px;
+}
+
+.product-name h5 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: bold;
+  color: #000;
+}
+
+/* CSS cho phần tử <td> có class="action" */
+td.action {
+  text-align: center !important;
+  max-width: 50px;
+}
+
+/* Định dạng các biểu tượng (icon) */
+td.action a {
+  margin: 10px;
+  text-align: center;
+  cursor: pointer;
+  color: gray;
+}
+
+td.action a:hover {
+  color: #000;
+}
+
+/* Định dạng tooltip (thông báo chú thích) */
+[data-toogle="tooltip"] {
+  position: relative;
+}
+
+/* Hiển thị tooltip khi rê chuột vào biểu tượng */
+[data-toogle="tooltip"]:hover::after {
+  content: attr(data-original-title);
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #000;
+  color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  white-space: nowrap;
+  font-size: 12px;
+}
+
+
+
+/* ----------------------------toogle---------------------------- */
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.toggle input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked+.slider {
+  background-color: #2196F3;
+}
+
+input:checked+.slider:before {
+  transform: translateX(26px);
+}
+
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.toggle input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked+.slider {
+  background-color: #2196F3;
+}
+
+input:checked+.slider:before {
+  transform: translateX(26px);
+}
+
+
+/* ----------------------------notification---------------------------- */
+
+/* CSS cho overlay mờ */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
+}
+
+/* CSS cho khung thông báo */
+.notification {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  padding: 20px;
+  z-index: 9999;
+}
+
+.notification-content {
+  text-align: center;
+}
+
+.notification button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.notification #deleteButton,
+#okButton {
+  background-color: #dc3545;
+  color: white;
+}
+
+.notification #deleteButton:hover,
+#okButton:hover {
+  background-color: #c82333;
+}
+
+.notification #cancelButton {
+  background-color: #6c757d;
+  color: white;
+  margin-left: 10px;
+}
+
+.notification #cancelButton:hover {
+  background-color: #5a6268;
+}
+
+/* ----------------------------pagination---------------------------- */
+
+/* CSS cho số trang */
+.pagination {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.page-button {
+  border: none;
+  background-color: transparent;
+  color: #007bff;
+  cursor: pointer;
+  margin: 0 5px;
+  padding: 5px 10px;
+  border-radius: 3px;
+  font-size: 14px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.page-button.active,
+.page-button:hover {
+  background-color: #007bff;
+  color: white;
+}

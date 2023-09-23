@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0-beta3/css/all.min.css">
+    <title>View</title>
+    <link rel="stylesheet" href="/css/admin/ViewCategory.css">
+    <link rel="stylesheet" href="/css/admin/order.css">
+
+</head>
+
+<body>
+    <div id="header">
+        <div class="navbar__logo">
+            <a href="#">
+              <img src="/img/60.png" alt="" />
+            </a>
+        </div>
+        <div class="header__navbar">
+            <div class="search">
+                <input type="search" placeholder="Tìm kiếm...">
+            </div>
+            <div class="header__menu">
+                <ul>
+                    <li><a href="/fe/product/viewAll">Quản lí sản phẩm</a></li>
+                    <li><a href="/fe/category/viewAll">Quản lí thể loại</a></li>
+                    <li><a href="/fe/order/viewAll">Quản lí đơn hàng</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div id="container">
+        <h1>Quản lý đơn hàng</h1>
+        <select id="status">
+          <option id="complete" value="1">Đã hoàn thành</option>
+          <option id="incom" value="0">Chưa hoàn thành</option>
+        </select>
+        <label>Từ :</label>
+        <input id="from" type="date">
+        <label> Đến :</label>
+        <input id="to" type="date">
+        <button onclick="Orders(1)">Lọc</button>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Address</th>
+        <th>Product List</th>
+        <th>Done</th>
+      </tr>
+    </thead>
+    <tbody id="orders">
+      
+      <!-- Add more rows for other orders -->
+    </tbody>
+  </table>
+  
+    </div>
+    <div class="overlay" id="overlay"></div>
+    <div class="modal" id="modal">
+      <h2>Thông báo</h2>
+      <p>Xác nhận đơn hàng hoàn thành?</p>
+      <button id="closeModal">No</button>
+      <button id="confirm">Yes</button>
+    </div>
+</body>
+<script src="/js/config.js"></script>
+<script src="/js/admin/order.js"></script>
+<!-- <script src="script.js"></script> -->
+</html>

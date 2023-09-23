@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0-beta3/css/all.min.css">
+    <title>Giỏ hàng</title>
+    <link rel="stylesheet" href="/css/home/cart.css">
+</head>
+<body>
+  <div id="headerMobile">
+    <div class="headerMobile__navbar">
+      <div class="navbar__logo">
+        <a href="#">
+          <img src="/img/60.png" alt="" />
+        </a>
+      </div>
+    </div>
+    <div class="headerMobile__menu">
+      <div class="menu__content">
+        <div class="navbar__iconshow">
+            <div class="iconshow__icon" onclick="showList()" >
+              <h2>MENU</h2>
+              <i class="fa-solid fa-bars"></i>
+            </div>
+
+        </div>
+        <div id="contentmenuCategoryMobile">
+          <ul>
+            <li>
+              <a href="#" class="selected">TRANG CHỦ</a>
+            </li>
+            
+          </ul>
+        </div>
+        <div class="navbar__search">
+          <div id="searchMobile__product">
+            <input type="text" placeholder="Tìm đèn từ Homelight" />
+            <div class="searchMobile__icon">
+              <i class="fas fa-search"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div id="header">
+        <div class="header__navbar">
+          <div class="navbar__logo">
+            <a href="#">
+              <img src="/img/60.png" alt="" />
+            </a>
+          </div>
+          <div class="navbar__search">
+            <div id="search__product">
+              <input type="text" placeholder="Tìm đèn từ Homelight" />
+              <div class="search__icon">
+                <i class="fas fa-search"></i>
+              </div>
+            </div>
+          </div>
+          <div class="navbar__contactnumber">
+            <div class="contactnumber___logo">
+              <i class="far fa-phone"></i>
+            </div>
+            <div class="contactnumber__content">
+              <span>HOTLINE HỖ TRỢ</span>
+              <b>086.999.5698</b>
+            </div>
+          </div>
+          <div class="navbar__cart">
+            <a href="#">
+              <div class="cart__logo">
+                <i class="fas fa-shopping-cart"></i>
+              </div>
+              <div class="cart__content">
+                <p>Giỏ Hàng</p>
+              </div>
+              <div class="cart__number">
+                <b>0</b>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="header__menu">
+          <div class="menu__content">
+            <div id="contentmenuCategory">
+              <ul>
+                <li>
+                  <a href="#">TRANG CHỦ</a>
+                </li>
+                <li>
+                  <a href="#">ĐÈN CHÙM</a>
+                  <div class="category__children">
+                    <ul>
+                      <li>
+                        <a href="#"
+                          ><i class="fa-solid fa-caret-right"></i> Đèn thả phòng
+                          khách</a
+                        >
+                      </li>
+                      <li>
+                        <a href="">
+                          <i class="fa-solid fa-caret-right"></i>Đèn thả phòng
+                          khách</a
+                        >
+                      </li>
+                      <li>
+                        <a href="">
+                          <i class="fa-solid fa-caret-right"></i>Đèn thả phòng
+                          khách</a
+                        >
+                      </li>
+                      <li>
+                        <a href="">
+                          <i class="fa-solid fa-caret-right"></i> Đèn thả phòng
+                          khách</a
+                        >
+                      </li>
+                      <li>
+                        <a href="">
+                          <i class="fa-solid fa-caret-right"></i> Đèn thả phòng
+                          khách</a
+                        >
+                      </li>
+                      <li>
+                        <a href="">
+                          <i class="fa-solid fa-caret-right"></i> Đèn thả phòng
+                          khách</a
+                        >
+                      </li>
+                      <li>
+                        <a href="">
+                          <i class="fa-solid fa-caret-right"></i> Đèn thả phòng
+                          khách</a
+                        >
+                      </li>
+                      <li>
+                        <a href="">
+                          <i class="fa-solid fa-caret-right"></i> Đèn thả phòng
+                          khách</a
+                        >
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+                <li>
+                  <a href="">ĐÈN THẢ</a>
+                </li>
+                <li>
+                  <a href="">ĐÈN MÂM ỐP TRẦM</a>
+                </li>
+                <li>
+                  <a href="">ĐÈN GƯƠNG</a>
+                </li>
+                <li>
+                  <a href="">ĐÈN BÀN - ĐÈN CẦY</a>
+                </li>
+                <li>
+                  <a href="">ĐÈN TƯỜNG</a>
+                </li>
+                <li>
+                  <a href="">QUẠT TRẦN</a>
+                </li>
+                <li>
+                  <a href="">ĐÈN LED</a>
+                </li>
+                <li>
+                  <a href="">ĐÈN NGOÀI TRỜI</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    <div class="container">
+        <div id="cart">
+            <h1>Giỏ hàng của bạn</h1>
+            <input type="checkbox" class="allproduct-checkbox" id="allproduct-checkbox">
+            <span>Chọn tất cả</span>
+            <!-- <div class="cart-item">
+                <input type="checkbox" class="product-checkbox">
+                <img src="https://scontent.xx.fbcdn.net/v/t1.15752-9/364541737_107245232451779_2139820527749191198_n.jpg?stp=dst-jpg_s235x350&_nc_cat=104&ccb=1-7&_nc_sid=aee45a&_nc_ohc=0vvdat2CsvMAX-mzdCJ&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&oh=03_AdTGhjeOqnUWn74u49vnefPW6wW2fJpl7CjjWCzN8tn_hg&oe=64F14D1D" alt="Sản phẩm 1">
+                <div class="product-details">
+                    <span>Tên sản phẩm 1</span><br>
+                    <span class="oldprice">$100</span>
+                    <span class="newprice">80d</span><br>
+                    <span>Size : M</span>
+                    <span>; Màu : Đen</span>
+                    <div class="quantity">
+                        <button class="minus-btn">-</button>
+                        <input type="number" min="1" value="1" productid="1">
+                        <button class="plus-btn">+</button>
+                    </div>
+                </div>
+                <i class="fa-solid fa-rectangle-xmark"></i>
+            </div> -->
+          
+            <!-- Thêm các mục giỏ hàng khác ở đây -->
+            <div class="cart-total" id="cart-total">
+                <p>Tổng cộng: $0</p>
+            </div>
+        </div>
+        <div class="form__cart">
+            <h2>Thông tin người mua hàng</h2>
+            <form action="" method="post" id="ahihi">
+                <label for="email" >Email:</label>
+                <input type="email" id="email" name="email" required oninvalid="this.setCustomValidity('Vui lòng nhập địa chỉ email')">
+                <p id="eEmail"></p>
+                <label for="phone">Số điện thoại:</label>
+                <input type="tel" id="phone" name="phone" required oninvalid="this.setCustomValidity('Vui lòng nhập số điện thoại')">
+                <p id="ePhone"></p>
+                <label for="address">Địa chỉ:</label>
+                <textarea id="address" name="address" required oninvalid="this.setCustomValidity('Vui lòng nhập địa chỉ ')"></textarea>
+                <p id="eAddress"></p>
+                <button type="submit" id="orderButton">Đặt hàng</button>
+            </form>
+        </div>    
+    </div>
+    <div id="footer">
+      <div class="footer__content">
+        <div class="footerContent__infor">
+          <div class="infor__contact">
+            <div class="contactCompany">
+              <div class="infor__title">
+                <strong>THÔNG TIN LIÊN HỆ</strong>
+                <span></span>
+              </div>
+              <div class="infor__content">
+                <ul>
+                  <li>
+                    <strong>Công Ty CP Xây Dựng và Thương Mại Homelight</strong>
+                  </li>
+                  <li><strong>ĐÈN TRANG TRÍ HOMELIGHT</strong></li>
+                  <li>HOTLINE: <strong>086.999.5698</strong></li>
+                  <li>EMAIL: <strong>ceo.homelight@gmail.com</strong></li>
+                  <li>
+                    Địa chỉ:
+                    <strong
+                      >Số nhà 56 Liền kề 4 - Khu Tổng cục V - Yên Xá - Tân Triều
+                      - Thanh Trì - Hà Nội.</strong
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="infor__about">
+            <div class="aboutCompany">
+              <div class="infor__title">
+                <strong>VỀ CHÚNG TÔI</strong>
+                <span></span>
+              </div>
+              <div class="infor__content">
+                <ul>
+                  <li><strong>Giới thiệu về Homelight</strong></li>
+                  <li><strong>Sơ đồ chỉ đường</strong></li>
+                  <li><strong>Lịch làm việc</strong></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="infor__supportBuy">
+            <div class="supportBuyCompany">
+              <div class="infor__title">
+                <strong>HỖ TRỢ MUA HÀNG</strong>
+                <span></span>
+              </div>
+              <div class="infor__content">
+                <ul>
+                  <li><strong>Bảo mật thông tin</strong></li>
+                  <li><strong>Vận chuyển - lắp đặt</strong></li>
+                  <li><strong>Phương thức thanh toán</strong></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="/js/config.js"></script>
+    <script src="/js/home/cart.js"></script>
+</body>
+</html>

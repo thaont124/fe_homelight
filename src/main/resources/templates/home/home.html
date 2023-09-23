@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/home/home.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div id="headerMobile">
+      <div class="headerMobile__navbar">
+        <div class="navbar__logo">
+          <a href="#">
+            <img src="/img/60.png" alt="" />
+          </a>
+        </div>
+      </div>
+      <div class="headerMobile__menu">
+        <div class="menu__content">
+          <div class="navbar__iconshow">
+              <div class="iconshow__icon" onclick="showList()" >
+                <h2>MENU</h2>
+                <i class="fa-solid fa-bars"></i>
+              </div>
+
+          </div>
+          <div id="contentmenuCategoryMobile">
+            <ul>
+              <li>
+                <a href="#" class="selected">TRANG CHỦ</a>
+              </li>
+              
+            </ul>
+          </div>
+          <div class="navbar__search">
+            <div id="searchMobile__product">
+              <input type="text" placeholder="Tìm đèn từ Homelight" />
+              <div class="searchMobile__icon">
+                <i class="fas fa-search"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="header">
+      <div class="header__navbar">
+        <div class="navbar__logo">
+          <a href="#">
+            <img src="/img/60.png" alt="" />
+          </a>
+        </div>
+        <div class="navbar__search">
+          <div id="search__product">
+            <input type="text" placeholder="Tìm đèn từ Homelight" />
+            <div class="search__icon">
+              <i class="fas fa-search"></i>
+            </div>
+          </div>
+        </div>
+        <div class="navbar__contactnumber">
+          <div class="contactnumber___logo">
+            <i class="far fa-phone"></i>
+          </div>
+          <div class="contactnumber__content">
+            <span>HOTLINE HỖ TRỢ</span>
+            <b>086.999.5698</b>
+          </div>
+        </div>
+        <div class="navbar__cart">
+          <a href="/fe/user/cart">
+            <div class="cart__logo">
+              <i class="fas fa-shopping-cart"></i>
+            </div>
+            <div class="cart__content">
+              <p>Giỏ Hàng</p>
+            </div>
+            <div class="cart__number">
+              <b>0</b>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="header__menu">
+        <div class="menu__content">
+          <div id="contentmenuCategory">
+            <ul>
+              <li>
+                <a href="#" class="selected">TRANG CHỦ</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="container">
+      <div class="container__slider">
+        <div id="slider__image">
+          <div class="slider__detailimage">
+            <a href="">
+              <img src="/img/g114.png" alt="" />
+            </a>
+          </div>
+          <div class="slider__detailimage">
+            <a href="">
+              <img src="/img/g117.jpg" alt="" />
+            </a>
+          </div>
+          <div class="slider__detailimage">
+            <a href="">
+              <img src="/img/g118.jpg" alt="" />
+            </a>
+          </div>
+          <div class="slider__detailimage">
+            <a href="">
+              <img src="/img/g119.jpg" alt="" />
+            </a>
+          </div>
+        </div>
+        <div class="slider__click">
+          <div id="slider__clickchange">
+            <div class="slider__clickDetail active">
+              <span></span>
+            </div>
+            <div class="slider__clickDetail">
+              <span></span>
+            </div>
+            <div class="slider__clickDetail">
+              <span></span>
+            </div>
+            <div class="slider__clickDetail">
+              <span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="container__content">
+        <div class="content__product">
+          <div class="product__show">
+            <ul class="show__listproduct">
+              <li class="show__productDetail">
+                <a href="">
+                  <img src="/img/82.jpg" alt="" />
+                </a>
+              </li>
+              <li class="show__productDetail">
+                <a href="">
+                  <img src="/img/83.jpg" alt="" />
+                </a>
+              </li>
+              <li class="show__productDetail">
+                <a href="">
+                  <img src="/img/84.jpg" alt="" />
+                </a>
+              </li>
+              <li class="show__productDetail">
+                <a href="">
+                  <img src="/img/85.jpg" alt="" />
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div id="product__sale">
+            <div class="productSale__header">
+              <div class="productSale__headerTitle">
+                <div class="headerTitle__icon"></div>
+                <div class="headerTitle__content">
+                  <h3>SẢN PHẨM KHUYẾN MẠI</h3>
+                </div>
+              </div>
+              <div class="productSale__headerViewAll">
+                <div class="headerViewAll__icon">
+                  <a href=""></a>
+                </div>
+              </div>
+            </div>
+            <ul class="productSale__content productList">
+              <li class="productDetail">
+                <a href="">
+                  <div class="backgroundImg"></div>
+                  <img src="/img/6c1f87d1c932c762.png" alt="" />
+                </a>
+                <div class="productDetail__content">
+                  <div class="productName">
+                    <a href=""><strong></strong></a>
+                  </div>
+                  <div class="product__priceSale">
+                   <span></span>
+                  </div>
+                  <div class="product__priceOrigin">
+                    <span></span> 
+                  </div>
+                </div>
+                
+              </li>
+              <li class="productDetail">
+                <a href="">
+                  <div class="backgroundImg"></div>
+                  <img src="/img/6c1f87d1c932c762.png" alt="" />
+                </a>
+                <div class="productDetail__content">
+                  <div class="productName">
+                    <a href=""><strong></strong></a>
+                  </div>
+                  <div class="product__priceSale">
+                   <span></span>
+                  </div>
+                  <div class="product__priceOrigin">
+                    <span></span> 
+                  </div>
+                </div>
+                
+              </li>
+              <li class="productDetail">
+                <a href="">
+                  <div class="backgroundImg"></div>
+                  <img src="/img/6c1f87d1c932c762.png" alt="" />
+                </a>
+                <div class="productDetail__content">
+                  <div class="productName">
+                    <a href=""><strong></strong></a>
+                  </div>
+                  <div class="product__priceSale">
+                   <span></span>
+                  </div>
+                  <div class="product__priceOrigin">
+                    <span></span> 
+                  </div>
+                </div>
+                
+              </li>
+              <li class="productDetail">
+                <a href="">
+                  <div class="backgroundImg"></div>
+                  <img src="/img/6c1f87d1c932c762.png" alt="" />
+                </a>
+                <div class="productDetail__content">
+                  <div class="productName">
+                    <a href=""><strong></strong></a>
+                  </div>
+                  <div class="product__priceSale">
+                   <span></span>
+                  </div>
+                  <div class="product__priceOrigin">
+                    <span></span> 
+                  </div>
+                </div>
+                
+              </li>
+              <li class="productDetail">
+                <a href="">
+                  <div class="backgroundImg"></div>
+                  <img src="/img/6c1f87d1c932c762.png" alt="" />
+                </a>
+                <div class="productDetail__content">
+                  <div class="productName">
+                    <a href=""><strong></strong></a>
+                  </div>
+                  <div class="product__priceSale">
+                   <span></span>
+                  </div>
+                  <div class="product__priceOrigin">
+                    <span></span> 
+                  </div>
+                </div>
+                
+              </li>
+              <li class="productDetail">
+                <a href="">
+                  <div class="backgroundImg"></div>
+                  <img src="/img/6c1f87d1c932c762.png" alt="" />
+                </a>
+                <div class="productDetail__content">
+                  <div class="productName">
+                    <a href=""><strong></strong></a>
+                  </div>
+                  <div class="product__priceSale">
+                   <span></span>
+                  </div>
+                  <div class="product__priceOrigin">
+                    <span></span> 
+                  </div>
+                </div>
+                
+              </li>
+              <li class="productDetail">
+                <a href="">
+                  <div class="backgroundImg"></div>
+                  <img src="/img/6c1f87d1c932c762.png" alt="" />
+                </a>
+                <div class="productDetail__content">
+                  <div class="productName">
+                    <a href=""><strong></strong></a>
+                  </div>
+                  <div class="product__priceSale">
+                   <span></span>
+                  </div>
+                  <div class="product__priceOrigin">
+                    <span></span> 
+                  </div>
+                </div>
+                
+              </li>
+               <li class="productDetail">
+                <a href="">
+                  <div class="backgroundImg"></div>
+                  <img src="/img/6c1f87d1c932c762.png" alt="" />
+                </a>
+                <div class="productDetail__content">
+                  <div class="productName">
+                    <a href=""><strong></strong></a>
+                  </div>
+                  <div class="product__priceSale">
+                   <span></span>
+                  </div>
+                  <div class="product__priceOrigin">
+                    <span></span> 
+                  </div>
+                </div>
+                
+              </li>
+             
+            
+            </ul>
+          </div>
+          <div id="productListCategory">
+           
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="footer">
+      <div class="footer__content">
+        <div class="footerContent__infor">
+          <div class="infor__contact">
+            <div class="contactCompany">
+              <div class="infor__title">
+                <strong>THÔNG TIN LIÊN HỆ</strong>
+                <span></span>
+              </div>
+              <div class="infor__content">
+                <ul>
+                  <li>
+                    <strong>Công Ty CP Xây Dựng và Thương Mại Homelight</strong>
+                  </li>
+                  <li><strong>ĐÈN TRANG TRÍ HOMELIGHT</strong></li>
+                  <li>HOTLINE: <strong>086.999.5698</strong></li>
+                  <li>EMAIL: <strong>ceo.homelight@gmail.com</strong></li>
+                  <li>
+                    Địa chỉ:
+                    <strong
+                      >Số nhà 56 Liền kề 4 - Khu Tổng cục V - Yên Xá - Tân Triều
+                      - Thanh Trì - Hà Nội.</strong
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="infor__about">
+            <div class="aboutCompany">
+              <div class="infor__title">
+                <strong>VỀ CHÚNG TÔI</strong>
+                <span></span>
+              </div>
+              <div class="infor__content">
+                <ul>
+                  <li><strong>Giới thiệu về Homelight</strong></li>
+                  <li><strong>Sơ đồ chỉ đường</strong></li>
+                  <li><strong>Lịch làm việc</strong></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="infor__supportBuy">
+            <div class="supportBuyCompany">
+              <div class="infor__title">
+                <strong>HỖ TRỢ MUA HÀNG</strong>
+                <span></span>
+              </div>
+              <div class="infor__content">
+                <ul>
+                  <li><strong>Bảo mật thông tin</strong></li>
+                  <li><strong>Vận chuyển - lắp đặt</strong></li>
+                  <li><strong>Phương thức thanh toán</strong></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="/js/config.js"></script>
+  <script>
+    function formatProductDetail(productDetail,idProductDetail){
+      const formattedDetail = productDetail.trim().replace(/\s+/g, '-');
+      return '/productDetail/'+formattedDetail+'-i.'+idProductDetail;
+    }
+    updateCart();
+       function updateCart(){
+      let cartJson = localStorage.getItem("cart");
+      if(cartJson){
+        let cart = JSON.parse(cartJson);
+        document.querySelector(".cart__number b").innerHTML=cart.length;
+      }else{
+        document.querySelector(".cart__number b").innerHTML="0";
+      }
+    }
+    getProductOrderSort();
+    function getProductOrderSort(){
+      var xhr = new XMLHttpRequest();
+        xhr.open("GET", domain + "/api/v1.0/Products?pageNo=1&&pageSize=8", true);
+
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            var productListOrderSortData = JSON.parse(xhr.responseText);
+            console.log(productListOrderSortData);
+            var listProductOrderSortHtml=``;
+            var listProductOrderSortElement =document.querySelector('#product__sale .productSale__content');
+            for(var j=0;j<productListOrderSortData.length;j++){
+              listProductOrderSortHtml+=`
+               <li class="productDetail">
+                  <a href="/fe/user/productDetail/${productListOrderSortData[j]['id']}">
+                    <div class="backgroundImg"></div>
+                    <img src="`;
+                    let check=0;
+                    for(var k=0;k<productListOrderSortData[j]['image'].length;k++){
+                      if(productListOrderSortData[j]['image'][k]['type']==='image'){
+                        listProductOrderSortHtml+=`${productListOrderSortData[j]['image'][k]['url']}" `;
+                        check=1;
+                        break;
+                      }
+                    }
+                    if(check===0)listProductOrderSortHtml+='/img/6c1f87d1c932c762.png'
+                    listProductOrderSortHtml+=`alt="${productListOrderSortData[j]['productName']}" />
+                  </a>
+                  <div class="productDetail__content">
+                    <div class="productName">
+                      <a href="/fe/user/productDetail/${productListOrderSortData[j]['id']}"><strong>${productListOrderSortData[j]['productName']}</strong></a>
+                    </div>`;
+                let sale=0;
+                const currentTime = new Date();
+
+                if(productListOrderSortData[j]['variantsDTO'].length===1){
+                  if(!productListOrderSortData[j]['variantsDTO'][0]['choices']){
+                    for(var s =0; s<productListOrderSortData[j]['variantsDTO'][0]['sale'].length;s++){
+                      let startDate = new Date(productListOrderSortData[j]['variantsDTO'][0]['sale'][s]['startDate']);
+                      let endDate = new Date(productListOrderSortData[j]['variantsDTO'][0]['sale'][s]['endDate']);
+                      // Kiểm tra xem thời gian hiện tại có nằm trong khoảng thời gian của sự kiện hay không
+                      if (currentTime >= startDate && currentTime <= endDate) {
+                        sale=productListOrderSortData[j]['variantsDTO'][0]['sale'][s]['numberSale'];
+                      }
+                    }
+                    listProductOrderSortHtml+=`
+                        <div class="product__priceSale">
+                          <span>${productListOrderSortData[j]['variantsDTO'][0]['originPrice']*(100-sale)/100} đ </span>
+                        </div>
+                        <div class="product__priceOrigin">
+                          <span>${productListOrderSortData[j]['variantsDTO'][0]['originPrice']} đ </span> 
+                        </div>`;
+                  }
+                }else{
+                  let minPrice = productListOrderSortData[j]['variantsDTO'][0]['originPrice'];
+                  let maxPrice = productListOrderSortData[j]['variantsDTO'][0]['originPrice'];
+                  
+                  for (var k=0;k<productListOrderSortData[j]['variantsDTO'].length;k++){
+                    
+                    if(minPrice>productListOrderSortData[j]['variantsDTO'][k]['originPrice'])minPrice=productListOrderSortData[j]['variantsDTO'][k]['originPrice'];
+                    if(maxPrice<productListOrderSortData[j]['variantsDTO'][k]['originPrice'])maxPrice=productListOrderSortData[j]['variantsDTO'][k]['originPrice'];
+                    for(var s =0; s<productListOrderSortData[j]['variantsDTO'][0]['sale'].length;s++){
+                    let startDate = new Date(productListOrderSortData[j]['variantsDTO'][0]['sale'][s]['startDate']);
+                    let endDate = new Date(productListOrderSortData[j]['variantsDTO'][0]['sale'][s]['endDate']);
+                    // Kiểm tra xem thời gian hiện tại có nằm trong khoảng thời gian của sự kiện hay không
+                    if (currentTime >= startDate && currentTime <= endDate) {
+                      
+                      if(productListOrderSortData[j]['variantsDTO'][0]['sale'][s]['numberSale']>sale)
+                      sale=productListOrderSortData[j]['variantsDTO'][0]['sale'][s]['numberSale'];
+                    }
+                  }
+                  }
+                  if(minPrice==maxPrice){
+                    listProductOrderSortHtml+=`
+                        <div class="product__priceSale">
+                          <span>${minPrice} đ</span>
+                        </div>
+                        <div class="product__priceOrigin">
+                          <span></span> 
+                        </div>`;
+                  }else{
+                    listProductOrderSortHtml+=`
+                        <div class="product__priceSale">
+                          <span>${minPrice} đ- ${maxPrice} đ</span>
+                        </div>
+                        <div class="product__priceOrigin">
+                          <span></span> 
+                        </div>`;
+                  }
+                }
+                listProductOrderSortHtml+=`
+                  </div>`;
+                  if(sale!=0){
+                    listProductOrderSortHtml+=`
+                  
+                  <div class="productDetail__sale">
+                    <span>-${sale}%</span>
+                  </div>`}
+                  listProductOrderSortHtml+=`
+                </li>
+              `;
+            }
+            listProductOrderSortElement.innerHTML=listProductOrderSortHtml;
+          } else if (xhr.status === 404) {
+           
+            
+          } else {
+            console.log("Yêu cầu không thành công. Mã lỗi:", xhr.status);
+          }
+        };
+
+        xhr.onerror = function() {
+          console.log("Đã xảy ra lỗi trong quá trình yêu cầu.");
+         
+        };
+
+        xhr.send();
+      }
+    function getProductByCategoryID(categoryID) {
+      return new Promise(function(resolve, reject) {
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", domain + "/api/v1.0/ProductByCategory/" + categoryID + '?pageNo=1&&pageSize=8', true);
+
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            var productListByCategoryData = JSON.parse(xhr.responseText);
+            resolve(productListByCategoryData);
+          } else if (xhr.status === 404) {
+            console.log("Yêu cầu không thành công. Mã lỗi:", xhr.status);
+            resolve([]);
+          } else {
+            resolve([]);
+          }
+        };
+
+        xhr.onerror = function() {
+          console.log("Đã xảy ra lỗi trong quá trình yêu cầu.");
+          reject([]);
+        };
+
+        xhr.send();
+      });
+    }
+    async function getListProduct(categoryData){
+      var listProductHtml =``;
+      var listProductElement = document.getElementById("productListCategory");
+      for (var i = 0; i < categoryData.length; i++) {
+        listProductHtml+=`<div class="productByCategoryDetail">`;
+        listProductHtml+=`<div class="productByCategoryDetail__header">`;
+        listProductHtml+=`
+            <div class="productByCategoryDetail__parent">
+              <div class="headerTitle__content">
+                <h3>${categoryData[i]["categoryName"]}</h3>
+              </div>
+            </div>`;
+        listProductHtml+=`<ul class="productByCategoryDetail__children">`;
+        
+        if (categoryData[i]["children"]) {
+                for(var j=0;j<categoryData[i]["children"].length;j++){
+                  listProductHtml+=`
+                    <li class="categoryChildrenName">
+                      <a href="/fe/user/productByCategory/${categoryData[i]["children"][j]["id"]}"><h4>${categoryData[i]["children"][j]["categoryName"]}</h4></a>
+                    </li>
+                  `;
+                }
+          
+        }
+        listProductHtml+=`</ul>`;
+        listProductHtml+=`
+          <div class="productSale__headerViewAll">
+            <div class="headerViewAll__icon">
+              <a href=""></a>
+            </div>
+          </div>
+        `;
+        listProductHtml+=`</div>`;
+
+        // Thêm Product cho category
+        listProductHtml+=`<ul class="productSale__content productList">`;
+        let productListByCategoryData = await getProductByCategoryID(categoryData[i]["id"]); 
+        //console.log(productListByCategoryData)
+
+        for(var j=0;j<productListByCategoryData.length;j++){
+              listProductHtml+=`
+               <li class="productDetail">
+                  <a href="/fe/user/productDetail/${productListByCategoryData[j]['id']}">
+                    <div class="backgroundImg"></div>
+                    <img src="`;
+                    let check=0;
+                    for(var k=0;k<productListByCategoryData[j]['image'].length;k++){
+                      if(productListByCategoryData[j]['image'][k]['type']==='image'){
+                        listProductHtml+=`${productListByCategoryData[j]['image'][0]['url']}" `;
+                        check=1;
+                        break;
+                      }
+                    }
+                    if(check===0)listProductHtml+='/img/6c1f87d1c932c762.png'
+                    listProductHtml+=`alt="${productListByCategoryData[j]['productName']}" />
+                  </a>
+                  <div class="productDetail__content">
+                    <div class="productName">
+                      <a href="/fe/user/productDetail/${productListByCategoryData[j]["id"]}"><strong>${productListByCategoryData[j]['productName']}</strong></a>
+                    </div>`;
+                let sale=0;
+                const currentTime = new Date();
+
+                if(productListByCategoryData[j]['variantsDTO'].length===1){
+                  if(!productListOrderSortData[j]['variantsDTO'][0]['choices']){
+                    for(var s =0; s<productListByCategoryData[j]['variantsDTO'][0]['sale'].length;s++){
+                      let startDate = new Date(productListByCategoryData[j]['variantsDTO'][0]['sale'][s]['startDate']);
+                      let endDate = new Date(productListByCategoryData[j]['variantsDTO'][0]['sale'][s]['endDate']);
+                      // Kiểm tra xem thời gian hiện tại có nằm trong khoảng thời gian của sự kiện hay không
+                      if (currentTime >= startDate && currentTime <= endDate) {
+                        sale=productListByCategoryData[j]['variantsDTO'][0]['sale'][s]['numberSale'];
+                      }
+                    }
+                    
+                    listProductHtml+=`
+                        <div class="product__priceSale">
+                          <span>${productListByCategoryData[j]['variantsDTO'][0]['originPrice']*(100-sale)/100} đ </span>
+                        </div>
+                        <div class="product__priceOrigin">
+                          <span>${productListByCategoryData[j]['variantsDTO'][0]['originPrice']} đ </span> 
+                        </div>`;
+                  }
+                }else{
+                  let minPrice = productListByCategoryData[j]['variantsDTO'][0]['originPrice'];
+                  let maxPrice = productListByCategoryData[j]['variantsDTO'][0]['originPrice'];
+                  for (var k=0;k<productListByCategoryData[j]['variantsDTO'].length;k++){
+                    if(minPrice>productListByCategoryData[j]['variantsDTO'][k]['originPrice'])minPrice=productListByCategoryData[j]['variantsDTO'][k]['originPrice'];
+                    if(maxPrice<productListByCategoryData[j]['variantsDTO'][k]['originPrice'])maxPrice=productListByCategoryData[j]['variantsDTO'][k]['originPrice'];
+                    for(var s =0; s<productListByCategoryData[j]['variantsDTO'][0]['sale'].length;s++){
+                    let startDate = new Date(productListByCategoryData[j]['variantsDTO'][0]['sale'][s]['startDate']);
+                    let endDate = new Date(productListByCategoryData[j]['variantsDTO'][0]['sale'][s]['endDate']);
+                    // Kiểm tra xem thời gian hiện tại có nằm trong khoảng thời gian của sự kiện hay không
+                    if (currentTime >= startDate && currentTime <= endDate) {
+                      if(productListByCategoryData[j]['variantsDTO'][0]['sale'][s]['numberSale']>sale)
+                      sale=productListByCategoryData[j]['variantsDTO'][0]['sale'][s]['numberSale'];
+                    }
+                  }
+                  }
+                  if(minPrice==maxPrice){
+                    listProductHtml+=`
+                        <div class="product__priceSale">
+                          <span>${minPrice} đ</span>
+                        </div>
+                        <div class="product__priceOrigin">
+                          <span></span> 
+                        </div>`;
+                  }else{
+                  listProductHtml+=`
+                      <div class="product__priceSale">
+                        <span>${minPrice} đ- ${maxPrice} đ</span>
+                      </div>
+                      <div class="product__priceOrigin">
+                        <span></span> 
+                      </div>`;}
+                }
+                listProductHtml+=`
+                  </div>`;
+                  if(sale!=0){
+                    listProductHtml+=`
+                  
+                  <div class="productDetail__sale">
+                    <span>-${sale}%</span>
+                  </div>`}
+                  listProductHtml+=`
+                </li>
+              `;
+            }
+            listProductHtml+=`</ul>`;
+        listProductElement.innerHTML=listProductHtml+'</div>';
+      }
+    }
+    getCategories();
+    function getCategories() {
+      // Tạo một đối tượng XMLHttpRequest mới
+      var xhr = new XMLHttpRequest();
+
+      // Đặt phương thức và URL cho yêu cầu
+      xhr.open("GET", domain + "/api/v1.0/Categories", true);
+
+      // Xử lý sự kiện khi yêu cầu hoàn thành
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          // Xử lý dữ liệu nhận được từ phản hồi
+          var categoryData = JSON.parse(xhr.responseText);
+          getListProduct(categoryData);
+
+
+          var categoryHtml = `
+            <ul>
+              <li>
+                  <a href="/fe/user/home" class="selected">TRANG CHỦ</a>
+              </li>
+            `;
+          var categoryElement = document.getElementById("contentmenuCategory");
+          var categoryMobileHtml = `
+            <ul>
+              <li>
+                  <a href="/fe/user/home" class="selected">TRANG CHỦ</a>
+              </li>
+            `;
+          var categoryMobileElement = document.getElementById("contentmenuCategoryMobile");
+          for (var i = 0; i < categoryData.length; i++) {
+            categoryMobileHtml+=`
+            <li>
+              <a href="/fe/user/productByCategory/categoryData[i]["id"]">${categoryData[i]["categoryName"]}</a>
+              </li>
+            `;
+
+
+            categoryHtml += "<li>";
+            categoryHtml += `<a href="/fe/user/productByCategory/${categoryData[i]["id"]}">${categoryData[i]["categoryName"]}</a>`;
+            if (categoryData[i]["children"]) {
+              categoryHtml+=`
+              <div class="category__children">
+                  <ul>`;
+                    for(var j=0;j<categoryData[i]["children"].length;j++){
+                      categoryHtml+=`<li>
+                      <a href="/fe/user/productByCategory/${categoryData[i]["children"][j]["id"]}">
+                        <i class="fa-solid fa-caret-right"></i>
+                        ${categoryData[i]["children"][j]["categoryName"]}
+                     </a>
+                    </li>`
+                    }
+                categoryHtml+= `
+                  </ul>
+                </div>   
+              `;
+            }
+            categoryHtml += "</li>";
+          }
+          categoryElement.innerHTML=categoryHtml+'</ul>';
+          categoryMobileElement.innerHTML=categoryMobileHtml+'<ul>';
+        } else {
+          console.log("Yêu cầu không thành công. Mã lỗi:", xhr.status);
+        }
+      };
+
+      // Xử lý sự kiện khi có lỗi trong quá trình yêu cầu
+      xhr.onerror = function () {
+        console.log("Đã xảy ra lỗi trong quá trình yêu cầu.");
+      };
+
+      // Gửi yêu cầu đi
+      xhr.send();
+    }
+
+    //--------------------header__menu trượt fixed------------------------------
+    document.addEventListener("DOMContentLoaded", function () {
+      const menu = document.querySelector("#header .header__menu");
+      const navbar = document.querySelector("#header .header__navbar");
+
+      // Lấy vị trí của thanh menu từ phía trên thanh navbar
+      const menuTopOffset = navbar.offsetTop + navbar.offsetHeight;
+      handleScroll();
+      // Xử lý sự kiện scroll
+      function handleScroll() {
+        const scrollY = window.scrollY;
+
+        // Nếu cuộn chuột đến vị trí của thanh menu
+        if (scrollY >= menuTopOffset) {
+          menu.classList.add("fixed");
+        } else {
+          menu.classList.remove("fixed");
+        }
+      }
+      const menuMobile = document.querySelector("#headerMobile .headerMobile__menu");
+      const navbarMobile = document.querySelector("#headerMobile .headerMobile__navbar");
+      console.log(menuMobile)
+      // Lấy vị trí của thanh menu từ phía trên thanh navbar
+      const menuTopOffsetMobile = navbarMobile.offsetTop + navbarMobile.offsetHeight;
+      handleScrollMobile();
+      // Xử lý sự kiện scroll
+      function handleScrollMobile() {
+        const scrollY = window.scrollY;
+        
+        // Nếu cuộn chuột đến vị trí của thanh menu
+        if (scrollY >= menuTopOffsetMobile) {
+          menuMobile.classList.add("fixed");
+          
+        } else {
+          menuMobile.classList.remove("fixed");
+        }
+      }
+
+      // Thêm sự kiện scroll cho cửa sổ
+      window.addEventListener("scroll", handleScroll);
+      window.addEventListener("scroll", handleScrollMobile);
+    });
+    //--------------------------------------------Slider trượt
+    var sliderIndex = 0;
+    var sliderIndexMax = 3;
+    function selectedImageSlider() {
+      var sliderSelected = document.getElementById("slider__image");
+      sliderSelected.style.transform =
+        "translate3d(-" + 100 * sliderIndex + "vw, 0px, 0px)";
+    }
+
+    var elementClickChangeSliders = document.querySelectorAll(
+      "#slider__clickchange .slider__clickDetail"
+    );
+    for (var i = 0; i < elementClickChangeSliders.length; i++) {
+      elementClickChangeSliders[i].addEventListener("click", (event) => {
+        const index = Array.from(elementClickChangeSliders).indexOf(
+          event.target
+        );
+        elementClickChangeSliders[sliderIndex].classList.remove("active");
+        sliderIndex = index;
+        elementClickChangeSliders[sliderIndex].classList.add("active");
+        selectedImageSlider();
+      });
+    }
+    setInterval(function () {
+      if (sliderIndex == sliderIndexMax) {
+        elementClickChangeSliders[sliderIndex].classList.remove("active");
+        sliderIndex = 0;
+        elementClickChangeSliders[sliderIndex].classList.add("active");
+      } else {
+        elementClickChangeSliders[sliderIndex].classList.remove("active");
+        sliderIndex++;
+        elementClickChangeSliders[sliderIndex].classList.add("active");
+      }
+      selectedImageSlider();
+    }, 4000);
+    function showList(){
+      var listCategory = document.getElementById("contentmenuCategoryMobile");
+      if (listCategory.classList.contains("showLish")) {
+        listCategory.classList.remove("showLish");
+      } else {
+        listCategory.classList.add("showLish");
+      }
+    }
+  </script>
+</html>

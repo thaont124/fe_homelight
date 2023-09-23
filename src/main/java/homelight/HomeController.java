@@ -5,30 +5,32 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/fe")
+@RequestMapping("/fe/user")
 public class HomeController {
-    @GetMapping("/login")
+    @GetMapping("/home")
     public String login(){
-        return "login";
+        return "home/home";
     }
 
 
-    @GetMapping("/product/viewAll")
-    public String viewProduct(){
-        return "product/viewProduct";
-    }
-
-    @GetMapping("/product/edit/{idProduct}")
-    public String editProduct(){
-        return "product/editProduct";
-    }
-
-    @GetMapping("/product/add")
-    public String addProduct(){
-        return "product/addProduct";
-    }
-    @GetMapping("/product/search/{key}")
+    @GetMapping("/productByName/{key}")
     public String searchProductByName(){
-        return "product/searchProductByName";
+        return "home/search";
+    }
+
+    @GetMapping("/productDetail/{idProduct}")
+    public String productDetail(){
+        return "home/Detail";
+    }
+
+    @GetMapping("/productByCategory/{idCategory}")
+    public String searchProductByCategory(){
+        return "home/productByCategory";
+    }
+
+    @GetMapping("/cart")
+    public String cartView(){
+        return "home/cart";
     }
 }
+
