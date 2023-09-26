@@ -1,5 +1,12 @@
 document.addEventListener("DOMContentLoaded", function () {
   getCategories();
+  const inputElement = document.getElementById("productSearch");
+  inputElement.addEventListener("change", function (event) {
+      const inputValue = event.target.value;
+      if (inputValue.trim() != '') {
+          window.location = "/fe/product/search/" + inputValue
+      }
+  });
 });
 
 function getCategories() {

@@ -5,7 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link rel="stylesheet" href="/css/home/Detail.css" />
+    <link rel="stylesheet" href="/css/home/detail.css" />
+    <link rel="stylesheet" href="/css/home/header.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <title>Document</title>
 </head>
@@ -14,7 +15,7 @@
     <div id="headerMobile">
         <div class="headerMobile__navbar">
             <div class="navbar__logo">
-                <a href="#">
+                <a href="/fe/user/home">
                     <img src="/img/60.png" alt="" />
                 </a>
             </div>
@@ -31,7 +32,7 @@
                 <div id="contentmenuCategoryMobile">
                     <ul>
                         <li>
-                            <a href="#" class="selected">TRANG CHỦ</a>
+                            <a href="/fe/user/home" class="selected">TRANG CHỦ</a>
                         </li>
 
                     </ul>
@@ -50,7 +51,7 @@
     <div id="header">
         <div class="header__navbar">
             <div class="navbar__logo">
-                <a href="#">
+                <a href="/fe/user/home">
                     <img src="/img/60.png" alt="" />
                 </a>
             </div>
@@ -90,7 +91,7 @@
                 <div id="contentmenuCategory">
                     <ul>
                         <li>
-                            <a href="#">TRANG CHỦ</a>
+                            <a href="/fe/user/home">TRANG CHỦ</a>
                         </li>
 
                     </ul>
@@ -261,827 +262,878 @@
         </div>
     </div>
 </body>
+<script src="/js/config.js"></script>
 <script>
-    var tabindexMin = 0;
-    var filteredIndex;
-    var tabindexMax = 6;
-    var tabindex = 0;
-    var listChoice = {};
-    var listVarian = [];
-    var selectedChoiced = {};
-    var productData;
-
-    function getidProductUrl(productDetail) {
-        const parts = productDetail.split('-i.');
-        if (parts.length > 1) {
-            return parts[1];
+  document.addEventListener("DOMContentLoaded", function () {
+    const inputElement = document.querySelector("#search__product input");
+    inputElement.addEventListener("change", function (event) {
+        const inputValue = event.target.value;
+        if (inputValue.trim() != '') {
+            window.location = "/fe/user/productByName/" + inputValue
         }
-        return null; // Không tìm thấy phần số phiên bản
+    });
+
+    const inputMobileElement = document.querySelector("#searchMobile__product input");
+    inputMobileElement.addEventListener("change", function (event) {
+        const inputValue = event.target.value;
+        if (inputValue.trim() != '') {
+            window.location = "/fe/user/productByName/" + inputValue
+        }
+    });
+});
+var tabindexMin = 0;
+var filteredIndex;
+var tabindexMax = 6;
+var tabindex = 0;
+var listChoice = {};
+var listVarian = [];
+var selectedChoiced = {};
+var productData;
+
+function getidProductUrl(productDetail) {
+    const parts = productDetail.split('-i.');
+    if (parts.length > 1) {
+        return parts[1];
     }
-    function formatProductDetail(productDetail, idProductDetail) {
-        const formattedDetail = productDetail.trim().replace(/\s+/g, '-');
-        return '/productDetail/' + formattedDetail + '-i.' + idProductDetail;
-    }
-    updateCart();
-    getCategories();
-    function getCategories() {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "http://26.127.173.194:8080/api/v1.0/Categories", true);
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                // Xử lý dữ liệu nhận được từ phản hồi
-                var categoryData = JSON.parse(xhr.responseText);
+    return null; // Không tìm thấy phần số phiên bản
+}
+function formatProductDetail(productDetail, idProductDetail) {
+    const formattedDetail = productDetail.trim().replace(/\s+/g, '-');
+    return '/productDetail/' + formattedDetail + '-i.' + idProductDetail;
+}
+updateCart();
+getCategories();
+function getCategories() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", domain + "/api/v1.0/Categories", true);
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            // Xử lý dữ liệu nhận được từ phản hồi
+            var categoryData = JSON.parse(xhr.responseText);
 
 
-                var categoryHtml = `
-            <ul>
-              <li>
-                  <a href="/fe/user/home">TRANG CHỦ</a>
-              </li>
-            `;
-                var categoryElement = document.getElementById("contentmenuCategory");
-                var categoryMobileHtml = `
-            <ul>
-              <li>
-                  <a href="/fe/user/home" class="selected">TRANG CHỦ</a>
-              </li>
-            `;
-                var categoryMobileElement = document.getElementById("contentmenuCategoryMobile");
-                for (var i = 0; i < categoryData.length; i++) {
-                    categoryMobileHtml += `
-            <li>
-              <a href="/fe/user/productByCategory/${categoryData[i]["id"]}">${categoryData[i]["categoryName"]}</a>
-              </li>
-            `;
-                    categoryHtml += "<li>";
-                    categoryHtml += `<a href="/fe/user/productByCategory/${categoryData[i]["id"]}">${categoryData[i]["categoryName"]}</a>`;
-                    if (categoryData[i]["children"]) {
-                        categoryHtml += `
-              <div class="category__children">
-                  <ul>`;
-                        for (var j = 0; j < categoryData[i]["children"].length; j++) {
-                            categoryHtml += `<li>
-                      <a href="/fe/user/productByCategory/${categoryData[i]["children"][j]["id"]}">
-                        <i class="fa-solid fa-caret-right"></i>
-                        ${categoryData[i]["children"][j]["categoryName"]}
-                     </a>
-                    </li>`
-                        }
-                        categoryHtml += `
-                  </ul>
-                </div>   
-              `;
+            var categoryHtml = `
+        <ul>
+          <li>
+              <a href="/fe/user/home">TRANG CHỦ</a>
+          </li>
+        `;
+            var categoryElement = document.getElementById("contentmenuCategory");
+            var categoryMobileHtml = `
+        <ul>
+          <li>
+              <a href="/fe/user/home" class="selected">TRANG CHỦ</a>
+          </li>
+        `;
+            var categoryMobileElement = document.getElementById("contentmenuCategoryMobile");
+            for (var i = 0; i < categoryData.length; i++) {
+                categoryMobileHtml += `
+        <li>
+          <a href="/fe/user/productByCategory/${categoryData[i]["id"]}">${categoryData[i]["categoryName"]}</a>
+          </li>
+        `;
+                categoryHtml += "<li>";
+                categoryHtml += `<a href="/fe/user/productByCategory/${categoryData[i]["id"]}">${categoryData[i]["categoryName"]}</a>`;
+                if (categoryData[i]["children"]) {
+                    categoryHtml += `
+          <div class="category__children">
+              <ul>`;
+                    for (var j = 0; j < categoryData[i]["children"].length; j++) {
+                        categoryHtml += `<li>
+                  <a href="">
+                    <i class="fa-solid fa-caret-right"></i>
+                    ${categoryData[i]["children"][j]["categoryName"]}
+                 </a>
+                </li>`
                     }
-                    categoryHtml += "</li>";
-                }
-                categoryElement.innerHTML = categoryHtml + '</ul>';
-                categoryMobileElement.innerHTML = categoryMobileHtml + '</ul>';
-            } else {
-                console.log("Yêu cầu không thành công. Mã lỗi:", xhr.status);
-            }
-        };
-
-        xhr.onerror = function () {
-            console.log("Đã xảy ra lỗi trong quá trình yêu cầu.");
-        };
-
-        xhr.send();
-    }
-    getProductByID();
-    function getProductByID() {
-        var xhr = new XMLHttpRequest();
-        // var idProductDetailUrl=getidProductUrl(window.location.href);
-        var idProductDetailUrl = window.location.pathname.substring(23);
-        xhr.open("GET", "http://26.127.173.194:8080/api/v1.0/ProductDetail/" + idProductDetailUrl, true);
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                // Xử lý dữ liệu nhận được từ phản hồi
-                productData = JSON.parse(xhr.responseText);
-                // console.log(productData)
-
-                var categoryTree = productData['category'][1];
-                var categoryLast = categoryTree;
-                breadcrumbProductHtml = '';
-                breadcrumbProductElement = document.getElementById("breadcrumbProduct");
-                while (categoryTree) {
-                    breadcrumbProductHtml += `
-            <div class="breadcrumDetail">
-              <a href="/fe/user/productByCategory/${categoryTree['categoryName']}">${categoryTree['categoryName']}</a>
-              <span>> </span>
-            </div>
+                    categoryHtml += `
+              </ul>
+            </div>   
           `;
-                    categoryLast = categoryTree;
-                    categoryTree = categoryTree.children[0];
                 }
+                categoryHtml += "</li>";
+            }
+            categoryElement.innerHTML = categoryHtml + '</ul>';
+            categoryMobileElement.innerHTML = categoryMobileHtml + '</ul>';
+        } else {
+            console.log("Yêu cầu không thành công. Mã lỗi:", xhr.status);
+        }
+    };
 
-                getProductsame(categoryLast['id']);
+    xhr.onerror = function () {
+        console.log("Đã xảy ra lỗi trong quá trình yêu cầu.");
+    };
 
-                breadcrumbProductElement.innerHTML = breadcrumbProductHtml;
+    xhr.send();
+}
+getProductByID();
+function getProductByID() {
+    var xhr = new XMLHttpRequest();
+    // var idProductDetailUrl=getidProductUrl(window.location.href);
+    var idProductDetailUrl = window.location.pathname.substring(23);
+    xhr.open("GET", domain + "/api/v1.0/ProductDetail/" + idProductDetailUrl, true);
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            // Xử lý dữ liệu nhận được từ phản hồi
+            productData = JSON.parse(xhr.responseText);
+            console.log("productData", productData)
 
-                //infor-product
-                var productInforElement = document.getElementById("productInfor");
-                var productInforHtml = ``;
-                var video = [];
-                var img = [];
-                var checkvideo = false;
-                for (var i = 0; i < productData['image'].length; i++) {
-                    if (productData['image'][i]['type'] === 'image') {
-                        img.push(productData['image'][i]);
-                    } else {
-                        video.push(productData['image'][i]);
-                        checkvideo = true;
-                    }
-                }
-                productInforHtml += `
-         <div class="inforProduct">
-            <div class="inforProductImage">
-              <div class="inforProductImage__imageView">
-                <div class="imageView__img" id="imageSelected">
-                  `;
-                if (checkvideo) {
-                    productInforHtml += `<video  class="img" muted>
-                <source src="${video[0]['url']}" type="video/mp4">
-        
-            </video>`
+            var categoryTree = productData['category'][1];
+            var categoryLast = categoryTree;
+            breadcrumbProductHtml = '';
+            breadcrumbProductElement = document.getElementById("breadcrumbProduct");
+            while (categoryTree) {
+                breadcrumbProductHtml += `
+                    <div class="breadcrumDetail">
+                      <a href="">${categoryTree['categoryName']}</a>
+                      <span>> </span>
+                    </div>
+                `;
+                categoryLast = categoryTree;
+                categoryTree = categoryTree.children[0];
+            }
+
+            getProductsame(categoryLast['id']);
+
+            breadcrumbProductElement.innerHTML = breadcrumbProductHtml;
+
+            //infor-product
+            var productInforElement = document.getElementById("productInfor");
+            var productInforHtml = ``;
+            var video = [];
+            var img = [];
+            var checkvideo = false;
+            for (var i = 0; i < productData['image'].length; i++) {
+                if (productData['image'][i]['type'] === 'image') {
+                    img.push(productData['image'][i]);
                 } else {
-                    productData += `<img src="${img[0]['url']}" alt="" class="img">`;
+                    video.push(productData['image'][i]);
+                    checkvideo = true;
                 }
-                productInforHtml += `
-                </div>
-              </div>
-              <div class="inforProductImage__sliderImageView">
-                <div class="sliderImageView__ListImage">
-                  <ul id="listImageSelected">
-                   `
-                for (var i = 0; i < video.length; i++) {
-                    productInforHtml +=
-                        ` <li>
-                      <div class="detailimg">
-                        <div class="detailimg__img">
-                          <video  class="img" muted>
-                            <source src="${video[i]['url']}" type="video/mp4">
-                          </video>
-                          <div class="video__icon">
-                            <div class="video__iconlogo">
-                              <i class="fa-regular fa-circle-play"></i>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="detailimg__boder">
+            }
+
+            productInforHtml += `
+     <div class="inforProduct">
+        <div class="inforProductImage">
+          <div class="inforProductImage__imageView">
+            <div class="imageView__img" id="imageSelected">
+              `;
+            if (checkvideo) {
+                productInforHtml += `<video  class="img" muted>
+            <source src="${video[0]['url']}" type="video/mp4">
+    
+        </video>`
+            } else {
+                productInforHtml += `<img src="${img[0]['url']}" alt="" class="img">`;
+            }
+            console.log("nhi", productData)
+            productInforHtml += `
+            </div>
+          </div>
+          <div class="inforProductImage__sliderImageView">
+            <div class="sliderImageView__ListImage">
+              <ul id="listImageSelected">
+               `
+            for (var i = 0; i < video.length; i++) {
+                productInforHtml +=
+                    ` <li>
+                  <div class="detailimg">
+                    <div class="detailimg__img">
+                      <video  class="img" muted>
+                        <source src="${video[i]['url']}" type="video/mp4">
+                      </video>
+                      <div class="video__icon">
+                        <div class="video__iconlogo">
+                          <i class="fa-regular fa-circle-play"></i>
                         </div>
                       </div>
-                    </li>`;
-                }
-                for (var i = 0; i < img.length; i++) {
-                    productInforHtml +=
-                        ` <li>
-                      <div class="detailimg">
-                        <div class="detailimg__img">
-                          <img src="${img[i]['url']}" alt="" class="img">
-                        </div>
-                        <div class="detailimg__boder">
-                        </div>
-                      </div>
-                    </li>`
-                }
-                listChoice = {};
-                listVarian = [];
-                if (productData['variantsDTO'].length != 1) {
-                    for (var i = 0; i < productData['variantsDTO'].length; i++) {
-                      console.log(productData['variantsDTO'][i])
-                        productData.variantsDTO[i]["idProduct"] = productData['id'];
+                    </div>
+                    <div class="detailimg__boder">
+                    </div>
+                  </div>
+                </li>`;
+            }
+            for (var i = 0; i < img.length; i++) {
+                productInforHtml +=
+                    ` <li>
+                  <div class="detailimg">
+                    <div class="detailimg__img">
+                      <img src="${img[i]['url']}" alt="" class="img">
+                    </div>
+                    <div class="detailimg__boder">
+                    </div>
+                  </div>
+                </li>`
+            }
+            listChoice = {};
+            listVarian = [];
+            if (productData['variantsDTO'].length != 1) {
+                for (var i = 0; i < productData['variantsDTO'].length; i++) {
+                    listVarian.push(productData['variantsDTO'][i]);
+                    for (var j = 0; j < productData['variantsDTO'][i]['choices'].length; j++) {
+                        if (productData['variantsDTO'][i]['choices'][j]['choiceName'] in listChoice) {
+                            if (listChoice[productData['variantsDTO'][i]['choices'][j]['choiceName']].includes(productData['variantsDTO'][i]['choices'][j]['choiceValue'])) {
 
-                        listVarian.push(productData['variantsDTO'][i]);
-                        for (var j = 0; j < productData['variantsDTO'][i]['choices'].length; j++) {
-                            if (productData['variantsDTO'][i]['choices'][j]['choiceName'] in listChoice) {
-                                if (listChoice[productData['variantsDTO'][i]['choices'][j]['choiceName']].includes(productData['variantsDTO'][i]['choices'][j]['choiceValue'])) {
-
-                                } else {
-
-                                    listChoice[productData['variantsDTO'][i]['choices'][j]['choiceName']].push(productData['variantsDTO'][i]['choices'][j]['choiceValue']);
-                                }
                             } else {
-                                selectedChoiced[productData['variantsDTO'][i]['choices'][j]['choiceName']] = null;
-                                listChoice[productData['variantsDTO'][i]['choices'][j]['choiceName']] = [productData['variantsDTO'][i]['choices'][j]['choiceValue']];
+
+                                listChoice[productData['variantsDTO'][i]['choices'][j]['choiceName']].push(productData['variantsDTO'][i]['choices'][j]['choiceValue']);
                             }
+                        } else {
+                            selectedChoiced[productData['variantsDTO'][i]['choices'][j]['choiceName']] = null;
+                            listChoice[productData['variantsDTO'][i]['choices'][j]['choiceName']] = [productData['variantsDTO'][i]['choices'][j]['choiceValue']];
                         }
                     }
                 }
-                // console.log(listChoice)
-                productInforHtml +=
-                    `
-                  </ul>
-                  <div class="tabindex__sub tabindex">
-                    <div class="tabindex__content">
-                      <i class="fa-sharp fa-solid fa-angle-left"></i>
-                    </div>
-                  </div>
-                  <div class="tabindex__add tabindex">
-                    <div class="tabindex__content">
-                      <i class="fa-sharp fa-solid fa-angle-right"></i>
-                    </div>
-                  </div>
+            }
+            else{
+              listVarian.push(productData['variantsDTO'][0]);
+            }
+            // console.log(listChoice)
+            var giaGoc = productData['variantsDTO'][0]['originPrice']
+            var giaSale
+            if (productData['variantsDTO'][0]['sale'].length != 0) {
+                giaSale = giaGoc * (100 - productData['variantsDTO'][0]['sale'][0]['numberSale']) / 100
+            }
+            else {
+                giaSale = giaGoc
+            }
+
+            productInforHtml +=
+                `
+              </ul>
+              <div class="tabindex__sub tabindex">
+                <div class="tabindex__content">
+                  <i class="fa-sharp fa-solid fa-angle-left"></i>
                 </div>
               </div>
-            </div>
-            <div class="inforProductShow">
-              <div class="inforProductOverall">
-                <div class="inforProductOverall__productName">
-                  <h2>${productData['productName']}</h2>
-                </div>
-                <div class="inforProductOverall__product">
-                  <div class="product__price">
-                    <div class="product__priceSale">
-                      <h4>Giá KM: <span> 4,915,000 đ</span></h4>
-                    </div>
-                    <div class="product__priceOrigin">
-                      <h4>Giá cũ: <span>6,650,000 đ</span></h4>
-                    </div>
-                  </div>
-                  <div class="product__listOption">
-                    <ul id="productListOption">`;
-                for (var key in listChoice) {
-
-
-                    productInforHtml += `
-                      <li>
-                        <div class="optionProduct__label">
-                          <h5>${key}</h5>
-                        </div>
-                        <ul class="optionProduct__selected">`
-                    for (var j = 0; j < listChoice[key].length; j++) {
-                        productInforHtml +=
-                            `<li class="" name="${key}" value="${listChoice[key][j]}">
-                              <div class="choicedetail">
-                                <p >${listChoice[key][j]}</p>
-                              </div>
-                              <div class ="choiceChecked">
-                                <i class="fa-solid fa-check"></i> 
-                              </div>
-                            </li>`;
-                    }
-                    productInforHtml += `  
-                        </ul>
-                      </li>`;
-                }
-
-
-                productInforHtml += `   
-                    <div id="errorOrder">
-                      <p>Vui lòng chọn đủ thuộc tính</p>
-                    </div>
-                    </ul>
-                  </div>
-                </div>
-                <div class="inforProductOverall__order">
-                  <div class="orderCount">
-                    <div class="orderCount__label">
-                      <h5>Số Lượng</h5>
-                    </div>
-                    <div class="orderCount__content">
-                      <div class="orderCountSelected">
-                        <div class="orderCountSelected__sub" id="orderCountSelected__sub">-</div>
-                        <input class="orderCountSelected__quantity" id="orderCountSelected__quantity" value="1" type="text">
-                        <div class="orderCountSelected__add" id="orderCountSelected__add">+</div>
-                      </div>
-                     
-                    </div>
-                  </div>
-                </div>
-                <div class="inforProductOverall__orderProduct">
-                  <div id="orderProduct">
-                    <div class="orderProduct__addToCart" onclick="addToCart()">
-                      <div class="addToCart__logo">
-                        <i class="fas fa-shopping-cart"></i>
-                      </div>
-                      <div class="addToCart__content">
-                        <p>Thêm Vào Giỏ Hàng</p>
-                      </div>
-                    </div>
-                    <div class="orderProduct__buyNow" onclick="buyNow()">
-                      <div class="buyProductNow">
-                        <p>Mua Ngay</p>
-                      </div>
-                    </div>
-                  </div>
+              <div class="tabindex__add tabindex">
+                <div class="tabindex__content">
+                  <i class="fa-sharp fa-solid fa-angle-right"></i>
                 </div>
               </div>
-            </div>
-          </div>
-         `
-                productInforElement.innerHTML = productInforHtml;
-                sliderImage();
-                orderQuantity();
-                selectedChoice();
-
-                var descriptionElement = document.getElementById("product__description");
-                var descriptionHtml = ``;
-                descriptionHtml += `<div class="desProduct">
-          <div class="desProduct__title">
-            <h2>THÔNG TIN SẢN PHẨM</h2>
-          </div>
-          <div class="desProduct__content">
-            <p>${productData['description']}</p>
-          </div>
-        </div>`
-                descriptionElement.innerHTML = descriptionHtml;
-            } else {
-                console.log("Yêu cầu không thành công. Mã lỗi:", xhr.status);
-            }
-        };
-
-        xhr.onerror = function () {
-            console.log("Đã xảy ra lỗi trong quá trình yêu cầu.");
-        };
-
-        xhr.send();
-    }
-    //-------------------- Thêm bớt số lượng -----------------------------------
-    function orderQuantity() {
-
-        var quantityCountElement = document.getElementById("orderCountSelected__quantity");
-        var subCountElement = document.getElementById("orderCountSelected__sub");
-        var addCountElement = document.getElementById("orderCountSelected__add");
-        var oldQuantityCount = quantityCountElement.value;
-        subCountElement.addEventListener("click", () => {
-            if (parseInt(quantityCountElement.value) > 1) {
-                quantityCountElement.value = (parseInt(quantityCountElement.value) - 1)
-            }
-        })
-        addCountElement.addEventListener("click", () => {
-
-            quantityCountElement.value = (parseInt(quantityCountElement.value) + 1)
-        })
-        quantityCountElement.addEventListener("input", (e) => {
-            if (isNaN(e.target.value)) {
-                e.target.value = oldQuantityCount;
-            } else {
-
-                oldQuantityCount = e.target.value;
-            }
-        })
-    }
-    //------------------- Lấy sản phẩm tương tự---------------------------------
-    function getProductsame(categoryID) {
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "http://26.127.173.194:8080/api/v1.0/ProductByCategory/" + categoryID + '?pageNo=1&&pageSize=4', true);
-
-        xhr.onload = function () {
-            if (xhr.status === 200) {
-                var productListByCategoryData = JSON.parse(xhr.responseText);
-                //console.log(productListByCategoryData);
-
-                var productSameElement = document.getElementById("product__Same");
-                var productSameHtml = ``;
-                productSameHtml += `
-          <div class="productSame__header">
-          <div class="productSame__headerTitle">
-            <div class="headerTitle__icon"></div>
-            <div class="headerTitle__content">
-              <h3>SẢN PHẨM TƯƠNG TỰ</h3>
-            </div>
-          </div>
-          <div class="productSame__headerViewAll">
-            <div class="headerViewAll__icon">
-              <a href=""></a>
             </div>
           </div>
         </div>
-          `;
+        <div class="inforProductShow">
+          <div class="inforProductOverall">
+            <div class="inforProductOverall__productName">
+              <h2>${productData['productName']}</h2>
+            </div>
+            <div class="inforProductOverall__product">
+              <div class="product__price">
+                <div class="product__priceSale">
+                  <h4>Giá KM: <span>${giaSale} đ</span></h4>
+                </div>
+                <div class="product__priceOrigin">
+                  <h4>Giá cũ: <span>${giaGoc} đ</span></h4>
+                </div>
+              </div>
+              <div class="product__listOption">
+                <ul id="productListOption">`;
+            for (var key in listChoice) {
+
+
+                productInforHtml += `
+                  <li>
+                    <div class="optionProduct__label">
+                      <h5>${key}</h5>
+                    </div>
+                    <ul class="optionProduct__selected">`
+                for (var j = 0; j < listChoice[key].length; j++) {
+                    productInforHtml +=
+                        `<li class="" name="${key}" value="${listChoice[key][j]}">
+                          <div class="choicedetail">
+                            <p >${listChoice[key][j]}</p>
+                          </div>
+                          <div class ="choiceChecked">
+                            <i class="fa-solid fa-check"></i> 
+                          </div>
+                        </li>`;
+                }
+                productInforHtml += `  
+                    </ul>
+                  </li>`;
+            }
+
+
+            productInforHtml += `   
+                <div id="errorOrder">
+                  <p>Vui lòng chọn đủ thuộc tính</p>
+                </div>
+                </ul>
+              </div>
+            </div>
+            <div class="inforProductOverall__order">
+              <div class="orderCount">
+                <div class="orderCount__label">
+                  <h5>Số Lượng</h5>
+                </div>
+                <div class="orderCount__content">
+                  <div class="orderCountSelected">
+                    <div class="orderCountSelected__sub" id="orderCountSelected__sub">-</div>
+                    <input class="orderCountSelected__quantity" id="orderCountSelected__quantity" value="1" type="text">
+                    <div class="orderCountSelected__add" id="orderCountSelected__add">+</div>
+                  </div>
+                 
+                </div>
+              </div>
+            </div>
+            <div class="inforProductOverall__orderProduct">
+              <div id="orderProduct">
+                <div class="orderProduct__addToCart" onclick="addToCart()">
+                  <div class="addToCart__logo">
+                    <i class="fas fa-shopping-cart"></i>
+                  </div>
+                  <div class="addToCart__content">
+                    <p>Thêm Vào Giỏ Hàng</p>
+                  </div>
+                </div>
+                <div class="orderProduct__buyNow" onclick="buyNow()">
+                  <div class="buyProductNow">
+                    <p>Mua Ngay</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+     `
+            productInforElement.innerHTML = productInforHtml;
+            sliderImage();
+            orderQuantity();
+            selectedChoice();
+
+            var descriptionElement = document.getElementById("product__description");
+            var descriptionHtml = ``;
+            descriptionHtml += `<div class="desProduct">
+      <div class="desProduct__title">
+        <h2>THÔNG TIN SẢN PHẨM</h2>
+      </div>
+      <div class="desProduct__content">
+        <p>${productData['description'].replace(/\r\n/g, '<br>')}</p>
+      </div>
+    </div>`
+            descriptionElement.innerHTML = descriptionHtml;
+        } else {
+            console.log("Yêu cầu không thành công. Mã lỗi:", xhr.status);
+        }
+    };
+
+    xhr.onerror = function () {
+        console.log("Đã xảy ra lỗi trong quá trình yêu cầu.");
+    };
+
+    xhr.send();
+}
+//-------------------- Thêm bớt số lượng -----------------------------------
+function orderQuantity() {
+
+    var quantityCountElement = document.getElementById("orderCountSelected__quantity");
+    var subCountElement = document.getElementById("orderCountSelected__sub");
+    var addCountElement = document.getElementById("orderCountSelected__add");
+    var oldQuantityCount = quantityCountElement.value;
+    subCountElement.addEventListener("click", () => {
+        if (parseInt(quantityCountElement.value) > 1) {
+            quantityCountElement.value = (parseInt(quantityCountElement.value) - 1)
+        }
+    })
+    addCountElement.addEventListener("click", () => {
+
+        quantityCountElement.value = (parseInt(quantityCountElement.value) + 1)
+    })
+    quantityCountElement.addEventListener("input", (e) => {
+        if (isNaN(e.target.value)) {
+            e.target.value = oldQuantityCount;
+        } else {
+
+            oldQuantityCount = e.target.value;
+        }
+    })
+}
+//------------------- Lấy sản phẩm tương tự---------------------------------
+function getProductsame(categoryID) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", domain + "/api/v1.0/ProductByCategory/" + categoryID + '?pageNo=1&&pageSize=4', true);
+
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            var productListByCategoryData = JSON.parse(xhr.responseText);
+            //console.log(productListByCategoryData);
+
+            var productSameElement = document.getElementById("product__Same");
+            var productSameHtml = ``;
+            productSameHtml += `
+      <div class="productSame__header">
+      <div class="productSame__headerTitle">
+        <div class="headerTitle__icon"></div>
+        <div class="headerTitle__content">
+          <h3>SẢN PHẨM TƯƠNG TỰ</h3>
+        </div>
+      </div>
+      <div class="productSame__headerViewAll">
+        <div class="headerViewAll__icon">
+          <a href=""></a>
+        </div>
+      </div>
+    </div>
+      `;
+            productSameHtml += `
+      <ul class="productSale__content productList">`;
+            for (var i = 0; i < productListByCategoryData.length; i++) {
                 productSameHtml += `
-          <ul class="productSale__content productList">`;
-                for (var i = 0; i < productListByCategoryData.length; i++) {
-                    productSameHtml += `
-            <li class="productDetail">
-            <a href="/fe/user/productByCategory/${productListByCategoryData[i]['id']}">
-              <div class="backgroundImg"></div> 
-              <img src="`;
-                    let check = 0;
-                    for (var k = 0; k < productListByCategoryData[i]['image'].length; k++) {
-                        if (productListByCategoryData[i]['image'][k]['type'] === 'image') {
-                            productSameHtml += `${productListByCategoryData[i]['image'][0]['url']}" `;
-                            check = 1;
-                            break;
+        <li class="productDetail">
+        <a href="${formatProductDetail(productListByCategoryData[i]['productName'], productListByCategoryData[i]['id'])}">
+          <div class="backgroundImg"></div> 
+          <img src="`;
+                let check = 0;
+                for (var k = 0; k < productListByCategoryData[i]['image'].length; k++) {
+                    if (productListByCategoryData[i]['image'][k]['type'] === 'image') {
+                        productSameHtml += `${productListByCategoryData[i]['image'][0]['url']}" `;
+                        check = 1;
+                        break;
+                    }
+                }
+                if (check === 0) productSameHtml += '/img/6c1f87d1c932c762.png';
+                productSameHtml += `" alt="" />
+        </a>
+        <div class="productDetail__content">
+                <div class="productName">
+                  <a href=""><strong>${productListByCategoryData[i]['productName']}</strong></a>
+                </div>`;
+                let sale = 0;
+                const currentTime = new Date();
+
+                if (productListByCategoryData[i]['variantsDTO'].length === 1) {
+                    if (!productListByCategoryData[k]['variantsDTO'][0]['choices']) {
+                        for (var s = 0; s < productListByCategoryData[i]['variantsDTO'][0]['sale'].length; s++) {
+                            let startDate = new Date(productListByCategoryData[i]['variantsDTO'][0]['sale'][s]['startDate']);
+                            let endDate = new Date(productListByCategoryData[i]['variantsDTO'][0]['sale'][s]['endDate']);
+                            // Kiểm tra xem thời gian hiện tại có nằm trong khoảng thời gian của sự kiện hay không
+                            if (currentTime >= startDate && currentTime <= endDate) {
+                                sale = productListByCategoryData[i]['variantsDTO'][0]['sale'][s]['numberSale'];
+                            }
+                        }
+                        productSameHtml += `
+                    <div class="product__priceSale">
+                      <span>${productListByCategoryData[i]['variantsDTO'][0]['originPrice'] * (100 - sale) / 100} đ </span>
+                    </div>
+                    <div class="product__priceOrigin">
+                      <span>${productListByCategoryData[i]['variantsDTO'][0]['originPrice']} đ </span> 
+                    </div>`;
+                    }
+                } else {
+                    let minPrice = productListByCategoryData[i]['variantsDTO'][0]['originPrice'];
+                    let maxPrice = productListByCategoryData[i]['variantsDTO'][0]['originPrice'];
+                    for (var k = 0; k < productListByCategoryData[i]['variantsDTO'].length; k++) {
+                        if (minPrice > productListByCategoryData[i]['variantsDTO'][k]['originPrice']) minPrice = productListByCategoryData[i]['variantsDTO'][k]['originPrice'];
+                        if (maxPrice < productListByCategoryData[i]['variantsDTO'][k]['originPrice']) minPrice = productListByCategoryData[i]['variantsDTO'][k]['originPrice'];
+                        for (var s = 0; s < productListByCategoryData[i]['variantsDTO'][0]['sale'].length; s++) {
+                            let startDate = new Date(productListByCategoryData[i]['variantsDTO'][0]['sale'][s]['startDate']);
+                            let endDate = new Date(productListByCategoryData[i]['variantsDTO'][0]['sale'][s]['endDate']);
+                            // Kiểm tra xem thời gian hiện tại có nằm trong khoảng thời gian của sự kiện hay không
+                            if (currentTime >= startDate && currentTime <= endDate) {
+                                if (productListByCategoryData[i]['variantsDTO'][0]['sale'][s]['numberSale'] > sale)
+                                    sale = productListByCategoryData[i]['variantsDTO'][0]['sale'][s]['numberSale'];
+                            }
                         }
                     }
-                    if (check === 0) productSameHtml += '/img/6c1f87d1c932c762.png';
-                    productSameHtml += `" alt="" />
-            </a>
-            <div class="productDetail__content">
-                    <div class="productName">
-                      <a href="/fe/user/productByCategory/${productListByCategoryData[i]['id']}"><strong>${productListByCategoryData[i]['productName']}</strong></a>
+                    if (minPrice == maxPrice) {
+                        productSameHtml += `
+                    <div class="product__priceSale">
+                      <span>${minPrice} đ</span>
+                    </div>
+                    <div class="product__priceOrigin">
+                      <span></span> 
                     </div>`;
+                    } else {
+                        productSameHtml += `
+                  <div class="product__priceSale">
+                    <span>${minPrice} đ- ${maxPrice} đ</span>
+                  </div>
+                  <div class="product__priceOrigin">
+                    <span></span> 
+                  </div>`;
+                    }
+                }
+                productSameHtml += `
+              </div>`;
+                if (sale != 0) {
+                    productSameHtml += `
+              
+              <div class="productDetail__sale">
+                <span>-${sale}%</span>
+              </div>`}
+                productSameHtml += `
+            </li>
+          `;
+            }
+            productSameHtml += `
+        </ul>
+        
+        </div>
+      `;
+            productSameElement.innerHTML = productSameHtml;
+        } else if (xhr.status === 404) {
+            console.log("Yêu cầu không thành công. Mã lỗi:", xhr.status);
+
+        } else {
+
+        }
+    };
+
+    xhr.onerror = function () {
+        console.log("Đã xảy ra lỗi trong quá trình yêu cầu.");
+        reject([]);
+    };
+
+    xhr.send();
+}
+
+//--------------------selected Choice --------------------------------------
+function selectedChoice() {
+    var listliElement = document.querySelectorAll(".optionProduct__selected li");
+    listliElement.forEach((liElementDetail) => {
+        liElementDetail.addEventListener("click", () => {
+            document.querySelector(".inforProductOverall__product .product__listOption").style.backgroundColor = "transparent";
+            document.getElementById("errorOrder").style.display = "none";
+            var liElementByChoice = liElementDetail.parentElement.querySelector(".selected");
+
+            if (liElementByChoice) {
+                liElementByChoice.querySelector(".choiceChecked").style.display = "none";
+                liElementByChoice.classList.remove("selected");
+            }
+
+            liElementDetail.querySelector(".choiceChecked").style.display = "block";
+            liElementDetail.classList.add("selected");
+            selectedChoiced[liElementDetail.getAttribute("name")] = liElementDetail.getAttribute("value");
+            let checkChoice = true;
+            for (key in selectedChoiced) {
+                if (!selectedChoiced[key]) {
+                    checkChoice = false;
+                    break;
+                }
+            }
+            if (checkChoice) {
+
+                var productPriceElement = document.querySelector(".inforProductOverall__product .product__price");
+                var productPriceHtml = ``;
+
+                // console.log(listVarian)
+                // console.log(selectedChoiced)
+                filteredIndex = -1;
+
+                listVarian.forEach((item, index) => {
+                    const isMatching = item.choices.every(choice => {
+                        const choiceName = choice.choiceName;
+                        const choiceValue = choice.choiceValue;
+                        return selectedChoiced[choiceName] === choiceValue;
+                    });
+
+                    if (isMatching) {
+                        filteredIndex = index;
+
+                    }
+                });
+
+                // console.log(filteredIndexes);
+                if (filteredIndex != -1) {
                     let sale = 0;
                     const currentTime = new Date();
 
-                    if (productListByCategoryData[i]['variantsDTO'].length === 1) {
-                        if (!productListOrderSortData[j]['variantsDTO'][0]['choices']) {
-                            for (var s = 0; s < productListByCategoryData[i]['variantsDTO'][0]['sale'].length; s++) {
-                                let startDate = new Date(productListByCategoryData[i]['variantsDTO'][0]['sale'][s]['startDate']);
-                                let endDate = new Date(productListByCategoryData[i]['variantsDTO'][0]['sale'][s]['endDate']);
-                                // Kiểm tra xem thời gian hiện tại có nằm trong khoảng thời gian của sự kiện hay không
-                                if (currentTime >= startDate && currentTime <= endDate) {
-                                    sale = productListByCategoryData[i]['variantsDTO'][0]['sale'][s]['numberSale'];
-                                }
-                            }
-                            productSameHtml += `
-                        <div class="product__priceSale">
-                          <span>${productListByCategoryData[i]['variantsDTO'][0]['originPrice'] * (100 - sale) / 100} đ </span>
-                        </div>
-                        <div class="product__priceOrigin">
-                          <span>${productListByCategoryData[i]['variantsDTO'][0]['originPrice']} đ </span> 
-                        </div>`;
-                        }
-                    } else {
-                        let minPrice = productListByCategoryData[i]['variantsDTO'][0]['originPrice'];
-                        let maxPrice = productListByCategoryData[i]['variantsDTO'][0]['originPrice'];
-                        for (var k = 0; k < productListByCategoryData[i]['variantsDTO'].length; k++) {
-                            if (minPrice > productListByCategoryData[i]['variantsDTO'][k]['originPrice']) minPrice = productListByCategoryData[i]['variantsDTO'][k]['originPrice'];
-                            if (maxPrice < productListByCategoryData[i]['variantsDTO'][k]['originPrice']) minPrice = productListByCategoryData[i]['variantsDTO'][k]['originPrice'];
-                            for (var s = 0; s < productListByCategoryData[i]['variantsDTO'][0]['sale'].length; s++) {
-                                let startDate = new Date(productListByCategoryData[i]['variantsDTO'][0]['sale'][s]['startDate']);
-                                let endDate = new Date(productListByCategoryData[i]['variantsDTO'][0]['sale'][s]['endDate']);
-                                // Kiểm tra xem thời gian hiện tại có nằm trong khoảng thời gian của sự kiện hay không
-                                if (currentTime >= startDate && currentTime <= endDate) {
-                                    if (productListByCategoryData[i]['variantsDTO'][0]['sale'][s]['numberSale'] > sale)
-                                        sale = productListByCategoryData[i]['variantsDTO'][0]['sale'][s]['numberSale'];
-                                }
-                            }
-                        }
-                        if (minPrice == maxPrice) {
-                            productSameHtml += `
-                        <div class="product__priceSale">
-                          <span>${minPrice} đ</span>
-                        </div>
-                        <div class="product__priceOrigin">
-                          <span></span> 
-                        </div>`;
-                        } else {
-                            productSameHtml += `
-                      <div class="product__priceSale">
-                        <span>${minPrice} đ- ${maxPrice} đ</span>
-                      </div>
-                      <div class="product__priceOrigin">
-                        <span></span> 
-                      </div>`;
+
+                    for (var s = 0; s < listVarian[filteredIndex]['sale'].length; s++) {
+                        let startDate = new Date(listVarian[filteredIndex]['sale'][s]['startDate']);
+                        let endDate = new Date(listVarian[filteredIndex]['sale'][s]['endDate']);
+                        // Kiểm tra xem thời gian hiện tại có nằm trong khoảng thời gian của sự kiện hay không
+                        if (currentTime >= startDate && currentTime <= endDate) {
+                            sale = listVarian[filteredIndex]['sale'][s]['numberSale'];
                         }
                     }
-                    productSameHtml += `
-                  </div>`;
+
                     if (sale != 0) {
-                        productSameHtml += `
-                  
-                  <div class="productDetail__sale">
-                    <span>-${sale}%</span>
-                  </div>`}
-                    productSameHtml += `
-                </li>
-              `;
+
+                        productPriceHtml += `<div class="product__price">
+              <div class="product__priceSale">
+                <h4>Giá KM: <span>  ${listVarian[filteredIndex]['originPrice'] * (100 - sale) / 100} đ</span></h4>
+              </div>
+              <div class="product__priceOrigin">
+                <h4>Giá cũ: <span>${listVarian[filteredIndex]['originPrice']} đ</span></h4>
+              </div>
+            </div>`;
+                    } else {
+                        productPriceHtml += `<div class="product__price">
+              <div class="product__priceSale">
+                <h4>Giá KM: <span>  ${listVarian[filteredIndex]['originPrice']} đ</span></h4>
+              </div>`;
+
+                    }
                 }
-                productSameHtml += `
-            </ul>
-            
-            </div>
-          `;
-                productSameElement.innerHTML = productSameHtml;
-            } else if (xhr.status === 404) {
-                console.log("Yêu cầu không thành công. Mã lỗi:", xhr.status);
-
-            } else {
-
+                productPriceElement.innerHTML = productPriceHtml;
             }
-        };
-
-        xhr.onerror = function () {
-            console.log("Đã xảy ra lỗi trong quá trình yêu cầu.");
-            reject([]);
-        };
-
-        xhr.send();
-    }
-
-    //--------------------selected Choice --------------------------------------
-    function selectedChoice() {
-        var listliElement = document.querySelectorAll(".optionProduct__selected li");
-        listliElement.forEach((liElementDetail) => {
-            liElementDetail.addEventListener("click", () => {
-                document.querySelector(".inforProductOverall__product .product__listOption").style.backgroundColor = "transparent";
-                document.getElementById("errorOrder").style.display = "none";
-                var liElementByChoice = liElementDetail.parentElement.querySelector(".selected");
-
-                if (liElementByChoice) {
-                    liElementByChoice.querySelector(".choiceChecked").style.display = "none";
-                    liElementByChoice.classList.remove("selected");
-                }
-
-                liElementDetail.querySelector(".choiceChecked").style.display = "block";
-                liElementDetail.classList.add("selected");
-                selectedChoiced[liElementDetail.getAttribute("name")] = liElementDetail.getAttribute("value");
-                let checkChoice = true;
-                for (key in selectedChoiced) {
-                    if (!selectedChoiced[key]) {
-                        checkChoice = false;
-                        break;
-                    }
-                }
-                if (checkChoice) {
-
-                    var productPriceElement = document.querySelector(".inforProductOverall__product .product__price");
-                    var productPriceHtml = ``;
-
-                    // console.log(listVarian)
-                    // console.log(selectedChoiced)
-                    filteredIndex = -1;
-
-                    listVarian.forEach((item, index) => {
-                        const isMatching = item.choices.every(choice => {
-                            const choiceName = choice.choiceName;
-                            const choiceValue = choice.choiceValue;
-                            return selectedChoiced[choiceName] === choiceValue;
-                        });
-
-                        if (isMatching) {
-                            filteredIndex = index;
-
-                        }
-                    });
-
-                    // console.log(filteredIndexes);
-                    if (filteredIndex != -1) {
-                        let sale = 0;
-                        const currentTime = new Date();
-
-
-                        for (var s = 0; s < listVarian[filteredIndex]['sale'].length; s++) {
-                            let startDate = new Date(listVarian[filteredIndex]['sale'][s]['startDate']);
-                            let endDate = new Date(listVarian[filteredIndex]['sale'][s]['endDate']);
-                            // Kiểm tra xem thời gian hiện tại có nằm trong khoảng thời gian của sự kiện hay không
-                            if (currentTime >= startDate && currentTime <= endDate) {
-                                sale = listVarian[filteredIndex]['sale'][s]['numberSale'];
-                            }
-                        }
-
-                        if (sale != 0) {
-
-                            productPriceHtml += `<div class="product__price">
-                  <div class="product__priceSale">
-                    <h4>Giá KM: <span>  ${listVarian[filteredIndex]['originPrice'] * (100 - sale) / 100} đ</span></h4>
-                  </div>
-                  <div class="product__priceOrigin">
-                    <h4>Giá cũ: <span>${listVarian[filteredIndex]['originPrice']} đ</span></h4>
-                  </div>
-                </div>`;
-                        } else {
-                            productPriceHtml += `<div class="product__price">
-                  <div class="product__priceSale">
-                    <h4>Giá KM: <span>  ${listVarian[filteredIndex]['originPrice']} đ</span></h4>
-                  </div>`;
-
-                        }
-                    }
-                    productPriceElement.innerHTML = productPriceHtml;
-                }
-            })
-
         })
+
+    })
+}
+function areArraysEqual(arr1, arr2) {
+    if (arr1.length !== arr2.length) {
+        return false;
     }
-    function areArraysEqual(arr1, arr2) {
-        if (arr1.length !== arr2.length) {
+
+    for (let i = 0; i < arr1.length; i++) {
+        const obj1 = arr1[i];
+        const obj2 = arr2[i];
+
+        if (!areObjectsEqual(obj1, obj2)) {
             return false;
         }
-
-        for (let i = 0; i < arr1.length; i++) {
-            const obj1 = arr1[i];
-            const obj2 = arr2[i];
-
-            if (!areObjectsEqual(obj1, obj2)) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
-    function areObjectsEqual(obj1, obj2) {
-        if (Object.keys(obj1).length !== Object.keys(obj2).length) {
-            return false;
-        }
+    return true;
+}
 
-        for (let key in obj1) {
-            if (obj1.hasOwnProperty(key) && obj2.hasOwnProperty(key)) {
-                if (obj1[key] !== obj2[key]) {
-                    return false;
-                }
-            } else {
+function areObjectsEqual(obj1, obj2) {
+    if (Object.keys(obj1).length !== Object.keys(obj2).length) {
+        return false;
+    }
+
+    for (let key in obj1) {
+        if (obj1.hasOwnProperty(key) && obj2.hasOwnProperty(key)) {
+            if (obj1[key] !== obj2[key]) {
                 return false;
             }
-        }
-
-        return true;
-    }
-    function buyNow() {
-        let checkChoice = true;
-        for (key in selectedChoiced) {
-            if (!selectedChoiced[key]) {
-                checkChoice = false;
-                break;
-            }
-        }
-        if (checkChoice) {
-            let cartJson = localStorage.getItem("cart");
-            if (cartJson) {
-                var cart = JSON.parse(cartJson);
-                let checkCart = false;
-                for (var i = 0; i < cart.length; i++) {
-                    if (cart[i]['id'] == listVarian[filteredIndex]['id'] && areArraysEqual(cart[i]['choices'], listVarian[filteredIndex]['choices'])) {
-                        cart[i]['quantity'] += parseInt(document.getElementById("orderCountSelected__quantity").value);
-                        checkCart = true;
-                        break;
-                    }
-                }
-                if (!checkCart) cart.push({ idVariant: listVarian[filteredIndex]['id'], idProduct: listVarian[filteredIndex]['idProduct'], quantity: parseInt(document.getElementById("orderCountSelected__quantity").value) });
-                localStorage.setItem("cart", JSON.stringify(cart));
-            } else {
-                var cartNew = [];
-                cartNew.push({ idVariant: listVarian[filteredIndex]['id'], idProduct: listVarian[filteredIndex]['idProduct'], quantity: parseInt(document.getElementById("orderCountSelected__quantity").value) });
-                localStorage.setItem("cart", JSON.stringify(cartNew));
-            }
-            window.location = "/cart";
         } else {
-            document.getElementById("errorOrder").style.display = "block";
-            document.querySelector(".inforProductOverall__product .product__listOption").style.backgroundColor = "rgba(2, 136, 209, 0.14)";
+            return false;
         }
-        updateCart();
-
     }
-    function updateCart() {
+
+    return true;
+}
+function buyNow() {
+    let checkChoice = true;
+    for (key in selectedChoiced) {
+        if (!selectedChoiced[key]) {
+            checkChoice = false;
+            break;
+        }
+    }
+    if (checkChoice) {
         let cartJson = localStorage.getItem("cart");
         if (cartJson) {
-            let cart = JSON.parse(cartJson);
-            document.querySelector(".cart__number b").innerHTML = cart.length;
-        } else {
-            document.querySelector(".cart__number b").innerHTML = "0";
-        }
-    }
-    function addToCart() {
-        let checkChoice = true;
-        for (key in selectedChoiced) {
-            if (!selectedChoiced[key]) {
-                checkChoice = false;
-                break;
-            }
-        }
-        if (checkChoice) {
-            let cartJson = localStorage.getItem("cart");
-            if (cartJson) {
-                var cart = JSON.parse(cartJson);
-                let checkCart = false;
-                for (var i = 0; i < cart.length; i++) {
+            var cart = JSON.parse(cartJson);
+            let checkCart = false;
+            for (var i = 0; i < cart.length; i++) {
+                if (listVarian[filteredIndex]){
                     if (cart[i]['id'] == listVarian[filteredIndex]['id'] && areArraysEqual(cart[i]['choices'], listVarian[filteredIndex]['choices'])) {
                         cart[i]['quantity'] += parseInt(document.getElementById("orderCountSelected__quantity").value);
                         checkCart = true;
                         break;
                     }
                 }
-                if (!checkCart) {
-                    let choiceList = []
-                    for (var i = 0; i < listVarian[filteredIndex]['choices'].length; i++) {
-                        choiceList.push({ id: listVarian[filteredIndex]['choices'][i]['id'] })
+                else{
+                    if (cart[i]['id'] == listVarian[0]['id'] && areArraysEqual(cart[i]['choices'], listVarian[0]['choices'])) {
+                        cart[i]['quantity'] += parseInt(document.getElementById("orderCountSelected__quantity").value);
+                        checkCart = true;
+                        break;
                     }
-                    cart.push({ idVariant: listVarian[filteredIndex]['id'], choices: choiceList, idProduct: listVarian[filteredIndex]['idProduct'],  quantity: parseInt(document.getElementById("orderCountSelected__quantity").value) });
                 }
-                localStorage.setItem("cart", JSON.stringify(cart));
-            } else {
-                var cartNew = [];
+            }
+            if (!checkCart) cart.push({ idVariant: listVarian[filteredIndex]['id'], idProduct: window.location.pathname.substring(23), choices: listVarian[filteredIndex]['choices'], quantity: parseInt(document.getElementById("orderCountSelected__quantity").value) });
+            localStorage.setItem("cart", JSON.stringify(cart));
+        } else {
+            var cartNew = [];
+            cartNew.push({ id: listVarian[filteredIndex]['id'], idProduct: window.location.pathname.substring(23), choices: listVarian[filteredIndex]['choices'], quantity: parseInt(document.getElementById("orderCountSelected__quantity").value) });
+            localStorage.setItem("cart", JSON.stringify(cartNew));
+        }
+        window.location = "/fe/user/cart";
+    } else {
+        document.getElementById("errorOrder").style.display = "block";
+        document.querySelector(".inforProductOverall__product .product__listOption").style.backgroundColor = "rgba(2, 136, 209, 0.14)";
+    }
+    updateCart();
+
+}
+function updateCart() {
+    let cartJson = localStorage.getItem("cart");
+    if (cartJson) {
+        let cart = JSON.parse(cartJson);
+        document.querySelector(".cart__number b").innerHTML = cart.length;
+    } else {
+        document.querySelector(".cart__number b").innerHTML = "0";
+    }
+}
+function addToCart() {
+    let checkChoice = true;
+    for (key in selectedChoiced) {
+        if (!selectedChoiced[key]) {
+            checkChoice = false;
+            break;
+        }
+    }
+    if (checkChoice) {
+        let cartJson = localStorage.getItem("cart");
+        if (cartJson) {
+            var cart = JSON.parse(cartJson);
+            let checkCart = false;
+            for (var i = 0; i < cart.length; i++) {
+                if(listVarian[filteredIndex]){
+                    if (cart[i]['id'] == listVarian[filteredIndex]['id'] && areArraysEqual(cart[i]['choices'], listVarian[filteredIndex]['choices'])) {
+                        cart[i]['quantity'] += parseInt(document.getElementById("orderCountSelected__quantity").value);
+                        checkCart = true;
+                        break;
+                    }
+                }
+                else{
+                    if (cart[i]['id'] == listVarian[0]['id'] && areArraysEqual(cart[i]['choices'], listVarian[0]['choices'])) {
+                        cart[i]['quantity'] += parseInt(document.getElementById("orderCountSelected__quantity").value);
+                        checkCart = true;
+                        break;
+                    }
+                }
+            }
+            if (!checkCart) {
                 let choiceList = []
-                for (var i = 0; i < listVarian[filteredIndex]['choices'].length; i++) {
-                    choiceList.push({ idVariant: listVarian[filteredIndex]['choices'][i]['id'] })
+                if (!listVarian[filteredIndex]){
+                    filteredIndex = 0;
+                    listVarian[filteredIndex]['choices'] = []
                 }
-                cartNew.push({ idVariant: listVarian[filteredIndex]['id'], choices: choiceList, idProduct: listVarian[filteredIndex]['idProduct'], quantity: parseInt(document.getElementById("orderCountSelected__quantity").value) });
-                localStorage.setItem("cart", JSON.stringify(cartNew));
+                for (var i = 0; i < listVarian[filteredIndex]['choices'].length; i++) {
+                    choiceList.push({ id: listVarian[filteredIndex]['choices'][i]['id'] })
+                }
+                cart.push({ idVariant: listVarian[filteredIndex]['id'], idProduct: window.location.pathname.substring(23), choices: choiceList, quantity: parseInt(document.getElementById("orderCountSelected__quantity").value) });
             }
+            localStorage.setItem("cart", JSON.stringify(cart));
         } else {
-            document.getElementById("errorOrder").style.display = "block";
-            document.querySelector(".inforProductOverall__product .product__listOption").style.backgroundColor = "rgba(2, 136, 209, 0.14)";
+            var cartNew = [];
+            let choiceList = []
+            for (var i = 0; i < listVarian[filteredIndex]['choices'].length; i++) {
+                choiceList.push({ id: listVarian[filteredIndex]['choices'][i]['id'] })
+            }
+            cartNew.push({ idVariant: listVarian[filteredIndex]['id'], idProduct: window.location.pathname.substring(23), choices: choiceList, quantity: parseInt(document.getElementById("orderCountSelected__quantity").value) });
+            localStorage.setItem("cart", JSON.stringify(cartNew));
         }
-        updateCart();
+    } else {
+        document.getElementById("errorOrder").style.display = "block";
+        document.querySelector(".inforProductOverall__product .product__listOption").style.backgroundColor = "rgba(2, 136, 209, 0.14)";
     }
-    //--------------------header__menu trượt fixed------------------------------
-    document.addEventListener("DOMContentLoaded", function () {
-        const menu = document.querySelector("#header .header__menu");
-        const navbar = document.querySelector("#header .header__navbar");
+    updateCart();
+}
+//--------------------header__menu trượt fixed------------------------------
+document.addEventListener("DOMContentLoaded", function () {
+    const menu = document.querySelector("#header .header__menu");
+    const navbar = document.querySelector("#header .header__navbar");
 
-        // Lấy vị trí của thanh menu từ phía trên thanh navbar
-        const menuTopOffset = navbar.offsetTop + navbar.offsetHeight;
-        handleScroll();
-        // Xử lý sự kiện scroll
-        function handleScroll() {
-            const scrollY = window.scrollY;
+    // Lấy vị trí của thanh menu từ phía trên thanh navbar
+    const menuTopOffset = navbar.offsetTop + navbar.offsetHeight;
+    handleScroll();
+    // Xử lý sự kiện scroll
+    function handleScroll() {
+        const scrollY = window.scrollY;
 
-            // Nếu cuộn chuột đến vị trí của thanh menu
-            if (scrollY >= menuTopOffset) {
-                menu.classList.add("fixed");
-            } else {
-                menu.classList.remove("fixed");
-            }
+        // Nếu cuộn chuột đến vị trí của thanh menu
+        if (scrollY >= menuTopOffset) {
+            menu.classList.add("fixed");
+        } else {
+            menu.classList.remove("fixed");
         }
-        const menuMobile = document.querySelector("#headerMobile .headerMobile__menu");
-        const navbarMobile = document.querySelector("#headerMobile .headerMobile__navbar");
-        console.log(menuMobile)
-        // Lấy vị trí của thanh menu từ phía trên thanh navbar
-        const menuTopOffsetMobile = navbarMobile.offsetTop + navbarMobile.offsetHeight;
-        handleScrollMobile();
-        // Xử lý sự kiện scroll
-        function handleScrollMobile() {
-            const scrollY = window.scrollY;
+    }
+    const menuMobile = document.querySelector("#headerMobile .headerMobile__menu");
+    const navbarMobile = document.querySelector("#headerMobile .headerMobile__navbar");
+    console.log(menuMobile)
+    // Lấy vị trí của thanh menu từ phía trên thanh navbar
+    const menuTopOffsetMobile = navbarMobile.offsetTop + navbarMobile.offsetHeight;
+    handleScrollMobile();
+    // Xử lý sự kiện scroll
+    function handleScrollMobile() {
+        const scrollY = window.scrollY;
 
-            // Nếu cuộn chuột đến vị trí của thanh menu
-            if (scrollY >= menuTopOffsetMobile) {
-                menuMobile.classList.add("fixed");
+        // Nếu cuộn chuột đến vị trí của thanh menu
+        if (scrollY >= menuTopOffsetMobile) {
+            menuMobile.classList.add("fixed");
 
-            } else {
-                menuMobile.classList.remove("fixed");
-            }
+        } else {
+            menuMobile.classList.remove("fixed");
         }
+    }
 
-        // Thêm sự kiện scroll cho cửa sổ
-        window.addEventListener("scroll", handleScroll);
-        window.addEventListener("scroll", handleScrollMobile);
-    });
-    //------Thêm hover cho slider-Image---------------
-    function sliderImage() {
+    // Thêm sự kiện scroll cho cửa sổ
+    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScrollMobile);
+});
+//------Thêm hover cho slider-Image---------------
+function sliderImage() {
 
-        var firstSelected = document.querySelector('#imageSelected .img')
-        if (firstSelected && firstSelected.tagName === 'VIDEO') {
-            firstSelected.muted = true;
-            firstSelected.play();
+    var firstSelected = document.querySelector('#imageSelected .img')
+    if (firstSelected && firstSelected.tagName === 'VIDEO') {
+        firstSelected.muted = true;
+        firstSelected.play();
+    }
+    var sliderImageIndex = 0;
+    var sliderListElement = document.querySelectorAll("#listImageSelected li .detailimg__boder");
+
+    var sliderListImageElement = document.querySelectorAll(
+        "#listImageSelected .detailimg__img .img"
+    );
+
+    function hoverSlider() {
+        var sliderImageShow = document.querySelector("#imageSelected");
+
+        sliderImageShow.innerHTML = sliderListImageElement[sliderImageIndex].outerHTML;
+
+        if (sliderListImageElement[sliderImageIndex] && sliderListImageElement[sliderImageIndex].tagName === 'VIDEO') {
+            var videoElementSelected = sliderImageShow.querySelector('video');
+            videoElementSelected.muted = true;
+            videoElementSelected.play();
         }
-        var sliderImageIndex = 0;
-        var sliderListElement = document.querySelectorAll("#listImageSelected li .detailimg__boder");
+    }
+    for (var i = 0; i < sliderListImageElement.length; i++) {
+        sliderListImageElement[i].addEventListener("mouseover", (event) => {
+            const index = Array.from(sliderListImageElement).indexOf(event.target);
 
-        var sliderListImageElement = document.querySelectorAll(
-            "#listImageSelected .detailimg__img .img"
-        );
+            sliderListElement[sliderImageIndex].classList.remove("selected");
+            sliderImageIndex = index;
+            sliderListElement[sliderImageIndex].classList.add("selected");
+            hoverSlider();
+        });
+    }
+    var sliderImgElement = document.querySelector(".sliderImageView__ListImage >ul");
+    var tabindexSubElement = document.querySelector(".tabindex__sub.tabindex");
+    var tabindexAddElement = document.querySelector(".tabindex__add.tabindex");
+    function checkTabindex() {
+        if (tabindex == 0) {
 
-        function hoverSlider() {
-            var sliderImageShow = document.querySelector("#imageSelected");
+            tabindexSubElement.style.display = "none";
+        } else {
 
-            sliderImageShow.innerHTML = sliderListImageElement[sliderImageIndex].outerHTML;
-
-            if (sliderListImageElement[sliderImageIndex] && sliderListImageElement[sliderImageIndex].tagName === 'VIDEO') {
-                var videoElementSelected = sliderImageShow.querySelector('video');
-                videoElementSelected.muted = true;
-                videoElementSelected.play();
-            }
+            tabindexSubElement.style.display = "block";
         }
-        for (var i = 0; i < sliderListImageElement.length; i++) {
-            sliderListImageElement[i].addEventListener("mouseover", (event) => {
-                const index = Array.from(sliderListImageElement).indexOf(event.target);
-
-                sliderListElement[sliderImageIndex].classList.remove("selected");
-                sliderImageIndex = index;
-                sliderListElement[sliderImageIndex].classList.add("selected");
-                hoverSlider();
-            });
+        if (tabindex == tabindexMax - 5) {
+            tabindexAddElement.style.display = "none";
+        } else {
+            tabindexAddElement.style.display = "block";
         }
-        var sliderImgElement = document.querySelector(".sliderImageView__ListImage >ul");
-        var tabindexSubElement = document.querySelector(".tabindex__sub.tabindex");
-        var tabindexAddElement = document.querySelector(".tabindex__add.tabindex");
-        function checkTabindex() {
-            if (tabindex == 0) {
+        sliderImgElement.style.transform = "translate3d(-" + (86 * tabindex) + "px, 0px, 0px)";
+    }
+    checkTabindex();
+    tabindexAddElement.addEventListener("click", () => {
+        tabindex++;
 
-                tabindexSubElement.style.display = "none";
-            } else {
 
-                tabindexSubElement.style.display = "block";
-            }
-            if (tabindex == tabindexMax - 5) {
-                tabindexAddElement.style.display = "none";
-            } else {
-                tabindexAddElement.style.display = "block";
-            }
-            sliderImgElement.style.transform = "translate3d(-" + (86 * tabindex) + "px, 0px, 0px)";
-        }
         checkTabindex();
-        tabindexAddElement.addEventListener("click", () => {
-            tabindex++;
-
-
-            checkTabindex();
-        })
-        tabindexSubElement.addEventListener("click", () => {
-            tabindex--;
-            checkTabindex();
-        })
+    })
+    tabindexSubElement.addEventListener("click", () => {
+        tabindex--;
+        checkTabindex();
+    })
+}
+function showList() {
+    var listCategory = document.getElementById("contentmenuCategoryMobile");
+    if (listCategory.classList.contains("showLish")) {
+        listCategory.classList.remove("showLish");
+    } else {
+        listCategory.classList.add("showLish");
     }
-    function showList() {
-        var listCategory = document.getElementById("contentmenuCategoryMobile");
-        if (listCategory.classList.contains("showLish")) {
-            listCategory.classList.remove("showLish");
-        } else {
-            listCategory.classList.add("showLish");
-        }
-    }
+}
 </script>
 
 </html>

@@ -2,6 +2,13 @@
 
 document.addEventListener("DOMContentLoaded", function () {
   getCategories();
+  const inputElement = document.getElementById("productSearch");
+  inputElement.addEventListener("change", function (event) {
+      const inputValue = event.target.value;
+      if (inputValue.trim() != '') {
+          window.location = "/fe/product/search/" + inputValue
+      }
+  });
 });
 
 function getCategories() {
@@ -58,6 +65,7 @@ function toggleEditInput(icon, id) {
   spanElement.style.display = "none";
   inputElement.style.display = "inline";
   inputElement.focus(); // Đặt focus vào ô input
+  inputElement.setSelectionRange(inputElement.value.length, inputElement.value.length);
   inputElement.addEventListener("keydown", function (event) {
     if (event.keyCode === 13) { // Mã phím của Enter
       event.preventDefault(); // Ngăn không cho form submit (nếu có)
@@ -128,6 +136,7 @@ function confirmdelete(id) {
     overlay.style.display = "none";
     modal.style.display = "none";
     deleteCategory(id);
+    
 
   });
 }

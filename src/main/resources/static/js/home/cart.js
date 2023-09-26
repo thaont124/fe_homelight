@@ -1,3 +1,23 @@
+document.addEventListener("DOMContentLoaded", function () {
+  const inputElement = document.querySelector("#search__product input");
+  inputElement.addEventListener("change", function (event) {
+      const inputValue = event.target.value;
+      if (inputValue.trim() != '') {
+          window.location = "/fe/user/productByName/" + inputValue
+      }
+  });
+
+  const inputMobileElement = document.querySelector("#searchMobile__product input");
+  inputMobileElement.addEventListener("change", function (event) {
+      const inputValue = event.target.value;
+      if (inputValue.trim() != '') {
+          window.location = "/fe/user/productByName/" + inputValue
+      }
+  });
+});
+
+
+
 getCategories();
 function getCategories() {
   var xhr = new XMLHttpRequest();
@@ -145,14 +165,32 @@ async function GetProducts() {
     var oldprice = product.variantsDTO[k].originPrice
     var price = 0
     var choise = '';
-    for (var j = 0; j < product.variantsDTO[k].choices.length; j++) {
-      choise += '<span>' + product.variantsDTO[k].choices[j].choiceName + ' : ' + product.variantsDTO[k].choices[j].choiceValue + '    </span>'
+    var variantsDTOLen;
+    if (product.variantsDTO[k].choices){
+      variantsDTOLen = product.variantsDTO[k].choices.length
+      for (var j = 0; j < variantsDTOLen - 1; j++) {
+        choise += '<span>' + product.variantsDTO[k].choices[j].choiceName + ': ' + product.variantsDTO[k].choices[j].choiceValue + ',    </span>'
+      }
+      choise += '<span>' + product.variantsDTO[k].choices[product.variantsDTO[k].choices.length - 1].choiceName + ': ' + product.variantsDTO[k].choices[product.variantsDTO[k].choices.length - 1].choiceValue + '    </span>'
     }
+    else {
+      variantsDTOLen = 0;
+
+    }
+    
+    var image;
+    for (var indexImage = 0; indexImage < product.image.length; indexImage++){
+        if (product.image[indexImage].type == 'image'){
+          image = product.image[indexImage];
+          break;
+        }
+    }
+    console.log(image)
     if (product.variantsDTO[k].sale.length != 0) {
       price = parseInt(oldprice) * (1 - parseInt(product.variantsDTO[k].sale[0].numberSale) / 100)
       s1 += '<div class="cart-item">'
         + '<input type="checkbox" class="product-checkbox" value="' + idVariant + '" productid="' + product.id + '" >'
-        + '<img src="' + product.image[0].url + '">'
+        + '<img src="' + image.url + '">'
         + '<div class="product-details">'
         + '<span>' + product.productName + '</span><br>'
         + '<span class="oldprice" value="' + oldprice + '"> ₫' + oldprice + '</span>'
@@ -169,7 +207,7 @@ async function GetProducts() {
     } else {
       s1 += '<div class="cart-item">'
         + '<input type="checkbox" class="product-checkbox" value="' + idVariant + '" productid="' + product.id + '" >'
-        + '<img src="' + product.image[0].url + '">'
+        + '<img src="' + image.url + '">'
         + '<div class="product-details">'
         + '<span>' + product.productName + '</span><br>'
         + '<span class="newprice" value="' + oldprice + '">  ₫' + oldprice + '</span><br>'
@@ -187,7 +225,7 @@ async function GetProducts() {
   }
   s1 += `
     <div class="cart-total" id="cart-total">
-      <p>Tổng cộng: $0</p>
+      <p>Tổng cộng: 0đ</p>
     </div>
     `;
   s.innerHTML = s1;
@@ -247,7 +285,7 @@ function TotalPrice() {
   })
   // alert(sum)
   var totalElement = document.getElementById("cart-total");
-  var totalHtml = '<p>Tổng cộng: $' + sum.toFixed(2) + '</p>';
+  var totalHtml = '<p>Tổng cộng: ' + sum.toFixed(2) + 'đ</p>';
 
   totalElement.innerHTML = totalHtml;
 }
@@ -380,3 +418,84 @@ function deleteVariant(idVariant) {
   localStorage.setItem("cart", ProductList);
   window.location = '/fe/user/cart'
 }
+
+//--------------------header__menu trượt fixed------------------------------
+document.addEventListener("DOMContentLoaded", function () {
+  const menu = document.querySelector("#header .header__menu");
+  const navbar = document.querySelector("#header .header__navbar");
+
+  // Lấy vị trí của thanh menu từ phía trên thanh navbar
+  const menuTopOffset = navbar.offsetTop + navbar.offsetHeight;
+  handleScroll();
+  // Xử lý sự kiện scroll
+  function handleScroll() {
+    const scrollY = window.scrollY;
+
+    // Nếu cuộn chuột đến vị trí của thanh menu
+    if (scrollY >= menuTopOffset) {
+      menu.classList.add("fixed");
+    } else {
+      menu.classList.remove("fixed");
+    }
+  }
+  const menuMobile = document.querySelector("#headerMobile .headerMobile__menu");
+  const navbarMobile = document.querySelector("#headerMobile .headerMobile__navbar");
+  console.log(menuMobile)
+  // Lấy vị trí của thanh menu từ phía trên thanh navbar
+  const menuTopOffsetMobile = navbarMobile.offsetTop + navbarMobile.offsetHeight;
+  handleScrollMobile();
+  // Xử lý sự kiện scroll
+  function handleScrollMobile() {
+    const scrollY = window.scrollY;
+    
+    // Nếu cuộn chuột đến vị trí của thanh menu
+    if (scrollY >= menuTopOffsetMobile) {
+      menuMobile.classList.add("fixed");
+      
+    } else {
+      menuMobile.classList.remove("fixed");
+    }
+  }
+
+  // Thêm sự kiện scroll cho cửa sổ
+  window.addEventListener("scroll", handleScroll);
+  window.addEventListener("scroll", handleScrollMobile);
+});
+
+
+//-------------------- Thêm bớt số lượng -----------------------------------
+function orderQuantity(){
+
+  var quantityCountElement =document.getElementById("orderCountSelected__quantity");
+  var subCountElement = document.getElementById("orderCountSelected__sub");
+  var addCountElement = document.getElementById("orderCountSelected__add");
+  var oldQuantityCount=quantityCountElement.value;
+  subCountElement.addEventListener("click",()=>{
+    if(parseInt(quantityCountElement.value)>1){
+      quantityCountElement.value=(parseInt(quantityCountElement.value)-1)}
+  })
+  addCountElement.addEventListener("click",()=>{
+   
+      quantityCountElement.value=(parseInt(quantityCountElement.value)+1)
+  })
+  quantityCountElement.addEventListener("input",(e)=>{
+    if(isNaN( e.target.value)){
+      e.target.value=oldQuantityCount;
+    }else{
+      
+      oldQuantityCount=e.target.value;
+    }
+  })
+}
+
+
+updateCart();
+    function updateCart() {
+        let cartJson = localStorage.getItem("cart");
+        if (cartJson) {
+            let cart = JSON.parse(cartJson);
+            document.querySelector(".cart__number b").innerHTML = cart.length;
+        } else {
+            document.querySelector(".cart__number b").innerHTML = "0";
+        }
+    }

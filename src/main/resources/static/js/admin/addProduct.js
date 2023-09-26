@@ -41,7 +41,6 @@ function checkAndToggleChoiceVisibility() {
     document.getElementById("showExceptionForm").style.display = (choiceList.length > 0 && variantList.length == 0) ? 'block' : 'none'
   }
 
-
   const containerSale = document.querySelector('#sale .container__sale__choice');
   const saleContainer = document.querySelector('#sale');
   if (containerSale) {
@@ -51,6 +50,9 @@ function checkAndToggleChoiceVisibility() {
     document.getElementById("showSaleForm").style.display = 'block'
   }
 }
+
+
+
 
 
 /* ----------------------------------------------XỬ LÝ CÂY---------------------------------------------- */
@@ -223,6 +225,7 @@ function updateAndDisplay() {
       }
     })
   })
+
   let allFieldsFilled = true;
   requiredFieldsArray.forEach(field => {
     if (!checkRequiredField(field)) {
@@ -231,7 +234,9 @@ function updateAndDisplay() {
   });
 
   if (!allFieldsFilled) {
-    overlay.style.display = 'block';
+    const overlay = document.createElement('div');
+    overlay.classList.add('overlay');
+    document.body.appendChild(overlay);
 
     const notification = document.createElement('div');
     notification.classList.add('notification');
@@ -245,8 +250,8 @@ function updateAndDisplay() {
 
     const okButton = document.getElementById('okButton');
     okButton.addEventListener('click', () => {
-      overlay.style.display = 'none';
       document.body.removeChild(notification);
+      overlay.style.display = 'none';
     });
     return;
   }
@@ -254,7 +259,9 @@ function updateAndDisplay() {
   variantList = extractExceptions()
   saleList = extractSaleList()
   if (checkDuplicateChoicesWithDifferentPrices(variantList)) {
-    overlay.style.display = 'block';
+    const overlay = document.createElement('div');
+    overlay.classList.add('overlay');
+    document.body.appendChild(overlay);
 
     const notification = document.createElement('div');
     notification.classList.add('notification');
@@ -268,19 +275,21 @@ function updateAndDisplay() {
 
     const okButton = document.getElementById('okButton');
     okButton.addEventListener('click', () => {
-      overlay.style.display = 'none';
       document.body.removeChild(notification);
+      overlay.style.display = 'none';
     });
-    return;
+    return
   }
   if (checkDuplicateChoicesWithDuplicateSale(saleList)) {
-    overlay.style.display = 'block';
+    const overlay = document.createElement('div');
+    overlay.classList.add('overlay');
+    document.body.appendChild(overlay);
 
     const notification = document.createElement('div');
     notification.classList.add('notification');
     notification.innerHTML = `
       <div class="notification-content">
-          <p>Nhóm lựa chọn có nhiều hơn 1 mã giám trong cùng thời điểm. Vui lòng sửa</p>
+          <p>Nhóm lựa chọn có nhiều hơn 1 mã giảm giá trong cùng thời điểm. Vui lòng sửa</p>
           <button id="okButton">OK</button>
       </div>
     `;
@@ -288,21 +297,17 @@ function updateAndDisplay() {
 
     const okButton = document.getElementById('okButton');
     okButton.addEventListener('click', () => {
-      overlay.style.display = 'none';
       document.body.removeChild(notification);
+      overlay.style.display = 'none';
     });
-    return;
+    return
   }
-  var variantsByChoiceList = generateCombinations(choiceList)
-  console.log('variantsByChoiceList', variantsByChoiceList)
-
   console.log("lấy từ html")
   console.log(choiceList);
   console.log(variantList);
   console.log(saleList);
 
   variantList = filterVariantsByChoiceList(variantList, choiceList)
-
   saleList = filterSalesByChoiceList(saleList, choiceList)
 
   console.log("sau khi filter")
@@ -311,13 +316,15 @@ function updateAndDisplay() {
   console.log(saleList);
 
   document.getElementById('sale').innerHTML = `<div class="container__variant__addChoice">
-          <button id="showSaleForm" onclick="addSaleForm()" class="addElement">Thêm mã giảm giá</button>
+          <button id="showExceptionForm" onclick="addSaleForm()" class="addElement">Thêm mã giảm giá</button>
         </div>`
   document.getElementById('exception').innerHTML = `<div class="container__variant__addChoice">
           <button id="addExceptionForm" onclick="addExceptionForm()" class="addElement">Thêm ngoại lệ</button>
         </div>`
+
   displayException()
   displaySale()
+  var variantsByChoiceList = generateCombinations(choiceList)
   if (variantsByChoiceList.length <= 1) {
     document.getElementById("showExceptionForm").style.display = 'none'
     document.getElementById("exceptionTitle").style.display = 'none'
@@ -332,8 +339,6 @@ function updateAndDisplay() {
     document.getElementById("exceptionTitle").style.display = 'block'
     document.getElementById("exception").style.display = 'flex'
   }
-
-
 
 
 }
@@ -355,6 +360,7 @@ async function fetchImageAsFile(imageUrl, fileType) {
     return null;
   }
 }
+
 
 function createImageElement(url, type) {
   const imageWrapper = document.createElement('div');
@@ -454,7 +460,6 @@ function displayChoice() {
     if (variantsByChoiceList.length > 1) {
       document.getElementById("showExceptionForm").style.display = 'inline-block'
     }
-
   }
   for (var i = 0; i < choiceList.length; i++) {
     const choice = choiceList[i];
@@ -532,6 +537,12 @@ function displayChoice() {
 var choiceName_index = 0;
 
 function addFormChoice() {
+  choiceList = extractChoiceList()
+  var variantsByChoiceList = generateCombinations(choiceList);
+  console.log("variantsByChoiceList", variantsByChoiceList)
+  if (variantsByChoiceList.length > 1) {
+    document.getElementById("showExceptionForm").style.display = 'inline-block'
+  }
   choiceName_index += 1;
   var choiceHTML = document.getElementById("choice");
 
@@ -541,16 +552,7 @@ function addFormChoice() {
   if (previousChoiceValueInput) {
     previousInputValue = previousChoiceValueInput.value;
   }
-  choiceList = extractChoiceList()
-  console.log("choiceList", choiceList)
-  var variantsByChoiceList = generateCombinations(choiceList);
-  console.log("variantsByChoiceList", variantsByChoiceList)
-  if (variantsByChoiceList.length > 1) {
-    document.getElementById("showExceptionForm").style.display = 'inline-block'
-  }
-  if (variantsByChoiceList.length > 1) {
-    document.getElementById("showExceptionForm").style.display = 'inline-block'
-  }
+
   var newChoiceElement = document.createElement("div");
   newChoiceElement.classList.add("container__variant__choice");
   newChoiceElement.innerHTML = `
@@ -600,7 +602,7 @@ function addChoiceValue(button) {
   removeButton.textContent = 'x';
   removeButton.addEventListener('click', function () {
     newInputContainer.remove();
-    updateAndDisplay();
+    updateAndDisplay()
   });
 
   newInputContainer.appendChild(newChoiceValueInput);
@@ -666,15 +668,25 @@ function showExceptionForm() {
   document.getElementById("showExceptionForm").style.display = 'none'
 
   var exceptionContainers = document.getElementById("exception").querySelectorAll(".container__exception__choice")
-  if (exceptionContainers.length == 0 && variantList.length == 0) {
+  if (exceptionContainers.length == 0  && variantList.length == 0) {
     addExceptionForm()
   }
 }
 
 function displayException() {
   var exceptionContainer = document.getElementById('exception');
-  variantList = filterVariantsByChoiceList(variantList, choiceList)
 
+  if (variantList.length > 0) {
+    showExceptionForm()
+  } else {
+    exceptionContainer.innerHTML = `<div class="container__variant__addChoice">
+        <button id="addSaleForm" onclick="addExceptionForm()" class="addElement">Thêm ngoại lệ</button>
+      </div>`
+    checkAndToggleChoiceVisibility()
+    document.getElementById("exceptionTitle").style.display = 'none'
+    document.getElementById("exception").style.display = 'none'
+    document.getElementById("showExceptionForm").style.display = 'block'
+  }
   for (var i = 0; i < variantList.length; i++) {
     var variant = variantList[i];
     if (variant.price != document.getElementById('priceNoChoice').value) {
@@ -834,7 +846,6 @@ function extractExceptions() {
   exceptionContainers.forEach(exceptionContainer => {
     const choiceInfo = exceptionContainer.querySelector('.choice__choiceInfo');
     const selectElements = choiceInfo.querySelectorAll('select.select__exception');
-
     var choices = []
     const choice = Array.from(selectElements).map(select => ({
       choiceName: select.getAttribute('choicename'),
@@ -869,7 +880,7 @@ function showSaleForm() {
   document.getElementById("sale").style.display = 'flex'
   document.getElementById("showSaleForm").style.display = 'none'
 
-  var saleContainers = document.getElementById("sale").querySelectorAll(".container__sale__choice")
+  var saleContainers = document.getElementById("exception").querySelectorAll(".container__sale__choice")
   if (saleContainers.length == 0 && saleList.length == 0) {
     addSaleForm()
   }
@@ -1143,16 +1154,6 @@ function extractSaleList() {
   return sales;
 }
 
-/* ----------------------------------------------XỬ LÝ REQUEST HIỂN THỊ THÔNG TIN CŨ SẢN PHẨM---------------------------------------------- */
-
-
-//result of old product
-console.log(choiceList)
-console.log(variantList)
-console.log(saleList)
-console.log(selectedImages)
-console.log(categoryOfProduct)
-
 /* ----------------------------------------------VALIDATION---------------------------------------------- */
 function checkRequiredField(field) {
   if (!field.value) {
@@ -1196,18 +1197,18 @@ function checkDuplicateChoicesWithDifferentPrices(variants) {
     }
   }
 
-  // if (duplicateChoices.size > 0) {
-  //   const duplicateChoicesList = document.getElementById('duplicateChoicesList');
-  //   duplicateChoices.forEach(choicesStr => {
-  //     const choices = JSON.parse(choicesStr);
-  //     const listItem = document.createElement('li');
-  //     listItem.textContent = choices.map(choice => `${choice.choiceName}: ${choice.choiceValue}`).join(', ');
-  //     duplicateChoicesList.appendChild(listItem);
-  //   });
+  if (duplicateChoices.size > 0) {
+    const duplicateChoicesList = document.getElementById('duplicateChoicesList');
+    duplicateChoices.forEach(choicesStr => {
+      const choices = JSON.parse(choicesStr);
+      const listItem = document.createElement('li');
+      listItem.textContent = choices.map(choice => `${choice.choiceName}: ${choice.choiceValue}`).join(', ');
+      duplicateChoicesList.appendChild(listItem);
+    });
 
-  //   const duplicateChoicesAlert = document.getElementById('duplicateChoicesAlert');
-  //   duplicateChoicesAlert.style.display = 'block';
-  // }
+    const duplicateChoicesAlert = document.getElementById('duplicateChoicesAlert');
+    duplicateChoicesAlert.style.display = 'block';
+  }
   return duplicateChoices.size > 0;
 }
 
@@ -1230,10 +1231,8 @@ function checkDuplicateChoicesWithDuplicateSale(sales) {
       const existingSaleEnd = new Date(existingSale.sale.endDate).getTime();
 
       if (
-        (newSaleStart <= existingSaleStart && existingSaleStart <= newSaleEnd) ||
-        (newSaleStart <= existingSaleEnd && existingSaleEnd <= newSaleEnd) ||
-        (existingSaleStart <= newSaleStart && newSaleStart <= existingSaleEnd) ||
-        (existingSaleStart <= newSaleEnd && newSaleEnd <= existingSaleEnd)
+        (newSaleStart >= existingSaleStart && newSaleStart <= existingSaleEnd) ||
+        (newSaleEnd >= existingSaleStart && newSaleEnd <= existingSaleEnd)
       ) {
         if (!duplicateSales.has(choicesKey)) {
           duplicateSales.set(choicesKey, [existingSale.sale, saleItem.sale]);
@@ -1246,18 +1245,18 @@ function checkDuplicateChoicesWithDuplicateSale(sales) {
     }
   }
 
-  // if (duplicateSales.size > 0) {
-  //   const duplicateSalesListElement = document.getElementById('duplicateSalesList');
-  //   duplicateSales.forEach((sales, choicesKey) => {
-  //     const choices = JSON.parse(choicesKey);
-  //     const listItem = document.createElement('li');
-  //     listItem.textContent = choices.map(choice => `${choice.choiceName}: ${choice.choiceValue}`).join(', ');
-  //     duplicateSalesListElement.appendChild(listItem);
-  //   });
+  if (duplicateSales.size > 0) {
+    const duplicateSalesListElement = document.getElementById('duplicateSalesList');
+    duplicateSales.forEach((sales, choicesKey) => {
+      const choices = JSON.parse(choicesKey);
+      const listItem = document.createElement('li');
+      listItem.textContent = choices.map(choice => `${choice.choiceName}: ${choice.choiceValue}`).join(', ');
+      duplicateSalesListElement.appendChild(listItem);
+    });
 
-  //   const duplicateSalesAlert = document.getElementById('duplicateSalesAlert');
-  //   duplicateSalesAlert.style.display = 'block';
-  // }
+    const duplicateSalesAlert = document.getElementById('duplicateSalesAlert');
+    duplicateSalesAlert.style.display = 'block';
+  }
   return duplicateSales.size > 0;
 }
 
@@ -1302,6 +1301,8 @@ function generateCombinations(choiceList) {
 }
 
 async function editProduct() {
+  overlay.style.display = 'block';
+
   //check validate
   clearFieldErrors();
   const requiredFields = document.querySelectorAll('[required]');
@@ -1312,6 +1313,7 @@ async function editProduct() {
   if (selectedImages.length == 0) {
     requiredFieldsArray.push(document.getElementById("image-input"))
   }
+
   var choiceInforDivs = document.querySelectorAll('.choice__choiceInfo')
   choiceInforDivs.forEach(choiceInforDiv => {
     var selectElements = choiceInforDiv.getElementsByTagName("select");
@@ -1327,6 +1329,7 @@ async function editProduct() {
       }
     })
   })
+
   let allFieldsFilled = true;
   requiredFieldsArray.forEach(field => {
     if (!checkRequiredField(field)) {
@@ -1352,6 +1355,7 @@ async function editProduct() {
       document.body.removeChild(notification);
       overlay.style.display = 'none';
     });
+
     return;
   }
   if (checkDuplicateChoicesWithDifferentPrices(variantList)) {
@@ -1372,6 +1376,7 @@ async function editProduct() {
       document.body.removeChild(notification);
       overlay.style.display = 'none';
     });
+    return;
   }
   if (checkDuplicateChoicesWithDuplicateSale(saleList)) {
     overlay.style.display = 'block';
@@ -1380,7 +1385,7 @@ async function editProduct() {
     notification.classList.add('notification');
     notification.innerHTML = `
       <div class="notification-content">
-          <p>Nhóm lựa chọn có nhiều hơn 1 mã giám trong cùng thời điểm. Vui lòng sửa</p>
+          <p>Nhóm lựa chọn có nhiều hơn 1 mã giảm giá trong cùng thời điểm. Vui lòng sửa</p>
           <button id="okButton">OK</button>
       </div>
     `;
@@ -1391,8 +1396,8 @@ async function editProduct() {
       document.body.removeChild(notification);
       overlay.style.display = 'none';
     });
+    return;
   }
-
 
   updateAndDisplay()
 
@@ -1470,7 +1475,7 @@ async function editProduct() {
 
   for (const imageInfo of selectedImages) {
     const imageUrl = imageInfo.url;
-    const fileType = imageInfo.url;
+    const fileType = imageInfo.extension;
 
     const file = await fetchImageAsFile(imageUrl, fileType);
 
@@ -1508,7 +1513,7 @@ async function editProduct() {
   console.log(formData.getAll('variantsDTO[0].sale[0].numberSale'));
 
   xhttp.onload = function () {
-    if (xhttp.status === 201) {
+    if (xhttp.status === 200) {
       var ResponseJson = xhttp.responseText;
       var Response = JSON.parse(ResponseJson)
 
@@ -1534,18 +1539,25 @@ async function editProduct() {
       }
       showSuccessNotification(document.getElementById('info__productName').value)
     } else if (xhttp.status === 403) {
-      window.location = '/fe/login';
+      //window.location = '/fe/login';
     } else if (xhttp.status === 400) {
       var ResponseJson = xhttp.responseText
       var Response = JSON.parse(ResponseJson)
-      console.log(Response)
-      console.log(Response.messages)
       if (Response.messages == "Product Code is existed"){
         var field = document.getElementById("info__productCode")
         field.classList.add('error');
         const errorElement = document.createElement('div');
         errorElement.classList.add('error-message');
         errorElement.textContent = 'Mã sản phẩm bị trùng. Vui lòng chọn lại';
+        field.insertAdjacentElement('afterend', errorElement);
+        return;
+      }
+      else if (Response.messages == "There is an image that is incorrect format (only .jpg, .png, vv)"){
+        var field = document.getElementById("selected-images")
+        field.classList.add('error');
+        const errorElement = document.createElement('div');
+        errorElement.classList.add('error-message');
+        errorElement.textContent = 'Ảnh không đúng định dạng(không nhận ảnh webp). Vui lòng chọn lại';
         field.insertAdjacentElement('afterend', errorElement);
         return;
       }
@@ -1563,6 +1575,7 @@ async function editProduct() {
   xhttp.send(formData);
 
 }
+
 
 
 /* ----------------------------------------------CHECK ADMIN---------------------------------------------- */
@@ -1602,6 +1615,7 @@ function CheckAdmin() {
 if (localStorage.getItem("Token")) {
   CheckAdmin();
   init();
+  viewProduct();
   checkAndToggleChoiceVisibility();
 }
 else {

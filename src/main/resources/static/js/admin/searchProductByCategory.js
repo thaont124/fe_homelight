@@ -315,8 +315,8 @@ function showProductsByIndex(index) {
     for (var i = start; i < end; i++) {
         console.log(listProduct[i])
         var imgHTML = '';
-        for (var j = 0; j < listProduct[i].image.length; i++) {
-            if (listProduct[i].image[j].type = 'image') {
+        for (var j = 0; j < listProduct[i].image.length; j++) {
+            if (listProduct[i].image[j].type == 'image') {
                 imgHTML = listProduct[i].image[j].url;
                 break;
             }

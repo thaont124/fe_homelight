@@ -1,9 +1,18 @@
+@font-face {
+  font-family: 'UTM Avo';
+  src: url('/Font/UTM-Avo.ttf') format('truetype'); /* Thay đổi đường dẫn đến font chữ */
+  /* Nếu font chữ có các định dạng khác nhau như .woff hoặc .woff2, bạn có thể thêm các dòng dưới đây: 
+  src: url('./path/to/utm-avo.woff') format('woff'),
+  src: url('./path/to/utm-avo.woff2') format('woff2'), */
+  font-weight: normal;
+  font-style: normal;
+}
 * {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
   font-size: 14px;
-  font-family: "Roboto", Arial, sans-serif;
+  font-family: 'UTM Avo', "Roboto", Arial, sans-serif;
   color: #000;
 }
 a {
@@ -11,224 +20,9 @@ a {
 }
 
 body {
-  padding-top: 31px;
-}
-#headerMobile{
-  display: none;
-}
-#header {
-}
-#header .header__navbar {
-  height: 100px;
-  background-color: #fff;
-  width: 1200px;
-  margin: auto;
-  display: flex;
-  justify-content: space-between;
-}
-.header__navbar .navbar__logo {
-}
-.navbar__logo a {
-  display: block;
-  height: 100px;
-}
-.navbar__logo a img {
-  display: block;
-  height: 100px;
-  max-width: 300px;
-}
-.header__navbar .navbar__search {
-  display: flex;
-  align-items: center;
-}
-#search__product {
-  width: 450px;
-  height: 40px;
-  overflow: hidden;
-  position: relative;
-}
-#search__product input[type="text"] {
-  height: 100%;
-  width: 100%;
-  color: #666;
-  padding: 10px;
-  font-size: 14px;
-  border: solid 1px #dcdddf;
-}
-#search__product .search__icon {
-  position: absolute;
-  width: 40px;
-  height: 100%;
-  right: 0;
-  top: 0;
-  border: none;
-  border-left: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.search__icon i {
-  font-size: 20px;
-  color: #f36d00;
-}
-.navbar__contactnumber {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.navbar__contactnumber .contactnumber___logo {
-  height: 42px;
-  width: 42px;
-  border-radius: 10%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #f5b700;
-}
-.contactnumber___logo i {
-  color: white;
-  font-weight: 900;
-  font-size: 24px;
-}
-.navbar__contactnumber .contactnumber__content {
-  margin-left: 20px;
-}
-.contactnumber__content span {
-  display: block;
-  font-size: 14px;
-  text-transform: uppercase;
-}
-.contactnumber__content b {
-  display: block;
-  color: #0288d1;
-  font-size: 20px;
-}
-.header__navbar .navbar__cart {
-  display: flex;
-  width: 140px;
-
-  align-items: center;
-}
-.navbar__cart a {
-  width: 100%;
-  border-radius: 3px;
-  display: flex;
-  background-color: #f5b700;
-  line-height: 42px;
-  justify-content: space-around;
-  align-items: center;
-}
-.navbar__cart a .cart__logo {
-  display: flex;
-  align-items: center;
-}
-.cart__logo i {
-  font-size: 24px;
-  color: white;
-}
-.navbar__cart a .cart__content {
-}
-.cart__content p {
-  color: white;
-}
-.navbar__cart .cart__number {
-  display: flex;
-  align-items: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: white;
-  justify-content: center;
-}
-.cart__number b {
-  color: red;
-}
-/*menu */
-#header .header__menu {
-  height: 50px;
-  position: relative;
-  background-color: #0288d1;
-}
-#header .header__menu.fixed {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-}
-.header__menu .menu__content {
-  width: 1200px;
-  margin: auto;
-  display: flex;
-}
-.menu__content #contentmenuCategory {
-  width: 100%;
-}
-#contentmenuCategory > ul {
-  font-size: 0;
-  height: 50px;
-  overflow-y: hidden;
-}
-#contentmenuCategory > ul > li {
-  display: inline-block;
-}
-#contentmenuCategory > ul > li > a {
-  padding: 0px 10px;
-  color: white;
-  line-height: 50px;
-  height: 50px;
-  display: block;
-  cursor: pointer;
-  font-size: 15px;
-}
-#contentmenuCategory .category__children {
-  display: none;
-  position: absolute;
-  top: 50px;
-  right: 0;
-  left: 0;
   padding-top: 10px;
-  background-color: white;
-  z-index: 100;
 }
 
-#contentmenuCategory > ul > li:hover > a {
-  background-color: #f5b700;
-}
-#contentmenuCategory > ul > li:hover .category__children {
-  display: block;
-}
-.category__children > ul {
-  width: 1200px;
-  margin: auto;
-  display: flex;
-  flex-wrap: wrap;
-
-  list-style-type: none;
-}
-.category__children ul li {
-  width: 20%;
-  background-color: transparent;
-  height: 36px;
-  padding: 0 10px;
-  display: block;
-  margin-bottom: 10px;
-}
-.category__children ul li a {
-  color: #555;
-  background-color: transparent;
-  border-bottom: #c1b69b 1px dotted;
-
-  font-weight: bold;
-  line-height: 36px;
-  display: block;
-}
-.category__children ul li a:hover {
-  color: #f5b700;
-}
-.category__children ul li a i {
-  margin-right: 10px;
-}
 #container {
 }
 #container .container__product {
@@ -410,12 +204,12 @@ body {
 }
 .inforProductOverall__productName h2{
     text-align: center;
-    font-size: 20px;
-
+    font-size: 30px;
+    font-weight: bold;
     overflow: hidden;
     color: #555;
     padding-top: 12px;
-    line-height: 20px;
+    line-height: 40px;
 
 }
 .inforProductOverall .inforProductOverall__product{

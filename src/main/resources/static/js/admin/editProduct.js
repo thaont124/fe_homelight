@@ -289,7 +289,7 @@ function updateAndDisplay() {
     notification.classList.add('notification');
     notification.innerHTML = `
       <div class="notification-content">
-          <p>Nhóm lựa chọn có nhiều hơn 1 mã giám trong cùng thời điểm. Vui lòng sửa</p>
+          <p>Nhóm lựa chọn có nhiều hơn 1 mã giảm giá trong cùng thời điểm. Vui lòng sửa</p>
           <button id="okButton">OK</button>
       </div>
     `;
@@ -1456,6 +1456,8 @@ function generateCombinations(choiceList) {
 }
 
 async function editProduct() {
+  overlay.style.display = 'block';
+  
   //check validate
   clearFieldErrors();
   const requiredFields = document.querySelectorAll('[required]');
@@ -1538,7 +1540,7 @@ async function editProduct() {
     notification.classList.add('notification');
     notification.innerHTML = `
       <div class="notification-content">
-          <p>Nhóm lựa chọn có nhiều hơn 1 mã giám trong cùng thời điểm. Vui lòng sửa</p>
+          <p>Nhóm lựa chọn có nhiều hơn 1 mã giảm giá trong cùng thời điểm. Vui lòng sửa</p>
           <button id="okButton">OK</button>
       </div>
     `;
@@ -1702,6 +1704,15 @@ async function editProduct() {
         const errorElement = document.createElement('div');
         errorElement.classList.add('error-message');
         errorElement.textContent = 'Mã sản phẩm bị trùng. Vui lòng chọn lại';
+        field.insertAdjacentElement('afterend', errorElement);
+        return;
+      }
+      else if (Response.messages == "There is an image that is incorrect format (only .jpg, .png, vv)"){
+        var field = document.getElementById("selected-images")
+        field.classList.add('error');
+        const errorElement = document.createElement('div');
+        errorElement.classList.add('error-message');
+        errorElement.textContent = 'Ảnh không đúng định dạng (không nhận ảnh webp). Vui lòng chọn lại';
         field.insertAdjacentElement('afterend', errorElement);
         return;
       }

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="/css/home/search.css" />
+    <link rel="stylesheet" href="/css/home/header.css">
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
@@ -14,8 +15,8 @@
     <div id="headerMobile">
       <div class="headerMobile__navbar">
         <div class="navbar__logo">
-          <a href="#">
-            <img src="./60.png" alt="" />
+          <a href="/fe/user/home">
+            <img src="/img/60.png" alt="" />
           </a>
         </div>
       </div>
@@ -31,7 +32,7 @@
           <div id="contentmenuCategoryMobile">
             <ul>
               <li>
-                <a href="#" class="selected">TRANG CHỦ</a>
+                <a href="/fe/user/home" class="selected">TRANG CHỦ</a>
               </li>
               
             </ul>
@@ -50,8 +51,8 @@
     <div id="header">
       <div class="header__navbar">
         <div class="navbar__logo">
-          <a href="#">
-            <img src="./60.png" alt="" />
+          <a href="/fe/user/home">
+            <img src="/img/60.png" alt="" />
           </a>
         </div>
         <div class="navbar__search">
@@ -90,7 +91,7 @@
           <div id="contentmenuCategory">
             <ul>
               <li>
-                <a href="#" class="selected">TRANG CHỦ</a>
+                <a href="/fe/user/home" class="selected">TRANG CHỦ</a>
               </li>
             </ul>
           </div>
@@ -103,9 +104,9 @@
         <div class="content__product">
           
           <div id="productListSearch">
-            <div class="productByCategoryDetail">
-                <div class="productByCategoryDetail__header">
-                    <div class="productByCategoryDetail__parent">
+            <div class="productCategoryDetail">
+                <div class="productCategoryDetail__header">
+                    <div class="productCategoryDetail__parent">
                       <div class="headerTitle__content">
                         <h3></h3>
                       </div>
@@ -120,7 +121,7 @@
                 <li class="productDetail">
                   <a href="">
                     <div class="backgroundImg"></div>
-                    <img src="./6c1f87d1c932c762.png" alt="" />
+                    <img src="/img/6c1f87d1c932c762.png" alt="" />
                   </a>
                   <div class="productDetail__content">
                     <div class="productName">
@@ -138,7 +139,7 @@
                 <li class="productDetail">
                   <a href="">
                     <div class="backgroundImg"></div>
-                    <img src="./6c1f87d1c932c762.png" alt="" />
+                    <img src="/img/6c1f87d1c932c762.png" alt="" />
                   </a>
                   <div class="productDetail__content">
                     <div class="productName">
@@ -156,7 +157,7 @@
                 <li class="productDetail">
                   <a href="">
                     <div class="backgroundImg"></div>
-                    <img src="./6c1f87d1c932c762.png" alt="" />
+                    <img src="/img/6c1f87d1c932c762.png" alt="" />
                   </a>
                   <div class="productDetail__content">
                     <div class="productName">
@@ -174,7 +175,7 @@
                 <li class="productDetail">
                   <a href="">
                     <div class="backgroundImg"></div>
-                    <img src="./6c1f87d1c932c762.png" alt="" />
+                    <img src="/img/6c1f87d1c932c762.png" alt="" />
                   </a>
                   <div class="productDetail__content">
                     <div class="productName">
@@ -192,7 +193,7 @@
                 <li class="productDetail">
                   <a href="">
                     <div class="backgroundImg"></div>
-                    <img src="./6c1f87d1c932c762.png" alt="" />
+                    <img src="/img/6c1f87d1c932c762.png" alt="" />
                   </a>
                   <div class="productDetail__content">
                     <div class="productName">
@@ -210,7 +211,7 @@
                 <li class="productDetail">
                   <a href="">
                     <div class="backgroundImg"></div>
-                    <img src="./6c1f87d1c932c762.png" alt="" />
+                    <img src="/img/6c1f87d1c932c762.png" alt="" />
                   </a>
                   <div class="productDetail__content">
                     <div class="productName">
@@ -228,7 +229,7 @@
                 <li class="productDetail">
                   <a href="">
                     <div class="backgroundImg"></div>
-                    <img src="./6c1f87d1c932c762.png" alt="" />
+                    <img src="/img/6c1f87d1c932c762.png" alt="" />
                   </a>
                   <div class="productDetail__content">
                     <div class="productName">
@@ -246,7 +247,7 @@
                  <li class="productDetail">
                   <a href="">
                     <div class="backgroundImg"></div>
-                    <img src="./6c1f87d1c932c762.png" alt="" />
+                    <img src="/img/6c1f87d1c932c762.png" alt="" />
                   </a>
                   <div class="productDetail__content">
                     <div class="productName">
@@ -346,7 +347,7 @@
         document.querySelector(".cart__number b").innerHTML="0";
       }
     }
-    searchproduct('n');
+    searchproduct(window.location.pathname.substring(23));
     function searchproduct(key){
       var xhr = new XMLHttpRequest();
       xhr.open("GET", domain + "/api/v1.0/ProductByName/" + key + '?pageNo=1&&pageSize=16', true);
@@ -359,9 +360,9 @@
           var productSearchElement = document.getElementById("productListSearch");
           var productSearchHtml =``;
           productSearchHtml+=`
-          <div class="productByCategoryDetail">
-                <div class="productByCategoryDetail__header">
-                    <div class="productByCategoryDetail__parent">
+          <div class="productCategoryDetail">
+                <div class="productCategoryDetail__header">
+                    <div class="productCategoryDetail__parent">
                       <div class="headerTitle__content">
                         <h3>${key}</h3>
                       </div>
@@ -379,29 +380,29 @@
           for(var i =0;i<productListByCategoryData.length;i++){
             productSearchHtml+=`
             <li class="productDetail">
-            <a href="/fe/user/productDetail/${productListByCategoryData[i]['productName']}">
+            <a href="/fe/user/productDetail/${productListByCategoryData[i]['id']}">
               <div class="backgroundImg"></div>
               <img src="`;
             let check=0;
             for(var k=0;k<productListByCategoryData[i]['image'].length;k++){
               if(productListByCategoryData[i]['image'][k]['type']==='image'){
-                productSearchHtml+=`${productListByCategoryData[i]['image'][0]['url']}" `;
+                productSearchHtml+=`${productListByCategoryData[i]['image'][k]['url']}" `;
                 check=1;
                 break;
               }
             }
-            if(check===0)productSearchHtml+='./6c1f87d1c932c762.png';
+            if(check===0)productSearchHtml+='/img/6c1f87d1c932c762.png';
             productSearchHtml+=`" alt="" />
             </a>
             <div class="productDetail__content">
                     <div class="productName">
-                      <a href="/fe/user/productDetail/${productListByCategoryData[i]['productName']}"><strong>${productListByCategoryData[i]['productName']}</strong></a>
+                      <a href="/fe/user/productDetail/${productListByCategoryData[i]['id']}"><strong>${productListByCategoryData[i]['productName']}</strong></a>
                     </div>`;
                 let sale=0;
                 const currentTime = new Date();
 
                 if(productListByCategoryData[i]['variantsDTO'].length===1){
-                  if(!productListOrderSortData[j]['variantsDTO'][0]['choices']){
+                  if(!productListByCategoryData[i]['variantsDTO'][0]['choices']){
                     for(var s =0; s<productListByCategoryData[i]['variantsDTO'][0]['sale'].length;s++){
                       let startDate = new Date(productListByCategoryData[i]['variantsDTO'][0]['sale'][s]['startDate']);
                       let endDate = new Date(productListByCategoryData[i]['variantsDTO'][0]['sale'][s]['endDate']);
@@ -518,7 +519,7 @@
           for (var i = 0; i < categoryData.length; i++) {
             categoryMobileHtml+=`
             <li>
-              <a href="/fe/user/productByCategory/${categoryData[i]["id"]}">${categoryData[i]["categoryName"]}</a>
+              <a href="/fe/user/productDetail/${categoryData[i]["id"]}">${categoryData[i]["categoryName"]}</a>
               </li>
             `;
 
@@ -563,6 +564,26 @@
 
     //--------------------header__menu trượt fixed------------------------------
     document.addEventListener("DOMContentLoaded", function () {
+
+      //thanh search
+      const inputElement = document.querySelector("#search__product input");
+      inputElement.value = window.location.pathname.substring(23)
+      inputElement.addEventListener("change", function (event) {
+          const inputValue = event.target.value;
+          if (inputValue.trim() != '') {
+              window.location = "/fe/user/productByName/" + inputValue
+          }
+      });
+
+      const inputMobileElement = document.querySelector("#searchMobile__product input");
+      inputMobileElement.addEventListener("change", function (event) {
+          const inputValue = event.target.value;
+          if (inputValue.trim() != '') {
+              window.location = "/fe/user/productByName/" + inputValue
+          }
+      });
+    
+
       const menu = document.querySelector("#header .header__menu");
       const navbar = document.querySelector("#header .header__navbar");
 

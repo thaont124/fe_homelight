@@ -1,4 +1,16 @@
 
+@font-face {
+  font-family: 'UTM Avo';
+  src: url('/Font/UTM-Avo.ttf') format('truetype'); /* Thay đổi đường dẫn đến font chữ */
+  /* Nếu font chữ có các định dạng khác nhau như .woff hoặc .woff2, bạn có thể thêm các dòng dưới đây: 
+  src: url('./path/to/utm-avo.woff') format('woff'),
+  src: url('./path/to/utm-avo.woff2') format('woff2'), */
+  font-weight: normal;
+  font-style: normal;
+}
+body{
+  font-family: 'UTM Avo', "Roboto", Arial, sans-serif;
+}
 table {
   border-collapse: collapse;
   width: 100%;

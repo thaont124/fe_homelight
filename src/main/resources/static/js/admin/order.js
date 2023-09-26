@@ -1,3 +1,12 @@
+document.addEventListener("DOMContentLoaded", function () {
+  const inputElement = document.getElementById("productSearch");
+  inputElement.addEventListener("change", function (event) {
+      const inputValue = event.target.value;
+      if (inputValue.trim() != '') {
+          window.location = "/fe/product/search/" + inputValue
+      }
+  });
+});
 
 function Orders() {
 
@@ -22,10 +31,16 @@ function Orders() {
       console.log(orders)
       for (var i = 0; i < orders.length; i++) {
         if (orders[i].status == "Đang Giao Hàng") {
-
+          
           var pro = '';
           for (var j = 0; j < orders[i].products.length; j++) {
-            pro += '<li>idProduct: ' + orders[i].products[j].id + ', idVariant: ' + orders[i].products[j].variantsDTO.id + ', Quantity: ' + orders[i].products[j].quantity + '</li>'
+            var variant = '';
+            var choiceLen = orders[i].products[j].variantsDTO.choices.length
+            for (var k = 0; k < choiceLen-1; k++){
+              variant += orders[i].products[j].variantsDTO.choices[k].choiceValue + " - "
+            }
+            variant += orders[i].products[j].variantsDTO.choices[choiceLen-1].choiceValue 
+            pro += '<li>Sản phẩm: ' + orders[i].products[j].productName + ', Lựa chọn: ' + variant + ', Quantity: ' + orders[i].products[j].quantity + '</li>'
           }
           s += '<tr>'
             + '<td>' + orders[i].id + '</td>'
@@ -45,7 +60,13 @@ function Orders() {
         else {
           var pro = '';
           for (var j = 0; j < orders[i].products.length; j++) {
-            pro += '<li>idProduct: ' + orders[i].products[j].id + ', idVariant: ' + orders[i].products[j].variantsDTO.id + ', Quantity: ' + orders[i].products[j].quantity + '</li>'
+            var variant = '';
+            var choiceLen = orders[i].products[j].variantsDTO.choices.length
+            for (var k = 0; k < choiceLen-1; k++){
+              variant += orders[i].products[j].variantsDTO.choices[k].choiceValue + " - "
+            }
+            variant += orders[i].products[j].variantsDTO.choices[choiceLen-1].choiceValue 
+            pro += '<li>Sản phẩm: ' + orders[i].products[j].productName + ', Lựa chọn: ' + variant + ', Quantity: ' + orders[i].products[j].quantity + '</li>'
           }
           s1 += '<tr>'
             + '<td>' + orders[i].id + '</td>'

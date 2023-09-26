@@ -8,3 +8,10 @@ window.addEventListener('scroll', function() {
         header.classList.remove('fixed');
     }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    var load = document.getElementById("loading")
+    if (load != null){
+        load.style.display = 'none'
+    }
+});

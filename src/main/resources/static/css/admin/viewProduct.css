@@ -163,6 +163,8 @@ li#navbar  li > ul {
   display: none;
 }
 li {
+  position: relative;
+  z-index: 2;
   list-style: none;
   background-color: white;
 }
@@ -236,6 +238,8 @@ tr.dragover {
   padding: 10px;
   text-align: center;
   border: 1px solid #ddd;
+  position: relative;
+  z-index: 1;
 }
 
 
